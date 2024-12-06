@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Regular expression for Conventional Commits
+commit_regex='^(feat|fix|docs|style|refactor|test|chore)(\(.+\))?: .{1,200}$'
+
+# Read the commit message
+commit_message=$(cat "$1")
+
+# Validate the commit message against the regex
+if ! [[ "$commit_message" =~ $commit_regex ]]; then
+  echo "ERROR: Commit message does not follow the Conventional Commits format."
+  echo "Please use the format: <type>(<scope>): <subject>"
+  echo "Example: feat(parser): add ability to parse arrays"
+  exit 1
+fi
