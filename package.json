@@ -1,8 +1,8 @@
 {
-  "name": "clean-template",
+  "name": "buddy-backend",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "Fipi Team",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

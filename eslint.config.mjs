@@ -39,7 +39,7 @@ export default [
 
       parserOptions: {
         project: 'tsconfig.json',
-        tsconfigRootDir: '/home/hardin/clean-template',
+        tsconfigRootDir: './',
       },
     },
 
