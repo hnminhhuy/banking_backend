@@ -14,5 +14,5 @@ export const pgDataSource = new DataSource({
   port: parseInt(PG_PORT),
   username: PG_USERNAME,
   password: PG_PASSWORD,
-  migrations: ['dist/migrations/*.js'],
+  migrations: ['dist/src/migrations/*.js'],
 });
