@@ -1,12 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsDateString, IsUUID } from 'class-validator';
 
-export class BaseDto {
-  @ApiProperty({ format: 'uuid' })
-  id: string;
+export abstract class BaseDto {
+  @ApiProperty()
+  @IsUUID()
+  public id: string;
 
-  @ApiProperty({ format: 'date-time' })
-  createdAt: Date;
+  @ApiProperty()
+  @IsDateString()
+  public createdAt: Date;
 
-  @ApiProperty({ format: 'date-time' })
-  updatedAt: Date;
+  @ApiProperty()
+  @IsDateString()
+  public updatedAt: Date;
 }

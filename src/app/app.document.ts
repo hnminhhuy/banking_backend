@@ -2,8 +2,10 @@ import { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-export async function setupSwagger(app: INestApplication) {
-  const configService = app.get(ConfigService);
+export const configAppDocument = async (
+  app: INestApplication,
+  configService: ConfigService,
+): Promise<void> => {
   if (!configService.get<boolean>('swagger.enabled')) {
     return;
   }
@@ -20,5 +22,6 @@ export async function setupSwagger(app: INestApplication) {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
+
   SwaggerModule.setup(path, app, document);
-}
+};

@@ -1,12 +1,24 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+export interface BaseModelParams {
+  id?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 export abstract class BaseModel {
-  @ApiProperty({ name: 'id' })
-  id: string;
+  @ApiProperty({ description: 'Unique identifier' })
+  public id: string;
 
-  @ApiProperty({ name: 'created_at' })
-  createdAt: Date;
+  @ApiProperty({ description: 'Timestamp of when the record was created' })
+  public createdAt: Date;
 
-  @ApiProperty({ name: 'updated_at' })
-  updatedAt: Date;
+  @ApiProperty({ description: 'Timestamp of when the record was last updated' })
+  public updatedAt: Date;
+
+  constructor({ id, createdAt, updatedAt }: BaseModelParams) {
+    this.id = id;
+    this.createdAt = createdAt || new Date();
+    this.updatedAt = updatedAt || new Date();
+  }
 }
