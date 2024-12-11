@@ -7,6 +7,7 @@ import {
 import { Response } from 'express';
 import { BaseException, IBaseExceptionResponse } from 'src/exceptions';
 import { ERROR_CODES } from '../common/utils/constants';
+import { isDevelopmentEnv } from 'src/common/helpers/env.helper';
 
 @Catch()
 export class ApiExceptionFilter implements ExceptionFilter {
@@ -15,6 +16,10 @@ export class ApiExceptionFilter implements ExceptionFilter {
     if (!response) {
       console.error('No HTTP response context found');
       throw new Error('No HTTP response context found');
+    }
+
+    if (isDevelopmentEnv) {
+      console.log(exception);
     }
 
     let data = <IBaseExceptionResponse>{
@@ -87,10 +92,10 @@ export class ApiExceptionFilter implements ExceptionFilter {
 
       return response.status(status).send(data);
     } catch (error) {
-      // if (isDevelopment) {
-      //   data.stack = error?.stack;
-      //   data.message = error?.message;
-      // }
+      if (isDevelopmentEnv) {
+        data.stack = error?.stack;
+        data.message = error?.message;
+      }
 
       console.error(error);
 

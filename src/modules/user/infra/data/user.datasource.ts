@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { UserModel } from '../../core/models/user.model';
-import { validate as isUuid } from 'uuid';
+import { UserModel, UserModelParams } from '../../core/models/user.model';
 
 @Injectable()
 export class UserDatasource {
@@ -20,7 +19,7 @@ export class UserDatasource {
   public async getUserBy(
     key: string,
     value: unknown,
-    relations: string[] | undefined,
+    relations: string[] | undefined = undefined,
   ): Promise<UserModel | undefined> {
     const query = this.userRepo.createQueryBuilder('users');
 
@@ -33,6 +32,22 @@ export class UserDatasource {
     }
 
     const entity = await query.getOne();
-    return new UserModel(entity);
+    if (entity) {
+      return new UserModel(entity);
+    } else {
+      return undefined;
+    }
+  }
+
+  public async update(
+    id: string,
+    updatedFields: Partial<UserModelParams>,
+  ): Promise<boolean> {
+    return (await this.userRepo.update(id, updatedFields)).affected > 0;
+  }
+
+  public async updatePassword(id: string, password: string): Promise<boolean> {
+    const result = await this.userRepo.update(id, { password });
+    return result.affected > 0;
   }
 }

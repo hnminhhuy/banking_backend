@@ -17,7 +17,7 @@ export class UserEntity extends BaseEntity {
   @Column({ name: 'is_active' })
   isActive: boolean;
 
-  @Column({ name: 'full_name' })
+  @Column({ name: 'fullname' })
   fullName: string;
 
   @Column()
