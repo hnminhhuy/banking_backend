@@ -1,8 +1,17 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './modules/app/app.module';
+import { ConfigService } from '@nestjs/config';
+import { initializeTransactionalContext } from 'typeorm-transactional';
+import { initApplication } from './app';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.PORT ?? 3000);
+  initializeTransactionalContext();
+  const app = await initApplication();
+  const port = app.get(ConfigService).get<number>('app.port') || 3000;
+
+  process.on('unhandledRejection', (error) => {
+    console.error(error);
+  });
+
+  await app.listen(port);
 }
+
 bootstrap();
