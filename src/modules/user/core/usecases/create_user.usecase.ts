@@ -9,8 +9,10 @@ export class CreateUserUsecase {
   public async execute(params: UserModelParams): Promise<UserModel> {
     type CreateUserParams = Pick<
       UserModelParams,
-      'email' | 'userName' | 'fullName' | 'role' | 'created_by'
+      'email' | 'username' | 'fullName' | 'role' | 'created_by' | 'isActive'
     >;
+
+    params['isActive'] = true;
 
     const newUser = new UserModel(params as CreateUserParams);
     await this.userRepo.create(newUser);

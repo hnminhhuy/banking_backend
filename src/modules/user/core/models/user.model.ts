@@ -5,7 +5,7 @@ import { UserRole } from '../enums/user_role';
 export interface UserModelParams extends BaseModelParams {
   created_by: string | undefined;
   email: string;
-  userName: string;
+  username: string;
   password: string;
   fullName: string;
   role: UserRole;

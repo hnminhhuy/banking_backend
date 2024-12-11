@@ -8,16 +8,16 @@ export class UserEntity extends BaseEntity {
   @Column()
   email: string;
 
-  @Column('username')
+  @Column()
   username: string;
 
   @Column()
   password: string;
 
-  @Column('is_active')
+  @Column({ name: 'is_active' })
   isActive: boolean;
 
-  @Column('full_name')
+  @Column({ name: 'full_name' })
   fullName: string;
 
   @Column()
