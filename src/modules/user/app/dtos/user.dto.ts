@@ -3,34 +3,26 @@ import { IsBoolean, IsEmail, IsOptional, IsString } from 'class-validator';
 import { BaseDto } from 'src/common/dtos/base.dto';
 
 export class UserDto extends BaseDto {
-  @ApiProperty({ description: 'Username of the user', required: false })
+  @ApiProperty()
   @IsOptional()
   @IsString()
   userName?: string;
 
-  @ApiProperty({
-    description: 'Indicates if the user has verified their email',
-  })
+  @ApiProperty()
   @IsBoolean()
   verifiedEmail!: boolean;
 
-  @ApiProperty({
-    description: 'Student ID associated with the user',
-    required: false,
-  })
+  @ApiProperty()
   @IsOptional()
   @IsString()
   studentId?: string;
 
-  @ApiProperty({
-    description: 'Additional email associated with the user',
-    required: false,
-  })
+  @ApiProperty()
   @IsOptional()
   @IsString()
   additionalEmail?: string;
 
-  @ApiProperty({ description: 'Primary email of the user' })
+  @ApiProperty()
   @IsEmail()
   email!: string;
 }

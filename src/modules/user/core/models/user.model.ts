@@ -10,34 +10,19 @@ export interface UserModelParams extends BaseModelParams {
 }
 
 export class UserModel extends BaseModel {
-  @ApiProperty({
-    description: 'User name of the user',
-    required: false,
-    name: 'username',
-  })
+  @ApiProperty()
   public readonly userName: string | undefined;
 
-  @ApiProperty({
-    description: 'Indicates if the email is verified',
-    name: 'verified_email',
-  })
+  @ApiProperty()
   public readonly verifiedEmail: boolean;
 
-  @ApiProperty({
-    description: 'Student ID if applicable',
-    required: false,
-    name: 'student_id',
-  })
+  @ApiProperty()
   public readonly studentId: string | undefined;
 
-  @ApiProperty({
-    description: 'Additional email for the user if applicable',
-    required: false,
-    name: 'additional_email',
-  })
+  @ApiProperty()
   public readonly additionalEmail: string | undefined;
 
-  @ApiProperty({ description: 'Primary email of the user', name: 'email' })
+  @ApiProperty()
   public readonly email: string;
 
   constructor(params: Partial<UserModelParams>) {

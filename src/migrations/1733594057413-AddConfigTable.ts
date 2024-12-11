@@ -3,7 +3,7 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 export class AddConfigTable1733594057413 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     queryRunner.query(`
-        CREATE TABLE config (
+        CREATE TABLE configs (
         id SERIAL PRIMARY KEY,
         config_key VARCHAR(50) NOT NULL UNIQUE,
         config_value TEXT NOT NULL,
@@ -16,6 +16,6 @@ export class AddConfigTable1733594057413 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.query('DROP TABLE config');
+    queryRunner.query('DROP TABLE configs');
   }
 }

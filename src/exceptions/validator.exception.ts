@@ -12,7 +12,7 @@ export class ValidatorException extends BaseException {
 
   constructor({
     errors = [],
-    message = 'Unprocessable Entiy',
+    message = 'Unprocessable Entity',
     status = HttpStatus.UNPROCESSABLE_ENTITY,
     code = ERROR_CODES.VALIDATION_ERROR,
   }: IBaseValidatorException) {

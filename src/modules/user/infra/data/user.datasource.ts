@@ -11,7 +11,7 @@ export class UserDataSource {
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  public async create(user: UserModel) {
+  public async create(user: UserModel): Promise<void> {
     const newUser = this.userRepository.create(user);
     await this.userRepository.insert(newUser);
   }

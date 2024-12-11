@@ -7,13 +7,13 @@ export interface BaseModelParams {
 }
 
 export abstract class BaseModel {
-  @ApiProperty({ description: 'Unique identifier' })
+  @ApiProperty()
   public id: string;
 
-  @ApiProperty({ description: 'Timestamp of when the record was created' })
+  @ApiProperty()
   public createdAt: Date;
 
-  @ApiProperty({ description: 'Timestamp of when the record was last updated' })
+  @ApiProperty()
   public updatedAt: Date;
 
   constructor({ id, createdAt, updatedAt }: BaseModelParams) {
