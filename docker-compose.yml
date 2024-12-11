@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_MULTIPLE_DATABASES: buddyus
+      POSTGRES_MULTIPLE_DATABASES: banking_backend
     ports:
       - '5432:5432'
     volumes:

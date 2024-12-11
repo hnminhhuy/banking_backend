@@ -11,7 +11,6 @@ import swaggerConfig from 'src/config/swagger.config';
 import authConfig from 'src/config/auth.config';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
-import { UserModule } from 'src/modules/user/user.module';
 
 @Module({
   imports: [
@@ -34,7 +33,7 @@ import { UserModule } from 'src/modules/user/user.module';
         return addTransactionalDataSource(new DataSource(options));
       },
     }),
-    forwardRef(() => UserModule),
+    ,
   ],
   controllers: [AppController],
   providers: [],
