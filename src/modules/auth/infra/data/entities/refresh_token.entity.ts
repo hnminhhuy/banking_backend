@@ -10,10 +10,10 @@ export class RefreshTokenEntity {
   @Column({ name: 'refresh_token', type: 'varchar' })
   refreshToken!: string;
 
-  @Column({ name: 'user_id', type: 'uuid' })
+  @Column({ name: 'user_id', type: 'uuid', nullable: true })
   userId?: string;
 
-  @Column({ name: 'bank_id', type: 'uuid' })
+  @Column({ name: 'bank_id', type: 'uuid', nullable: true })
   bankId?: string;
 
   @Column()

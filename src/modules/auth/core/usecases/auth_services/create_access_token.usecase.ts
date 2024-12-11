@@ -6,6 +6,6 @@ import { PayloadModel } from '../../models/refresh_token.model';
 export class CreateAccessTokenUsecase {
   constructor(private readonly jwtService: JwtService) {}
   public async execute(payload: PayloadModel) {
-    return await this.jwtService.sign(payload);
+    return this.jwtService.sign(payload);
   }
 }

@@ -20,6 +20,7 @@ export class RefreshTokenDatasource {
     const entity = await this.refTokenRepository.findOne({
       where: [{ userId: userIdOrBankId }, { bankId: userIdOrBankId }],
     });
+    if (!entity) return undefined;
     return new RefreshTokenModel(entity);
   }
   public async deleteById(id: string): Promise<boolean> {

@@ -7,6 +7,8 @@ import {
 } from '../../models/refresh_token.model';
 import * as ms from 'ms';
 import { JwtService } from '@nestjs/jwt';
+import { AuthProvider } from '../../enums/auth.provider';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class CreateRefreshTokenUsecase {
@@ -17,23 +19,27 @@ export class CreateRefreshTokenUsecase {
   ) {}
 
   public async execute(
-    params: RefreshTokenModelParams,
+    userId: string,
+    provider: AuthProvider,
   ): Promise<RefreshTokenModel> {
-    const expiresIn = await this.configService.get<string>(
-      'auth.refreshTokenExpiresIn',
-    );
-    const expiresInMs = ms(expiresIn);
-
-    params['issuedAt'] = new Date();
-    params['expiredAt'] = new Date(Date.now() + expiresInMs);
-
-    const newRefreshToken = new RefreshTokenModel(params);
-    newRefreshToken.refreshToken = this.jwtService.sign(
-      { id: newRefreshToken.id },
+    const id = uuidv4();
+    const refreshToken = this.jwtService.sign(
+      { id: id },
       {
         expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN,
       },
     );
+    const params: RefreshTokenModelParams = {
+      id: id,
+      refreshToken: refreshToken,
+      userId: userId,
+      bankId: undefined,
+      issuedAt: new Date(),
+      provider: provider,
+    };
+
+    const newRefreshToken = new RefreshTokenModel(params);
+
     await this.refRepo.create(newRefreshToken);
     return newRefreshToken;
   }

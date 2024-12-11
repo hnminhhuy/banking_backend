@@ -34,10 +34,9 @@ export class RefreshTokenModel {
   public readonly provider: AuthProvider;
 
   @ApiProperty()
-  public readonly issuedId: Date;
+  public readonly issuedAt: Date;
 
   constructor(partial: Partial<RefreshTokenModel>) {
     Object.assign(this, partial);
-    this.id = this.id || uuidv4();
   }
 }
