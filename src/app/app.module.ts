@@ -12,6 +12,7 @@ import authConfig from 'src/config/auth.config';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
 import { UserModule } from 'src/modules/user/user.module';
+import { BankModule } from '../modules/bank/bank.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { UserModule } from 'src/modules/user/user.module';
       },
     }),
     forwardRef(() => UserModule),
+    forwardRef(() => BankModule),
   ],
   controllers: [AppController],
   providers: [],
