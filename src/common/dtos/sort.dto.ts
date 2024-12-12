@@ -1,7 +1,7 @@
 import { Transform } from 'class-transformer';
 import { IsEnum, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { SortOrder } from '../enums';
+import { SORT_DIRECTION } from '../enums';
 
 export class SortParamsDto {
   @ApiProperty()
@@ -9,7 +9,7 @@ export class SortParamsDto {
   sort!: string;
 
   @ApiProperty()
-  @IsEnum(SortOrder)
+  @IsEnum(SORT_DIRECTION)
   @Transform(({ value }) => value?.toUpperCase().trim())
-  type!: SortOrder;
+  direction!: SORT_DIRECTION;
 }

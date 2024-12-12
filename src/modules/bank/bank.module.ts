@@ -21,5 +21,6 @@ import { BankController } from './app/controller/customer/bank.controller';
     GetBankUsecase,
     ListBanksUsecase,
   ],
+  exports: [GetBankUsecase],
 })
 export class BankModule {}

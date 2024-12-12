@@ -33,7 +33,6 @@ export default {
           status: HttpStatus.OK,
           type: BankModel,
         },
-        { status: 400, description: 'Bad request.' },
       ],
     },
   },

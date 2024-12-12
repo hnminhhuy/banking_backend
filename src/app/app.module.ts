@@ -13,12 +13,14 @@ import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
 import { UserModule } from 'src/modules/user/user.module';
 import { BankModule } from '../modules/bank/bank.module';
+import { BankAccountModule } from '../modules/bank_account/bank_account.module';
+import constantConfig from '../config/constant.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [databaseConfig, swaggerConfig, authConfig],
+      load: [databaseConfig, swaggerConfig, authConfig, constantConfig],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -36,6 +38,7 @@ import { BankModule } from '../modules/bank/bank.module';
     }),
     forwardRef(() => UserModule),
     forwardRef(() => BankModule),
+    forwardRef(() => BankAccountModule),
   ],
   controllers: [AppController],
   providers: [],

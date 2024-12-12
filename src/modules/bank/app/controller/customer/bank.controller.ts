@@ -1,10 +1,10 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { GetBankUsecase, ListBanksUsecase } from '../../../core/usecases';
 import { Route } from '../../../../../decorators';
-import bankRoute from '../../routes/employee/bank.route';
+import bankRoute from '../../routes/customer/bank.route';
 import { GetBankDto, ListBankDto } from '../../dto';
 import { PageParams, SortParams } from '../../../../../common/models';
-import { BankSort } from '../../../core/enums/bank_sort';
+import { BANK_SORT_KEY as BANK_SORT_KEY } from '../../../core/enums/bank_sort_key';
 
 @Controller({ path: 'api/customer/v1/banks' })
 export class BankController {
@@ -22,9 +22,9 @@ export class BankController {
       query.onlyCount,
     );
 
-    const sortParams: SortParams<BankSort> = new SortParams(
-      query.sort as BankSort,
-      query.type,
+    const sortParams: SortParams<BANK_SORT_KEY> = new SortParams(
+      query.sort as BANK_SORT_KEY,
+      query.direction,
     );
     const banks = await this.listBanksUsecase.execute(pageParams, sortParams);
 

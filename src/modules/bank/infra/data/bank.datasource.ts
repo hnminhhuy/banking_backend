@@ -4,7 +4,7 @@ import { BankEntity } from './entities/bank.entity';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { BankModel } from '../../core/models/bank.model';
 import { Page, PageParams, SortParams } from '../../../../common/models';
-import { BankSort } from '../../core/enums/bank_sort';
+import { BANK_SORT_KEY } from '../../core/enums/bank_sort_key';
 
 @Injectable()
 export class BankDatasource {
@@ -29,17 +29,17 @@ export class BankDatasource {
 
     if (relations) {
       relations.forEach((relation) => {
-        query.leftJoinAndSelect(`users.${relation}`, relation);
+        query.leftJoinAndSelect(`banks.${relation}`, relation);
       });
     }
 
     const entity = await query.getOne();
-    return new BankModel(entity);
+    return entity ? new BankModel(entity) : undefined;
   }
 
   public async list(
     pageParams: PageParams,
-    sortParams: SortParams<BankSort> | undefined,
+    sortParams: SortParams<BANK_SORT_KEY> | undefined,
     relations: string[] | undefined = undefined,
   ): Promise<Page<BankModel>> {
     const condition: FindOptionsWhere<BankEntity> = {};
