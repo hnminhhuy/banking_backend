@@ -1,17 +1,33 @@
 services:
+  main:
+    image: ${APP_NAME}/main:18-alpine
+    build:
+      context: .
+    command: >
+      /bin/sh -c "npm install &&
+                  npm run build &&
+                  npm run typeorm:migration:run &&
+                  npm run start:debug"
+    restart: on-failure
+    ports:
+      - '${APP_PORT}:${APP_PORT}'
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - postgres
   postgres:
     image: postgres:alpine
-    container_name: banking_postgres
-    restart: always
+    container_name: postgres
+    restart: on-failure
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_MULTIPLE_DATABASES: banking_backend
+      POSTGRES_USER: ${PG_USERNAME}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_MULTIPLE_DATABASES: ${PG_DATABASE}
     ports:
-      - '5432:5432'
+      - '${PG_PORT}:5432'
     volumes:
       - ./multi_pg_databases:/docker-entrypoint-initdb.d
-      - baking_postgres:/var/lib/postgresql/data
+      - banking_postgres:/var/lib/postgresql/data
 
 volumes:
   banking_postgres:

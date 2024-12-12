@@ -4,12 +4,21 @@ import { UserEntity } from './infra/data/entities/user.entity';
 import { IUserRepo } from './core/repositories/user.irepo';
 import { UserRepo } from './infra/data/repositories/user.repo';
 import { UserDatasource } from './infra/data/user.datasource';
-import { CreateUserUsecase } from './core/usecases/create_user.usecase';
-import { GetUserUsecase } from './core/usecases/get_user.usecase';
+import {
+  CreateUserUsecase,
+  GetUserUsecase,
+  UpdateUserPassword,
+  UpdateUserUsecase,
+} from './core/usecases';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity])],
-  exports: [CreateUserUsecase],
+  exports: [
+    CreateUserUsecase,
+    UpdateUserUsecase,
+    GetUserUsecase,
+    UpdateUserPassword,
+  ],
   providers: [
     {
       provide: IUserRepo,
@@ -18,6 +27,8 @@ import { GetUserUsecase } from './core/usecases/get_user.usecase';
     UserDatasource,
     CreateUserUsecase,
     GetUserUsecase,
+    UpdateUserUsecase,
+    UpdateUserPassword,
   ],
   controllers: [],
 })

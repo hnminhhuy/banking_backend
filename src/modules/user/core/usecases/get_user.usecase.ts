@@ -9,7 +9,7 @@ export class GetUserUsecase {
   public async execute(
     key: string,
     value: unknown,
-    relations: string[] | undefined,
+    relations: string[] | undefined = undefined,
   ): Promise<UserModel | undefined> {
     return this.userRepo.getUserBy(key, value, relations);
   }
