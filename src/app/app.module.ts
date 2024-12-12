@@ -11,6 +11,7 @@ import swaggerConfig from 'src/config/swagger.config';
 import authConfig from 'src/config/auth.config';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
+import { UserModule } from 'src/modules/user/user.module';
 
 @Module({
   imports: [
@@ -29,10 +30,10 @@ import { DataSource } from 'typeorm';
         if (!options) {
           throw new Error('Configuration options are required.');
         }
-
         return addTransactionalDataSource(new DataSource(options));
       },
     }),
+    forwardRef(() => UserModule),
   ],
   controllers: [AppController],
   providers: [],

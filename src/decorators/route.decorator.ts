@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Patch,
   Post,
   Put,
   RequestMethod,
@@ -32,6 +33,7 @@ export function Route({
     [RequestMethod.PUT]: Put,
     [RequestMethod.POST]: Post,
     [RequestMethod.DELETE]: Delete,
+    [RequestMethod.PATCH]: Patch,
   };
 
   const decorators = [
