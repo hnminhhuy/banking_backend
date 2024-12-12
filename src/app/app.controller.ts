@@ -7,7 +7,10 @@ import {
 } from '@nestjs/common';
 import { isDevelopmentEnv } from 'src/common/helpers/env.helper';
 import { Route } from 'src/decorators';
-import { UserModelParams } from 'src/modules/user/core/models/user.model';
+import {
+  UserModel,
+  UserModelParams,
+} from 'src/modules/user/core/models/user.model';
 import {
   CreateUserUsecase,
   UpdateUserUsecase,
@@ -25,7 +28,10 @@ export class AppController {
     return 'OK!';
   }
 
-  @Route({ path: '/api/dump', method: RequestMethod.POST })
+  @Route({
+    path: '/api/dump',
+    method: RequestMethod.POST,
+  })
   async apiCreateDump(@Body() body: UserModelParams) {
     if (!isDevelopmentEnv) {
       throw new ForbiddenException();
