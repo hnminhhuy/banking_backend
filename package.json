@@ -1,8 +1,8 @@
 {
-  "name": "buddy-backend",
+  "name": "nh-bank-backend",
   "version": "0.0.1",
   "description": "",
-  "author": "Fipi Team",
+  "author": "NH Bank",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

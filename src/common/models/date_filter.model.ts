@@ -1,12 +1,12 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  Between,
+  FindOperator,
+  LessThanOrEqual,
+  MoreThanOrEqual,
+} from 'typeorm';
 
-export interface DateFilterModelParams {
-  from?: Date;
-  to?: Date;
-  column?: string;
-}
-
-export class DateFilterModel {
+export class DateFilter {
   @ApiPropertyOptional({ type: Date, description: 'Start date' })
   public readonly from: Date | undefined;
 
@@ -16,9 +16,23 @@ export class DateFilterModel {
   @ApiPropertyOptional({ description: 'Column name for filtering' })
   public readonly column: string | undefined;
 
-  constructor({ from, to, column }: DateFilterModelParams) {
+  constructor(
+    from: Date | undefined,
+    to: Date | undefined,
+    column: string | undefined,
+  ) {
     this.from = from;
     this.to = to;
     this.column = column;
+  }
+
+  public toFindCondition(): FindOperator<Date> | undefined {
+    if (this.from && this.to) {
+      return Between(this.from, this.to);
+    } else if (this.from) {
+      return MoreThanOrEqual(this.from);
+    } else if (this.to) {
+      return LessThanOrEqual(this.to);
+    }
   }
 }

@@ -5,6 +5,7 @@ import { IBankRepo } from './core/repositories/bank.irepo';
 import { BankRepo } from './infra/data/repositories/bank.repo';
 import { BankDatasource } from './infra/data/bank.datasource';
 import { CreateBankUsecase, GetBankUsecase } from './core/usecases';
+import { ListBanksUsecase } from './core/usecases/list-banks.usecase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([BankEntity])],
@@ -17,6 +18,7 @@ import { CreateBankUsecase, GetBankUsecase } from './core/usecases';
     BankDatasource,
     CreateBankUsecase,
     GetBankUsecase,
+    ListBanksUsecase,
   ],
 })
 export class BankModule {}

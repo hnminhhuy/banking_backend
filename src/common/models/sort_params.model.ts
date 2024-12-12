@@ -1,11 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export interface SortParamsModelParams<T> {
-  sort: T;
-  dir: 'ASC' | 'DESC';
-}
-
-export class SortParamsModel<T> {
+export class SortParams<T> {
   @ApiProperty({ description: 'The field by which to sort' })
   public readonly sort: T;
 
@@ -15,8 +10,8 @@ export class SortParamsModel<T> {
   })
   public readonly dir: 'ASC' | 'DESC';
 
-  constructor({ sort, dir }: SortParamsModelParams<T>) {
+  constructor(sort: T, dir: string | undefined) {
     this.sort = sort;
-    this.dir = dir;
+    this.dir = <'ASC' | 'DESC'>dir?.toUpperCase() ?? 'ASC';
   }
 }

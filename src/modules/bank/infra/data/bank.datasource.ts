@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BankEntity } from './entities/bank.entity';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { BankModel } from '../../core/models/bank.model';
+import { Page, PageParams, SortParams } from '../../../../common/models';
+import { BankSort } from '../../core/enums/bank_sort';
 
 @Injectable()
 export class BankDatasource {
@@ -33,5 +35,41 @@ export class BankDatasource {
 
     const entity = await query.getOne();
     return new BankModel(entity);
+  }
+
+  public async list(
+    pageParams: PageParams,
+    sortParams: SortParams<BankSort> | undefined,
+    relations: string[] | undefined = undefined,
+  ): Promise<Page<BankModel>> {
+    const condition: FindOptionsWhere<BankEntity> = {};
+    const orderBy: Record<any, any> = {};
+
+    if (sortParams) {
+      orderBy[sortParams.sort] = sortParams.dir;
+    }
+    const query = this.bankRepo.createQueryBuilder();
+
+    query.setFindOptions({
+      where: condition,
+      relations: relations,
+      skip: pageParams.limit * (pageParams.page - 1),
+      take: pageParams.limit,
+      order: orderBy,
+    });
+
+    let totalCount;
+    if (pageParams.needTotalCount) {
+      totalCount = await query.getCount();
+    }
+
+    let banks: BankEntity[] = [];
+    if (!pageParams.onlyCount) {
+      banks = await query.getMany();
+    }
+
+    const bankModels = banks.map((bank) => new BankModel(bank));
+
+    return new Page(pageParams.page, totalCount, bankModels);
   }
 }
