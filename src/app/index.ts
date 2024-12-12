@@ -11,11 +11,6 @@ export const initApplication = async (): Promise<INestApplication> => {
 
   const configService = app.get(ConfigService);
 
-  app.enableVersioning({
-    type: VersioningType.URI,
-    prefix: 'api/v',
-  });
-
   await configAppInterceptor(app);
   await configAppException(app);
   await configAppDocument(app, configService);

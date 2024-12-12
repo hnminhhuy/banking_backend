@@ -34,7 +34,7 @@ export class BankDatasource {
     }
 
     const entity = await query.getOne();
-    return new BankModel(entity);
+    return entity ? new BankModel(entity) : undefined;
   }
 
   public async list(
@@ -46,7 +46,7 @@ export class BankDatasource {
     const orderBy: Record<any, any> = {};
 
     if (sortParams) {
-      orderBy[sortParams.sort] = sortParams.dir;
+      orderBy[sortParams.sort] = sortParams.direction;
     }
     const query = this.bankRepo.createQueryBuilder();
 
