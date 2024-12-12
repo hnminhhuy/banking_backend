@@ -18,7 +18,11 @@ export class RefreshTokenDatasource {
     userIdOrBankId: string,
   ): Promise<RefreshTokenModel | undefined> {
     const entity = await this.refTokenRepository.findOne({
-      where: [{ userId: userIdOrBankId }, { bankId: userIdOrBankId }],
+      where: [
+        { userId: userIdOrBankId },
+        { bankId: userIdOrBankId },
+        { id: userIdOrBankId },
+      ],
     });
     if (!entity) return undefined;
     return new RefreshTokenModel(entity);

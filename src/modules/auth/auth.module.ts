@@ -15,6 +15,8 @@ import { GetRefreshTokenUsecase } from './core/usecases/refresh_tokens/get_refre
 import { CreateAccessTokenUsecase } from './core/usecases/auth_services/create_access_token.usecase';
 import { VerifyTokenUsecase } from './core/usecases/auth_services/verify_token.usecase';
 import { LoginUsecase } from './core/usecases/login.usecase';
+import { RefreshAccessTokenUsecase } from './core/usecases/auth_services/refresh_access_token_usecase';
+import { RoleAuthGuard } from './core/guards/auth.guard';
 
 @Module({
   imports: [
@@ -35,11 +37,14 @@ import { LoginUsecase } from './core/usecases/login.usecase';
   ],
   controllers: [AuthController],
   providers: [
+    RoleAuthGuard,
     {
       provide: IRefreshTokenRepo,
       useClass: RefreshTokenRepo,
     },
     RefreshTokenDatasource,
+    VerifyTokenUsecase,
+    RefreshAccessTokenUsecase,
     CreateRefreshTokenUsecase,
     GetRefreshTokenUsecase,
     CreateAccessTokenUsecase,

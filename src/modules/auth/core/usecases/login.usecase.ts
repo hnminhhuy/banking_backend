@@ -23,7 +23,6 @@ export class LoginUsecase {
     if (!user.verifyPassword(password)) throw new BadRequestException();
 
     let refreshToken = await this.getRefreshTokenUsecase.execute(user.id);
-    console.log('new: ', refreshToken);
 
     if (!refreshToken) {
       refreshToken = await this.createRefreshTokenUsecase.execute(
