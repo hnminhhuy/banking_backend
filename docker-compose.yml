@@ -27,7 +27,7 @@ services:
       - '${PG_PORT}:5432'
     volumes:
       - ./multi_pg_databases:/docker-entrypoint-initdb.d
-      - baking_postgres:/var/lib/postgresql/data
+      - banking_postgres:/var/lib/postgresql/data
 
 volumes:
   banking_postgres:
