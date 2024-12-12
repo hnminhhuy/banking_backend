@@ -9,10 +9,8 @@ export class RefreshTokenRepo implements IRefreshTokenRepo {
   public async create(refreshToken: RefreshTokenModel): Promise<void> {
     await this.refTokenDatasource.create(refreshToken);
   }
-  public async get(
-    userIdOrBankId: string,
-  ): Promise<RefreshTokenModel | undefined> {
-    return await this.refTokenDatasource.get(userIdOrBankId);
+  public async get(idOrAuthId: string): Promise<RefreshTokenModel | undefined> {
+    return await this.refTokenDatasource.get(idOrAuthId);
   }
   public async deleteById(id: string): Promise<boolean> {
     return await this.refTokenDatasource.deleteById(id);

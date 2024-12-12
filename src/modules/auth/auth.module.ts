@@ -15,8 +15,10 @@ import { GetRefreshTokenUsecase } from './core/usecases/refresh_tokens/get_refre
 import { CreateAccessTokenUsecase } from './core/usecases/auth_services/create_access_token.usecase';
 import { VerifyTokenUsecase } from './core/usecases/auth_services/verify_token.usecase';
 import { LoginUsecase } from './core/usecases/login.usecase';
-import { RefreshAccessTokenUsecase } from './core/usecases/auth_services/refresh_access_token_usecase';
-import { RoleAuthGuard } from './core/guards/auth.guard';
+import { RefreshAccessTokenUsecase } from './core/usecases/auth_services/refresh_access_token.usecase';
+import { RoleAuthGuard } from './core/guards/role_auth.guard';
+import { JwtUserStrategy } from './strategies/jwt_user.strategy';
+import { DeleteRefreshTokenUsecase } from './core/usecases/refresh_tokens/delete_refresh_token.usecase';
 
 @Module({
   imports: [
@@ -38,6 +40,7 @@ import { RoleAuthGuard } from './core/guards/auth.guard';
   controllers: [AuthController],
   providers: [
     RoleAuthGuard,
+    JwtUserStrategy,
     {
       provide: IRefreshTokenRepo,
       useClass: RefreshTokenRepo,
@@ -46,6 +49,7 @@ import { RoleAuthGuard } from './core/guards/auth.guard';
     VerifyTokenUsecase,
     RefreshAccessTokenUsecase,
     CreateRefreshTokenUsecase,
+    DeleteRefreshTokenUsecase,
     GetRefreshTokenUsecase,
     CreateAccessTokenUsecase,
     VerifyTokenUsecase,

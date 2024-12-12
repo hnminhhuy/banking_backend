@@ -14,15 +14,9 @@ export class RefreshTokenDatasource {
     const newRefreshToken = this.refTokenRepository.create(refreshToken);
     await this.refTokenRepository.insert(newRefreshToken);
   }
-  public async get(
-    userIdOrBankId: string,
-  ): Promise<RefreshTokenModel | undefined> {
+  public async get(idOrAuthId: string): Promise<RefreshTokenModel | undefined> {
     const entity = await this.refTokenRepository.findOne({
-      where: [
-        { userId: userIdOrBankId },
-        { bankId: userIdOrBankId },
-        { id: userIdOrBankId },
-      ],
+      where: [{ authId: idOrAuthId }, { id: idOrAuthId }],
     });
     if (!entity) return undefined;
     return new RefreshTokenModel(entity);

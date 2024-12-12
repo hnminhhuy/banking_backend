@@ -31,8 +31,8 @@ export class LoginUsecase {
       );
     }
     const accessToken = await this.createAccessTokenUsecase.execute({
-      userId: user.id,
-      bankId: undefined,
+      authId: user.id,
+      userRole: user.role,
       provider: AuthProvider.USER,
     });
     return {

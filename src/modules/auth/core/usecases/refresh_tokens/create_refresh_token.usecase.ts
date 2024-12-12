@@ -32,8 +32,7 @@ export class CreateRefreshTokenUsecase {
     const params: RefreshTokenModelParams = {
       id: id,
       refreshToken: refreshToken,
-      userId: userId,
-      bankId: undefined,
+      authId: userId,
       issuedAt: new Date(),
       provider: provider,
     };

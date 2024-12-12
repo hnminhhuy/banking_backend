@@ -1,9 +1,10 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { LoginUsecase } from '../../core/usecases/login.usecase';
 import { LoginDto } from '../dtos/auth.dto';
-import { RefreshAccessTokenUsecase } from '../../core/usecases/auth_services/refresh_access_token_usecase';
-import { RoleAuthGuard } from '../../core/guards/auth.guard';
+import { RefreshAccessTokenUsecase } from '../../core/usecases/auth_services/refresh_access_token.usecase';
+
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Public')
 @Controller({ path: 'api/user/v1' })
@@ -23,22 +24,18 @@ export class AuthController {
     return bearerToken;
   }
 
-  @ApiBearerAuth()
-  @UseGuards(RoleAuthGuard)
   @Post('/refresh')
-  @ApiBody({
-    description: 'Thông tin của người dùng mới',
-    schema: {
-      example: {
-        refreshToken: 'string',
-      },
-    },
-  })
-  async refresh(@Body() body: { refreshToken: string }) {
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt_user'))
+  async refresh(@Req() req) {
     const newAccessToken = await this.refreshAccessTokenUsecase.execute(
-      body.refreshToken,
+      req.user.id,
     );
-
     return { accessToken: newAccessToken }; // Send the new access token in response
   }
+
+  //Authorization
+  // @Get()
+  // @UserRoles(UserRoles.Admin) or @UserRoles(Roles.Admin, Roles.Manager)
+  // @UseGuards(RoleAuthGuard)
 }
