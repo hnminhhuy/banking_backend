@@ -33,7 +33,6 @@ import { DataSource } from 'typeorm';
         return addTransactionalDataSource(new DataSource(options));
       },
     }),
-    ,
   ],
   controllers: [AppController],
   providers: [],
