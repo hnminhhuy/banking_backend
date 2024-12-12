@@ -5,10 +5,19 @@ import {
   UserModel,
   UserModelParams,
 } from 'src/modules/user/core/models/user.model';
+import { PageParams, SortParams, Page } from 'src/common/models';
+import { UserSort } from 'src/modules/user/core/enums/user_sort';
 
 @Injectable()
 export class UserRepo implements IUserRepo {
   constructor(private readonly userDatasource: UserDatasource) {}
+  public async list(
+    pageParams: PageParams,
+    sortParams: SortParams<UserSort>,
+    relations: string[] | undefined,
+  ): Promise<Page<UserModel>> {
+    return await this.userDatasource.list(pageParams, sortParams, relations);
+  }
   public async update(
     id: string,
     updatedFields: Partial<UserModelParams>,
