@@ -14,8 +14,8 @@ export class UserEntity extends BaseEntity {
   @Column()
   password: string;
 
-  @Column({ name: 'is_active' })
-  isActive: boolean;
+  @Column({ name: 'is_blocked' })
+  isBlocked: boolean;
 
   @Column({ name: 'fullname' })
   fullName: string;

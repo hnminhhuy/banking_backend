@@ -9,10 +9,10 @@ export class CreateUserUsecase {
   public async execute(params: UserModelParams): Promise<UserModel> {
     type CreateUserParams = Pick<
       UserModelParams,
-      'email' | 'username' | 'fullName' | 'role' | 'createdBy' | 'isActive'
+      'email' | 'username' | 'fullName' | 'role' | 'createdBy' | 'isBlocked'
     >;
 
-    params['isActive'] = false;
+    params['isBlocked'] = false;
     params['password'] = await UserModel.hashPassword(params['password']);
 
     const newUser = new UserModel(params as CreateUserParams);

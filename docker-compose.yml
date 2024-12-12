@@ -25,7 +25,6 @@ services:
       POSTGRES_USER: ${PG_USERNAME}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_MULTIPLE_DATABASES: ${PG_DATABASE}
-      TZ: Asia/Ho_Chi_Minh
     ports:
       - '${PG_PORT}:5432'
     volumes:
