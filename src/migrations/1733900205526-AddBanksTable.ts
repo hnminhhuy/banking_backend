@@ -33,6 +33,7 @@ export class AddBanksTable1733900205526 implements MigrationInterface {
           {
             name: 'logo_url',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'created_at',
