@@ -1,5 +1,11 @@
 FROM node:18-alpine
 
+# Cài đặt múi giờ và cấu hình
+RUN apk add --no-cache tzdata
+
+# Cấu hình múi giờ cho container
+ENV TZ=Asia/Ho_Chi_Minh
+
 # Set the working directory inside the container
 WORKDIR /var/www
 
@@ -17,6 +23,8 @@ RUN npm run build
 
 # Run migrations (optional, if needed)
 RUN npm run typeorm:migration:run
+
+RUN ln -snf /usr/share/zoneinfo/Asia/Ho_Chi_Minh /etc/localtime && echo "Asia/Ho_Chi_Minh" > /etc/timezone
 
 # Start the application in debug mode
 CMD ["npm", "run", "start:debug"]
