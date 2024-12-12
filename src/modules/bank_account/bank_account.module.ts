@@ -10,13 +10,14 @@ import {
 } from './core/usecases';
 import { BankAccountEntity } from './infra/data/entities/bank_account.entity';
 import { BankModule } from '../bank/bank.module';
+import { BankAccountControllerByCustomer } from './app/controller';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([BankAccountEntity]),
     forwardRef(() => BankModule),
   ],
-  controllers: [],
+  controllers: [BankAccountControllerByCustomer],
   providers: [
     {
       provide: IBankAccountRepo,

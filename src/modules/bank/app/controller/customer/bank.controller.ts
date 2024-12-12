@@ -1,10 +1,10 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { GetBankUsecase, ListBanksUsecase } from '../../../core/usecases';
 import { Route } from '../../../../../decorators';
-import bankRoute from '../../routes/customer/bank.route';
 import { GetBankDto, ListBankDto } from '../../dto';
 import { PageParams, SortParams } from '../../../../../common/models';
 import { BANK_SORT_KEY as BANK_SORT_KEY } from '../../../core/enums/bank_sort_key';
+import bankRoute from '../../routes/customer/bank.route';
 
 @Controller({ path: 'api/customer/v1/banks' })
 export class BankController {
