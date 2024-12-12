@@ -20,10 +20,10 @@ export class PaginationDto {
   @ApiProperty()
   @Transform((value: any) => parseBoolean(value.obj?.need_total_count, false))
   @IsBoolean()
-  need_total_count!: boolean;
+  needTotalCount!: boolean;
 
   @ApiProperty()
   @Transform((value: any) => parseBoolean(value.obj?.only_count, false))
   @IsBoolean()
-  only_count!: boolean;
+  onlyCount!: boolean;
 }

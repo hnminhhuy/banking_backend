@@ -27,7 +27,7 @@ export class AddBanksTable1733900205526 implements MigrationInterface {
           },
           {
             name: 'public_key',
-            type: 'varchar',
+            type: 'text',
             isUnique: true,
           },
           {

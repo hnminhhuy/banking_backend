@@ -6,10 +6,11 @@ import { BankRepo } from './infra/data/repositories/bank.repo';
 import { BankDatasource } from './infra/data/bank.datasource';
 import { CreateBankUsecase, GetBankUsecase } from './core/usecases';
 import { ListBanksUsecase } from './core/usecases/list-banks.usecase';
+import { BankController } from './app/controller/customer/bank.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([BankEntity])],
-  controllers: [],
+  controllers: [BankController],
   providers: [
     {
       provide: IBankRepo,

@@ -13,7 +13,7 @@ export class BankEntity extends BaseEntity {
   @Column({ name: 'short_name' })
   shortName!: string;
 
-  @Column({ name: 'public_key' })
+  @Column({ type: 'text', name: 'public_key' })
   publicKey!: string;
 
   @Column({ name: 'logo_url' })
