@@ -10,14 +10,21 @@ import {
 } from './core/usecases';
 import { BankAccountEntity } from './infra/data/entities/bank_account.entity';
 import { BankModule } from '../bank/bank.module';
-import { BankAccountControllerByCustomer } from './app/controller';
+import {
+  BankAccountControllerByCustomer,
+  BankAccountControllerByEmployee,
+} from './app/controller';
+import { ListBankAccountsUsecase } from './core/usecases/list_bank_account.usecase';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([BankAccountEntity]),
     forwardRef(() => BankModule),
   ],
-  controllers: [BankAccountControllerByCustomer],
+  controllers: [
+    BankAccountControllerByCustomer,
+    BankAccountControllerByEmployee,
+  ],
   providers: [
     {
       provide: IBankAccountRepo,
@@ -27,6 +34,7 @@ import { BankAccountControllerByCustomer } from './app/controller';
     CreateBankAccountUsecase,
     GetBankAccountUsecase,
     ChangeBalanceUsecase,
+    ListBankAccountsUsecase,
   ],
   exports: [GetBankAccountUsecase],
 })
