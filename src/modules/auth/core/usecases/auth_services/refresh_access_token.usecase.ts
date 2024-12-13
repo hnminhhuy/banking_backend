@@ -17,7 +17,10 @@ export class RefreshAccessTokenUsecase {
 
   public async execute(id: string): Promise<string> {
     //Check if refresh token in DB
-    const validRefreshToken = await this.getRefreshTokenUsecase.execute(id);
+    const validRefreshToken = await this.getRefreshTokenUsecase.execute(
+      'id',
+      id,
+    );
     if (!validRefreshToken) throw ForbiddenException;
     const user = await this.getUserUsecase.execute(
       'id',

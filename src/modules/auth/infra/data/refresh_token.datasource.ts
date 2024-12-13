@@ -14,10 +14,14 @@ export class RefreshTokenDatasource {
     const newRefreshToken = this.refTokenRepository.create(refreshToken);
     await this.refTokenRepository.insert(newRefreshToken);
   }
-  public async get(idOrAuthId: string): Promise<RefreshTokenModel | undefined> {
-    const entity = await this.refTokenRepository.findOne({
-      where: [{ authId: idOrAuthId }, { id: idOrAuthId }],
-    });
+  public async get(
+    key: string,
+    value: unknown,
+  ): Promise<RefreshTokenModel | undefined> {
+    const query = this.refTokenRepository.createQueryBuilder('refresh_tokens');
+
+    query.where(`refresh_tokens.${key} = :value`, { value });
+    const entity = await query.getOne();
     if (!entity) return undefined;
     return new RefreshTokenModel(entity);
   }

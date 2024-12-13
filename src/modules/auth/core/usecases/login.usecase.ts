@@ -22,7 +22,10 @@ export class LoginUsecase {
     if (!user) throw new NotFoundException();
     if (!user.verifyPassword(password)) throw new BadRequestException();
 
-    let refreshToken = await this.getRefreshTokenUsecase.execute(user.id);
+    let refreshToken = await this.getRefreshTokenUsecase.execute(
+      'auth_id',
+      user.id,
+    );
 
     if (!refreshToken) {
       refreshToken = await this.createRefreshTokenUsecase.execute(

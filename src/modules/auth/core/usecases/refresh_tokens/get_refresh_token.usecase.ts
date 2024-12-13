@@ -6,8 +6,9 @@ import { RefreshTokenModel } from '../../models/refresh_token.model';
 export class GetRefreshTokenUsecase {
   constructor(private readonly refTokenRepo: IRefreshTokenRepo) {}
   public async execute(
-    idOrAuthId: string,
+    key: string,
+    value: unknown,
   ): Promise<RefreshTokenModel | undefined> {
-    return await this.refTokenRepo.get(idOrAuthId);
+    return await this.refTokenRepo.get(key, value);
   }
 }
