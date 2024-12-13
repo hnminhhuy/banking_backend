@@ -5,6 +5,9 @@ import { Column, Entity } from 'typeorm';
 
 @Entity('users')
 export class UserEntity extends BaseEntity {
+  @Column({ name: 'created_by' })
+  createdBy: string | undefined;
+
   @Column()
   email: string;
 
@@ -14,8 +17,8 @@ export class UserEntity extends BaseEntity {
   @Column()
   password: string;
 
-  @Column({ name: 'is_active' })
-  isActive: boolean;
+  @Column({ name: 'is_blocked' })
+  isBlocked: boolean;
 
   @Column({ name: 'fullname' })
   fullName: string;
