@@ -12,6 +12,7 @@ import {
   UpdateUserUsecase,
 } from './core/usecases';
 import { UserControllerByAdmin } from './app/controller';
+import { UserControllerByEmployee } from './app/controller/employee/employee.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity])],
@@ -33,6 +34,6 @@ import { UserControllerByAdmin } from './app/controller';
     UpdateUserPassword,
     ListUserUsecase,
   ],
-  controllers: [UserControllerByAdmin],
+  controllers: [UserControllerByAdmin, UserControllerByEmployee],
 })
 export class UserModule {}

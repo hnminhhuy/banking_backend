@@ -15,7 +15,6 @@ export class UserDatasource {
   ) {}
 
   public async create(user: UserModel): Promise<void> {
-    console.log(user);
     const newUser = this.userRepo.create(user);
     await this.userRepo.insert(newUser);
   }

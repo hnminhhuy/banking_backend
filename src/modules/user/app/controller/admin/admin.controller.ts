@@ -32,9 +32,6 @@ export class UserControllerByAdmin {
       query.direction,
     );
 
-    console.log(pageParams);
-    console.log(sortParams);
-
     const users = await this.listUsersUsecase.execute(
       query.role,
       pageParams,
