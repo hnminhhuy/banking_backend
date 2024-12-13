@@ -32,7 +32,6 @@ export class SendMailUseCase {
     }
 
     const htmlContent = await this.mailService.renderTemplate(templateName, data);
-
     return this.mailService.sendMail(to, subject, htmlContent);
   }
 }

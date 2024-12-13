@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import * as Handlebars from 'handlebars';
 import * as fs from 'fs';
 import * as path from 'path';
+import { cwd } from 'process';
 
 @Injectable()
 export class MailService {
@@ -36,7 +37,7 @@ export class MailService {
   }
 
   async renderTemplate(templateName: string, data: any): Promise<string> {
-    const templatePath = path.join(__dirname, '..', 'templates', `${templateName}.hbs`);
+    const templatePath = path.join(cwd(),  'dist/src/modules/mail/core/templates/', `${templateName}.hbs`);
     const templateContent = fs.readFileSync(templatePath, 'utf-8');
     const template = Handlebars.compile(templateContent);
     return template(data);
