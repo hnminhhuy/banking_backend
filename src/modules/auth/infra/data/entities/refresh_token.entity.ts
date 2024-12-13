@@ -10,8 +10,8 @@ export class RefreshTokenEntity {
   @Column({ name: 'refresh_token', type: 'varchar' })
   refreshToken!: string;
 
-  @Column({ name: 'auth_id', type: 'uuid', nullable: true })
-  authId?: string;
+  @Column({ name: 'auth_id', type: 'uuid' })
+  authId!: string;
 
   @Column()
   provider!: AuthProvider;

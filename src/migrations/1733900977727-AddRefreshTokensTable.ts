@@ -1,9 +1,4 @@
-import {
-  MigrationInterface,
-  QueryRunner,
-  Table,
-  TableForeignKey,
-} from 'typeorm';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class AddRefreshTokensTable1733900977727 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -13,7 +8,7 @@ export class AddRefreshTokensTable1733900977727 implements MigrationInterface {
         columns: [
           { name: 'id', type: 'uuid', isPrimary: true },
           { name: 'refresh_token', type: 'varchar' },
-          { name: 'auth_id', type: 'uuid', isNullable: true },
+          { name: 'auth_id', type: 'uuid' },
           { name: 'provider', type: 'varchar' },
           { name: 'issued_at', type: 'timestamp', default: 'NOW()' },
         ],

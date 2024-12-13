@@ -10,15 +10,17 @@ import { AuthController } from './app/controller/auth.controller';
 import { IRefreshTokenRepo } from './core/repositories/refresh_token.irepo';
 import { RefreshTokenRepo } from './infra/repositories/refresh_token.repo';
 import { RefreshTokenDatasource } from './infra/data/refresh_token.datasource';
-import { CreateRefreshTokenUsecase } from './core/usecases/refresh_tokens/create_refresh_token.usecase';
-import { GetRefreshTokenUsecase } from './core/usecases/refresh_tokens/get_refresh_token.usecase';
-import { CreateAccessTokenUsecase } from './core/usecases/auth_services/create_access_token.usecase';
-import { VerifyTokenUsecase } from './core/usecases/auth_services/verify_token.usecase';
-import { LoginUsecase } from './core/usecases/login.usecase';
-import { RefreshAccessTokenUsecase } from './core/usecases/auth_services/refresh_access_token.usecase';
 import { RoleAuthGuard } from './core/guards/role_auth.guard';
 import { JwtUserStrategy } from './strategies/jwt_user.strategy';
-import { DeleteRefreshTokenUsecase } from './core/usecases/refresh_tokens/delete_refresh_token.usecase';
+import {
+  CreateAccessTokenUsecase,
+  CreateRefreshTokenUsecase,
+  DeleteRefreshTokenUsecase,
+  GetRefreshTokenUsecase,
+  LoginUsecase,
+  RefreshAccessTokenUsecase,
+  VerifyTokenUsecase,
+} from './core/usecases';
 
 @Module({
   imports: [

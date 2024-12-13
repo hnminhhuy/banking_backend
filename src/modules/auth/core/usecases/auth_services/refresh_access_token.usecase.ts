@@ -1,10 +1,11 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { CreateAccessTokenUsecase } from './create_access_token.usecase';
-import { VerifyTokenUsecase } from './verify_token.usecase';
-import { GetRefreshTokenUsecase } from '../refresh_tokens/get_refresh_token.usecase';
 import { AuthProvider } from '../../enums/auth.provider';
+import {
+  CreateAccessTokenUsecase,
+  DeleteRefreshTokenUsecase,
+  GetRefreshTokenUsecase,
+} from '..';
 import { GetUserUsecase } from 'src/modules/user/core/usecases';
-import { DeleteRefreshTokenUsecase } from '../refresh_tokens/delete_refresh_token.usecase';
 
 @Injectable()
 export class RefreshAccessTokenUsecase {

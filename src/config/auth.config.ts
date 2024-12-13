@@ -9,7 +9,7 @@ export default registerAs('auth', () => ({
       expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN,
     },
   },
-  jwtRefreshToken: process.env.JWT_RERESH_TOKEN_EXPIRES_IN,
+  jwtRefreshTokenExpired: process.env.JWT_RERESH_TOKEN_EXPIRES_IN,
   google: {
     clientId: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,

@@ -5,7 +5,6 @@ import {
   RefreshTokenModel,
   RefreshTokenModelParams,
 } from '../../models/refresh_token.model';
-import * as ms from 'ms';
 import { JwtService } from '@nestjs/jwt';
 import { AuthProvider } from '../../enums/auth.provider';
 import { v4 as uuidv4 } from 'uuid';
@@ -26,7 +25,9 @@ export class CreateRefreshTokenUsecase {
     const refreshToken = this.jwtService.sign(
       { id: id },
       {
-        expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN,
+        expiresIn: this.configService.get<string>(
+          'auth.jwtRefreshTokenExpired',
+        ),
       },
     );
     const params: RefreshTokenModelParams = {
