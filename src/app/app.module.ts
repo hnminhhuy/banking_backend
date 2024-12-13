@@ -15,12 +15,20 @@ import { UserModule } from 'src/modules/user/user.module';
 import { BankModule } from '../modules/bank/bank.module';
 import { BankAccountModule } from '../modules/bank_account/bank_account.module';
 import constantConfig from '../config/constant.config';
+import otpConfig from '../config/otp.config';
+import { OtpModule } from '../modules/otp/otp.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [databaseConfig, swaggerConfig, authConfig, constantConfig],
+      load: [
+        databaseConfig,
+        swaggerConfig,
+        authConfig,
+        constantConfig,
+        otpConfig,
+      ],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -39,6 +47,7 @@ import constantConfig from '../config/constant.config';
     forwardRef(() => UserModule),
     forwardRef(() => BankModule),
     forwardRef(() => BankAccountModule),
+    forwardRef(() => OtpModule)
   ],
   controllers: [AppController],
   providers: [],

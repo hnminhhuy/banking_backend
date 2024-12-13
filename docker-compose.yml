@@ -1,6 +1,6 @@
 services:
   main:
-    image: ${APP_NAME}/main:18-alpine
+    image: ${COMPOSE_PROJECT_NAME}/main:20-alpine
     build:
       context: .
     command: >
@@ -17,8 +17,9 @@ services:
       - TZ=Asia/Ho_Chi_Minh
     depends_on:
       - postgres
+
   postgres:
-    image: postgres:alpine
+    image: postgres:16-alpine
     container_name: postgres
     restart: on-failure
     environment:
