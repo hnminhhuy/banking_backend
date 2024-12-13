@@ -46,7 +46,7 @@ export class BankDatasource {
     const orderBy: Record<any, any> = {};
 
     if (sortParams) {
-      orderBy[sortParams.sort] = sortParams.dir;
+      orderBy[sortParams.sort] = sortParams.direction;
     }
     const query = this.bankRepo.createQueryBuilder();
 

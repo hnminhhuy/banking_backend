@@ -17,6 +17,7 @@ import { BankAccountModule } from '../modules/bank_account/bank_account.module';
 import constantConfig from '../config/constant.config';
 import mailConfig from '../config/mail.config';
 import { MailModule } from '../modules/mail/mail.module';
+import { AuthModule } from 'src/modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { MailModule } from '../modules/mail/mail.module';
     forwardRef(() => BankModule),
     forwardRef(() => BankAccountModule),
     forwardRef(() => MailModule),
+    forwardRef(() => AuthModule),
   ],
   controllers: [AppController],
   providers: [],

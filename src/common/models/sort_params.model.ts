@@ -8,10 +8,10 @@ export class SortParams<T> {
     description: 'Sort order, either ASC or DESC',
     enum: ['ASC', 'DESC'],
   })
-  public readonly dir: 'ASC' | 'DESC';
+  public readonly direction: 'ASC' | 'DESC';
 
-  constructor(sort: T, dir: string | undefined) {
+  constructor(sort: T, direction: string | undefined) {
     this.sort = sort;
-    this.dir = <'ASC' | 'DESC'>dir?.toUpperCase() ?? 'ASC';
+    this.direction = <'ASC' | 'DESC'>direction?.toUpperCase() ?? 'ASC';
   }
 }
