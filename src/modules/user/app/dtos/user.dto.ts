@@ -10,7 +10,7 @@ import {
 import { BaseDto } from 'src/common/dtos';
 import { UserRole } from '../../core/enums/user_role';
 
-export class EmployeeDto extends BaseDto {
+export class UserDto extends BaseDto {
   @ApiProperty()
   @IsUUID()
   public createdBy?: string;
