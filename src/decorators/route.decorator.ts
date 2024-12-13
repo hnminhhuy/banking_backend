@@ -56,6 +56,5 @@ export function Route({
   if (secure) {
     decorators.push(UseGuards(RoleAuthGuard));
   }
-
   return applyDecorators(...decorators);
 }

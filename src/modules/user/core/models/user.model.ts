@@ -10,7 +10,7 @@ export interface UserModelParams extends BaseModelParams {
   password: string;
   fullName: string;
   role: UserRole;
-  isActive: boolean;
+  isBlocked: boolean;
 }
 
 export class UserModel extends BaseModel {
@@ -27,7 +27,7 @@ export class UserModel extends BaseModel {
   public readonly password: string;
 
   @ApiProperty()
-  public readonly isActive: boolean;
+  public readonly isBlocked: boolean;
 
   @ApiProperty()
   public readonly fullName: string;

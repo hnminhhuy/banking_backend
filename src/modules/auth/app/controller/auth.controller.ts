@@ -5,7 +5,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { LoginUsecase, RefreshAccessTokenUsecase } from '../../core/usecases';
 
 @ApiTags('Public')
-@Controller({ path: 'api/user/v1' })
+@Controller({ path: 'api/auth/v1' })
 export class AuthController {
   constructor(
     private readonly loginUsecase: LoginUsecase,
