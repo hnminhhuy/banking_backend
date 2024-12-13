@@ -15,8 +15,8 @@ import { UserModule } from 'src/modules/user/user.module';
 import { BankModule } from '../modules/bank/bank.module';
 import { BankAccountModule } from '../modules/bank_account/bank_account.module';
 import constantConfig from '../config/constant.config';
-import otpConfig from '../config/otp.config';
-import { OtpModule } from '../modules/otp/otp.module';
+import mailConfig from '../config/mail.config';
+import { MailModule } from '../modules/mail/mail.module';
 
 @Module({
   imports: [
@@ -27,7 +27,7 @@ import { OtpModule } from '../modules/otp/otp.module';
         swaggerConfig,
         authConfig,
         constantConfig,
-        otpConfig,
+        mailConfig,
       ],
     }),
     TypeOrmModule.forRootAsync({
@@ -47,7 +47,7 @@ import { OtpModule } from '../modules/otp/otp.module';
     forwardRef(() => UserModule),
     forwardRef(() => BankModule),
     forwardRef(() => BankAccountModule),
-    forwardRef(() => OtpModule)
+    forwardRef(() => MailModule),
   ],
   controllers: [AppController],
   providers: [],

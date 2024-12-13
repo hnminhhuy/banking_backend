@@ -1,23 +1,4 @@
 services:
-  main:
-    image: ${COMPOSE_PROJECT_NAME}/main:20-alpine
-    build:
-      context: .
-    command: >
-      /bin/sh -c "npm install &&
-                  npm run build &&
-                  npm run typeorm:migration:run &&
-                  npm run start:debug"
-    restart: on-failure
-    ports:
-      - '${APP_PORT}:${APP_PORT}'
-    volumes:
-      - ./:/var/www
-    environment:
-      - TZ=Asia/Ho_Chi_Minh
-    depends_on:
-      - postgres
-
   postgres:
     image: postgres:16-alpine
     container_name: postgres
