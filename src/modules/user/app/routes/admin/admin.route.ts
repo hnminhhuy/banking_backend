@@ -1,29 +1,34 @@
 import { RequestMethod } from '@nestjs/common';
 import { IRouteParams } from 'src/decorators';
+import { UserRole } from 'src/modules/user/core/enums/user_role';
 
 export default {
   listUsers: <IRouteParams>{
     path: '/',
     method: RequestMethod.GET,
-    secure: false,
+    secure: true,
+    roles: [UserRole.Admin],
     swaggerParams: {},
   },
   createEmployee: <IRouteParams>{
     path: '/',
     method: RequestMethod.POST,
-    secure: false,
+    secure: true,
+    roles: [UserRole.Admin],
     swaggerParams: {},
   },
   updateUser: <IRouteParams>{
     path: '/:id',
     method: RequestMethod.PATCH,
-    secure: false,
+    secure: true,
+    roles: [UserRole.Admin],
     swaggerParams: {},
   },
   blockedUser: <IRouteParams>{
     path: '/:id',
     method: RequestMethod.DELETE,
-    secure: false,
+    secure: true,
+    roles: [UserRole.Admin],
     swaggerParams: {},
   },
 };

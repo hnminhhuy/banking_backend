@@ -7,9 +7,11 @@ import { UserDatasource } from './infra/data/user.datasource';
 import {
   CreateUserUsecase,
   GetUserUsecase,
+  ListUserUsecase,
   UpdateUserPassword,
   UpdateUserUsecase,
 } from './core/usecases';
+import { UserControllerByAdmin } from './app/controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity])],
@@ -29,7 +31,8 @@ import {
     GetUserUsecase,
     UpdateUserUsecase,
     UpdateUserPassword,
+    ListUserUsecase,
   ],
-  controllers: [],
+  controllers: [UserControllerByAdmin],
 })
 export class UserModule {}

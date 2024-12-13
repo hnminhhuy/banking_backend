@@ -5,6 +5,7 @@ import { FindOptionsWhere, Repository } from 'typeorm';
 import { UserModel, UserModelParams } from '../../core/models/user.model';
 import { Page, PageParams, SortParams } from 'src/common/models';
 import { UserSort } from '../../core/enums/user_sort';
+import { UserRole } from '../../core/enums/user_role';
 
 @Injectable()
 export class UserDatasource {
@@ -14,6 +15,7 @@ export class UserDatasource {
   ) {}
 
   public async create(user: UserModel): Promise<void> {
+    console.log(user);
     const newUser = this.userRepo.create(user);
     await this.userRepo.insert(newUser);
   }
@@ -54,11 +56,14 @@ export class UserDatasource {
   }
 
   public async list(
+    role: UserRole,
     pageParams: PageParams,
     sortParams: SortParams<UserSort>,
     relations: string[] | undefined = undefined,
   ) {
-    const condition: FindOptionsWhere<UserEntity> = {};
+    const condition: FindOptionsWhere<UserEntity> = {
+      role: role,
+    };
     const orderBy: Record<any, any> = {};
 
     let totalCount = 0;

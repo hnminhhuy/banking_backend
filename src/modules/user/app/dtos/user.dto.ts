@@ -1,12 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsDefined,
-  IsEmail,
-  IsString,
-  IsStrongPassword,
-  IsUUID,
-  Length,
-} from 'class-validator';
+import { IsDefined, IsEmail, IsString, IsUUID, Length } from 'class-validator';
 import { BaseDto } from 'src/common/dtos';
 import { UserRole } from '../../core/enums/user_role';
 
@@ -28,7 +21,6 @@ export class UserDto extends BaseDto {
 
   @ApiProperty()
   @IsDefined()
-  @IsStrongPassword()
   public password: string;
 
   @ApiProperty()

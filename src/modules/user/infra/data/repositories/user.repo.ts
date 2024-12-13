@@ -7,16 +7,23 @@ import {
 } from 'src/modules/user/core/models/user.model';
 import { PageParams, SortParams, Page } from 'src/common/models';
 import { UserSort } from 'src/modules/user/core/enums/user_sort';
+import { UserRole } from 'src/modules/user/core/enums/user_role';
 
 @Injectable()
 export class UserRepo implements IUserRepo {
   constructor(private readonly userDatasource: UserDatasource) {}
   public async list(
+    role: UserRole,
     pageParams: PageParams,
     sortParams: SortParams<UserSort>,
     relations: string[] | undefined,
   ): Promise<Page<UserModel>> {
-    return await this.userDatasource.list(pageParams, sortParams, relations);
+    return await this.userDatasource.list(
+      role,
+      pageParams,
+      sortParams,
+      relations,
+    );
   }
   public async update(
     id: string,

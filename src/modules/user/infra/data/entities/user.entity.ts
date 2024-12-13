@@ -5,6 +5,9 @@ import { Column, Entity } from 'typeorm';
 
 @Entity('users')
 export class UserEntity extends BaseEntity {
+  @Column({ name: 'created_by' })
+  createdBy: string | undefined;
+
   @Column()
   email: string;
 

@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Query } from '@nestjs/common';
+import { Body, Controller, Query, Req } from '@nestjs/common';
 import { Route } from 'src/decorators';
 import adminRoute from '../../routes/admin/admin.route';
 import { PageParams, SortParams } from 'src/common/models';
@@ -28,26 +28,40 @@ export class UserControllerByAdmin {
     );
 
     const sortParams: SortParams<UserSort> = new SortParams(
-      query.sort as UserSort,
+      (query.sort as UserSort) ?? UserSort.CREATED_AT,
       query.direction,
     );
 
-    const users = await this.listUsersUsecase.execute(pageParams, sortParams);
-    return users.data.map((user) => {
-      const { password, isBlocked, createdBy, ...userData } = user;
-      return userData;
-    });
+    console.log(pageParams);
+    console.log(sortParams);
+
+    const users = await this.listUsersUsecase.execute(
+      query.role,
+      pageParams,
+      sortParams,
+    );
+    const data = users.data.map(
+      ({ password, isBlocked, createdBy, ...userData }) => userData,
+    );
+
+    return {
+      data: data,
+      page: users.page,
+      totalCount: users.totalCount,
+    };
   }
 
   @Route(adminRoute.createEmployee)
-  async createEmployee(@Body() body: CreateUserDto) {
+  async createEmployee(@Req() req, @Body() body: CreateUserDto) {
     const params: UserModelParams = {
       ...body,
       role: UserRole.Employee,
-      createdBy: 'admin_id',
+      createdBy: req.user.authId,
       isBlocked: false,
     };
 
-    return await this.createUserUsecase.execute(params);
+    const createdUser = await this.createUserUsecase.execute(params);
+    const { password, ...returnData } = createdUser;
+    return returnData;
   }
 }
