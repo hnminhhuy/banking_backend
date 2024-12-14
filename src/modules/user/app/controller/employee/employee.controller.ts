@@ -20,6 +20,7 @@ export class UserControllerByEmployee {
     };
 
     const createdUser = await this.createUserUsecase.execute(params);
+
     const { password, ...returnData } = createdUser;
     return returnData;
   }
