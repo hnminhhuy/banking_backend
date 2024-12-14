@@ -27,7 +27,7 @@ export class RefreshAccessTokenUsecase {
       'id',
       validRefreshToken.authId,
     );
-    if (!user.isActive) {
+    if (!user.isBlocked) {
       this.deleteRefreshTokenUsecase.deleteById(id);
       throw ForbiddenException;
     }

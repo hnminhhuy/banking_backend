@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Param, Query } from '@nestjs/common';
 import { GetBankUsecase, ListBanksUsecase } from '../../../core/usecases';
 import { Route } from '../../../../../decorators';
 import bankRoute from '../../routes/employee/bank.route';
@@ -24,7 +24,7 @@ export class BankController {
 
     const sortParams: SortParams<BankSort> = new SortParams(
       query.sort as BankSort,
-      query.type,
+      query.direction,
     );
     const banks = await this.listBanksUsecase.execute(pageParams, sortParams);
 

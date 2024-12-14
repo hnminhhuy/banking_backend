@@ -11,5 +11,5 @@ export class SortParamsDto {
   @ApiProperty()
   @IsEnum(SortOrder)
   @Transform(({ value }) => value?.toUpperCase().trim())
-  type!: SortOrder;
+  direction!: SortOrder;
 }

@@ -1,5 +1,4 @@
 import { registerAs } from '@nestjs/config';
-import { isDevelopmentEnv } from 'src/common/helpers/env.helper';
 
 export default registerAs('database', () => ({
   postgres: {

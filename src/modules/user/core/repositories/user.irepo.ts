@@ -1,4 +1,7 @@
+import { Page, PageParams, SortParams } from 'src/common/models';
 import { UserModel, UserModelParams } from '../models/user.model';
+import { UserSort } from '../enums/user_sort';
+import { UserRole } from '../enums/user_role';
 
 export abstract class IUserRepo {
   public abstract create(user: UserModel): Promise<void>;
@@ -18,4 +21,11 @@ export abstract class IUserRepo {
     id: string,
     password: string,
   ): Promise<boolean>;
+
+  public abstract list(
+    role: UserRole,
+    pageParams: PageParams,
+    sortParams: SortParams<UserSort>,
+    relations: string[] | undefined,
+  ): Promise<Page<UserModel>>;
 }
