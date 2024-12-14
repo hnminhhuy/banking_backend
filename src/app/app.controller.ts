@@ -1,30 +1,32 @@
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
   Body,
   Controller,
   ForbiddenException,
+  Inject,
   Param,
   RequestMethod,
 } from '@nestjs/common';
 import { isDevelopmentEnv } from 'src/common/helpers/env.helper';
 import { Route } from 'src/decorators';
-import {
-  UserModel,
-  UserModelParams,
-} from 'src/modules/user/core/models/user.model';
+import { UserModelParams } from 'src/modules/user/core/models/user.model';
 import {
   CreateUserUsecase,
   UpdateUserUsecase,
 } from 'src/modules/user/core/usecases';
+import { Cache } from 'cache-manager';
 
 @Controller('/')
 export class AppController {
   constructor(
     private readonly updateUserUsecase: UpdateUserUsecase,
     private readonly createUserUsecase: CreateUserUsecase,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
   @Route({ path: '/', method: RequestMethod.GET })
-  getHealth(): string {
+  async getHealth(): Promise<string> {
+    // await this.redisTestService.testRedisConnection();
     return 'OK!';
   }
 

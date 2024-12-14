@@ -14,8 +14,9 @@ import { DataSource } from 'typeorm';
 import { UserModule } from 'src/modules/user/user.module';
 import { BankModule } from '../modules/bank/bank.module';
 import { AuthModule } from 'src/modules/auth/auth.module';
-import Redis from 'ioredis';
 import redisConfig from 'src/config/redis.config';
+import { CacheModule, CacheModuleAsyncOptions } from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-redis-store';
 
 @Module({
   imports: [
@@ -37,26 +38,24 @@ import redisConfig from 'src/config/redis.config';
         return addTransactionalDataSource(new DataSource(options));
       },
     }),
+    CacheModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        const redisConfig = configService.get<CacheModuleAsyncOptions>('redis');
+
+        return {
+          ...redisConfig,
+          store: redisStore,
+        } as CacheModuleAsyncOptions;
+      },
+    }),
     forwardRef(() => UserModule),
     forwardRef(() => BankModule),
     forwardRef(() => AuthModule),
   ],
   controllers: [AppController],
-  providers: [
-    {
-      provide: 'REDIS_CLIENT',
-      useFactory: (configService: ConfigService) => {
-        const redisConfig = configService.get('redis');
-        console.log('Redis Config: ', redisConfig);
-        return new Redis({
-          host: redisConfig.host,
-          port: redisConfig.port,
-          password: redisConfig.password,
-        });
-      },
-      inject: [ConfigService],
-    },
-  ],
-  exports: ['REDIS_CLIENT'],
+  providers: [],
+  exports: [],
 })
 export class AppModule {}
