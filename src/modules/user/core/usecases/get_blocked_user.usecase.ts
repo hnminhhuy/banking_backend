@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { IUserRepo } from '../repositories/user.irepo';
-import { UserModel } from '../models/user.model';
 
 @Injectable()
 export class GetBlockedUserUsecase {

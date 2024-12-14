@@ -1,9 +1,7 @@
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
   Body,
   Controller,
   ForbiddenException,
-  Inject,
   Param,
   RequestMethod,
 } from '@nestjs/common';
@@ -14,7 +12,6 @@ import {
   CreateUserUsecase,
   UpdateUserUsecase,
 } from 'src/modules/user/core/usecases';
-import { Cache } from 'cache-manager';
 
 @Controller('/')
 export class AppController {

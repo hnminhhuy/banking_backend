@@ -15,10 +15,7 @@ import { UserModule } from 'src/modules/user/user.module';
 import { BankModule } from '../modules/bank/bank.module';
 import { AuthModule } from 'src/modules/auth/auth.module';
 import redisConfig from 'src/config/redis.config';
-import { CacheModule, CacheModuleAsyncOptions } from '@nestjs/cache-manager';
-import { redisStore } from 'cache-manager-redis-store';
 import { SetCacheBlockedUserUsecase } from 'src/modules/auth/core/usecases';
-import { CacheBlockedUserIRepo } from 'src/modules/auth/core/repositories/cache_blocked_user.irepo';
 import Redis from 'ioredis';
 
 @Module({
