@@ -21,12 +21,10 @@ export class AppController {
   constructor(
     private readonly updateUserUsecase: UpdateUserUsecase,
     private readonly createUserUsecase: CreateUserUsecase,
-    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
   @Route({ path: '/', method: RequestMethod.GET })
   async getHealth(): Promise<string> {
-    // await this.redisTestService.testRedisConnection();
     return 'OK!';
   }
 

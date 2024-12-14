@@ -1,11 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { CheckCacheBlockedUserUsecase } from '../core/usecases';
 
 @Injectable()
 export class JwtUserStrategy extends PassportStrategy(Strategy, 'jwt_user') {
-  constructor(configService: ConfigService) {
+  constructor(
+    configService: ConfigService,
+    private readonly checkCacheBlockedUserUsecase: CheckCacheBlockedUserUsecase,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -17,6 +21,11 @@ export class JwtUserStrategy extends PassportStrategy(Strategy, 'jwt_user') {
   }
 
   async validate(payload: any) {
+    const userId = payload.authId;
+
+    if (await this.checkCacheBlockedUserUsecase.execute(userId))
+      throw new ForbiddenException();
+
     return payload;
   }
 }

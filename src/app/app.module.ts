@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { forwardRef, Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import {
   TypeOrmModule,
@@ -17,6 +17,9 @@ import { AuthModule } from 'src/modules/auth/auth.module';
 import redisConfig from 'src/config/redis.config';
 import { CacheModule, CacheModuleAsyncOptions } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-store';
+import { SetCacheBlockedUserUsecase } from 'src/modules/auth/core/usecases';
+import { CacheBlockedUserIRepo } from 'src/modules/auth/core/repositories/cache_blocked_user.irepo';
+import Redis from 'ioredis';
 
 @Module({
   imports: [
@@ -38,24 +41,30 @@ import { redisStore } from 'cache-manager-redis-store';
         return addTransactionalDataSource(new DataSource(options));
       },
     }),
-    CacheModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => {
-        const redisConfig = configService.get<CacheModuleAsyncOptions>('redis');
-
-        return {
-          ...redisConfig,
-          store: redisStore,
-        } as CacheModuleAsyncOptions;
-      },
-    }),
     forwardRef(() => UserModule),
     forwardRef(() => BankModule),
     forwardRef(() => AuthModule),
   ],
   controllers: [AppController],
-  providers: [],
-  exports: [],
+  providers: [
+    {
+      provide: 'REDIS_CLIENT',
+      useFactory: async (configService: ConfigService) => {
+        const redisConfig = configService.get('redis');
+        return new Redis(redisConfig);
+      },
+      inject: [ConfigService],
+    },
+  ],
+  exports: ['REDIS_CLIENT'],
 })
-export class AppModule {}
+export class AppModule implements OnModuleInit {
+  constructor(
+    private readonly setCacheBlockedUserUsecase: SetCacheBlockedUserUsecase,
+  ) {}
+
+  async onModuleInit() {
+    await this.setCacheBlockedUserUsecase.execute();
+  }
+}
+// export class AppModule {}

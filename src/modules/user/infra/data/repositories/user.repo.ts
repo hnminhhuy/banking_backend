@@ -12,6 +12,7 @@ import { UserRole } from 'src/modules/user/core/enums/user_role';
 @Injectable()
 export class UserRepo implements IUserRepo {
   constructor(private readonly userDatasource: UserDatasource) {}
+
   public async list(
     role: UserRole,
     pageParams: PageParams,
@@ -46,5 +47,9 @@ export class UserRepo implements IUserRepo {
 
   public async create(user: UserModel): Promise<void> {
     await this.userDatasource.create(user);
+  }
+
+  public getBlockedUser(): Promise<string[]> {
+    return this.userDatasource.getBlockedUser();
   }
 }

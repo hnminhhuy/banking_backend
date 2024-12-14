@@ -94,4 +94,12 @@ export class UserDatasource {
 
     return new Page(pageParams.page, totalCount, userModels);
   }
+
+  async getBlockedUser(): Promise<string[]> {
+    const blockedUsers = await this.userRepo.find({
+      where: { isBlocked: true },
+    });
+
+    return blockedUsers.map((user) => user.id);
+  }
 }

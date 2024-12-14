@@ -13,14 +13,22 @@ import { RefreshTokenDatasource } from './infra/data/refresh_token.datasource';
 import { RoleAuthGuard } from './core/guards/role_auth.guard';
 import { JwtUserStrategy } from './strategies/jwt_user.strategy';
 import {
+  CheckCacheBlockedUserUsecase,
   CreateAccessTokenUsecase,
   CreateRefreshTokenUsecase,
   DeleteRefreshTokenUsecase,
   GetRefreshTokenUsecase,
   LoginUsecase,
   RefreshAccessTokenUsecase,
+  SetCacheBlockedUserUsecase,
+  UpdateCacheBlockedUserUsecase,
   VerifyTokenUsecase,
 } from './core/usecases';
+import { GetBlockedUserUsecase } from '../user/core/usecases/get_blocked_user.usecase';
+import { CacheBlockedUserIRepo } from './core/repositories/cache_blocked_user.irepo';
+import { CacheBlockedUserRepo } from './infra/repositories/cache_blocked_user.repo';
+import { CacheBlockedUserDatasource } from './infra/data/cache_blocked_user.datasource';
+import { AppModule } from 'src/app/app.module';
 
 @Module({
   imports: [
@@ -37,15 +45,34 @@ import {
       useFactory: (configService: ConfigService): any =>
         configService.get<JwtModuleOptions>('auth.jwt'),
     }),
+    // CacheModule.registerAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService],
+    //   useFactory: async (configService: ConfigService) => {
+    //     const redisConfig = configService.get<CacheModuleAsyncOptions>('redis');
+
+    //     return {
+    //       ...redisConfig,
+    //       store: redisStore,
+    //     } as CacheModuleAsyncOptions;
+    //   },
+    // }),
     forwardRef(() => UserModule),
+    forwardRef(() => AppModule),
   ],
   controllers: [AuthController],
   providers: [
+    GetBlockedUserUsecase,
     RoleAuthGuard,
     JwtUserStrategy,
+    CacheBlockedUserDatasource,
     {
       provide: IRefreshTokenRepo,
       useClass: RefreshTokenRepo,
+    },
+    {
+      provide: CacheBlockedUserIRepo,
+      useClass: CacheBlockedUserRepo,
     },
     RefreshTokenDatasource,
     VerifyTokenUsecase,
@@ -54,8 +81,15 @@ import {
     DeleteRefreshTokenUsecase,
     GetRefreshTokenUsecase,
     CreateAccessTokenUsecase,
-    VerifyTokenUsecase,
     LoginUsecase,
+    SetCacheBlockedUserUsecase,
+    CheckCacheBlockedUserUsecase,
+    UpdateCacheBlockedUserUsecase,
+  ],
+  exports: [
+    SetCacheBlockedUserUsecase,
+    CheckCacheBlockedUserUsecase,
+    UpdateCacheBlockedUserUsecase,
   ],
 })
 export class AuthModule {}

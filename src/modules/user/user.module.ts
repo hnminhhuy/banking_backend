@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './infra/data/entities/user.entity';
 import { IUserRepo } from './core/repositories/user.irepo';
@@ -13,14 +13,13 @@ import {
 } from './core/usecases';
 import { UserControllerByAdmin } from './app/controller';
 import { UserControllerByEmployee } from './app/controller/employee/employee.controller';
+import { GetBlockedUserUsecase } from './core/usecases/get_blocked_user.usecase';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity])],
-  exports: [
-    CreateUserUsecase,
-    UpdateUserUsecase,
-    GetUserUsecase,
-    UpdateUserPassword,
+  imports: [
+    TypeOrmModule.forFeature([UserEntity]),
+    forwardRef(() => AuthModule),
   ],
   providers: [
     {
@@ -33,6 +32,15 @@ import { UserControllerByEmployee } from './app/controller/employee/employee.con
     UpdateUserUsecase,
     UpdateUserPassword,
     ListUserUsecase,
+    GetBlockedUserUsecase,
+  ],
+  exports: [
+    IUserRepo,
+    CreateUserUsecase,
+    UpdateUserUsecase,
+    GetUserUsecase,
+    UpdateUserPassword,
+    GetBlockedUserUsecase,
   ],
   controllers: [UserControllerByAdmin, UserControllerByEmployee],
 })
