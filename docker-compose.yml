@@ -50,7 +50,7 @@ services:
         'warning',
       ]
     environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
 volumes:
   banking_postgres:
   redis_data:

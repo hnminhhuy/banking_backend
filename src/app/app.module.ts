@@ -14,13 +14,14 @@ import { DataSource } from 'typeorm';
 import { UserModule } from 'src/modules/user/user.module';
 import { BankModule } from '../modules/bank/bank.module';
 import { AuthModule } from 'src/modules/auth/auth.module';
-import { RedisModule, RedisModuleOptions } from '@liaoliaots/nestjs-redis';
+import Redis from 'ioredis';
+import redisConfig from 'src/config/redis.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [databaseConfig, swaggerConfig, authConfig],
+      load: [databaseConfig, swaggerConfig, authConfig, redisConfig],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -36,18 +37,26 @@ import { RedisModule, RedisModuleOptions } from '@liaoliaots/nestjs-redis';
         return addTransactionalDataSource(new DataSource(options));
       },
     }),
-    RedisModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService): RedisModuleOptions =>
-        configService.get<RedisModuleOptions>('redis'),
-    }),
     forwardRef(() => UserModule),
     forwardRef(() => BankModule),
     forwardRef(() => AuthModule),
   ],
   controllers: [AppController],
-  providers: [],
-  exports: [],
+  providers: [
+    {
+      provide: 'REDIS_CLIENT',
+      useFactory: (configService: ConfigService) => {
+        const redisConfig = configService.get('redis');
+        console.log('Redis Config: ', redisConfig);
+        return new Redis({
+          host: redisConfig.host,
+          port: redisConfig.port,
+          password: redisConfig.password,
+        });
+      },
+      inject: [ConfigService],
+    },
+  ],
+  exports: ['REDIS_CLIENT'],
 })
 export class AppModule {}
