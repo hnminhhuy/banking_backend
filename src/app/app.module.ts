@@ -14,6 +14,7 @@ import { DataSource } from 'typeorm';
 import { UserModule } from 'src/modules/user/user.module';
 import { BankModule } from '../modules/bank/bank.module';
 import { AuthModule } from 'src/modules/auth/auth.module';
+import { RedisModule, RedisModuleOptions } from '@liaoliaots/nestjs-redis';
 
 @Module({
   imports: [
@@ -34,6 +35,12 @@ import { AuthModule } from 'src/modules/auth/auth.module';
         }
         return addTransactionalDataSource(new DataSource(options));
       },
+    }),
+    RedisModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService): RedisModuleOptions =>
+        configService.get<RedisModuleOptions>('redis'),
     }),
     forwardRef(() => UserModule),
     forwardRef(() => BankModule),
