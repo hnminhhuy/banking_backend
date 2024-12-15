@@ -1,4 +1,4 @@
-import { INestApplication, VersioningType } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { configAppInterceptor } from './app.interceptor';
 import { configAppException } from './app.exception';

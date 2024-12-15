@@ -29,5 +29,10 @@ export abstract class IUserRepo {
     relations: string[] | undefined,
   ): Promise<Page<UserModel>>;
 
+  public abstract updateBlocked(
+    id: string,
+    isBlocked: boolean,
+  ): Promise<boolean>;
+
   public abstract getBlockedUser(): Promise<string[]>;
 }

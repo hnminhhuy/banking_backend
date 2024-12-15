@@ -5,15 +5,20 @@ import { IUserRepo } from './core/repositories/user.irepo';
 import { UserRepo } from './infra/data/repositories/user.repo';
 import { UserDatasource } from './infra/data/user.datasource';
 import {
+  BlockUserUsecase,
   CreateUserUsecase,
+  GeneratePasswordUsecase,
+  GetBlockedUserUsecase,
   GetUserUsecase,
   ListUserUsecase,
   UpdateUserPassword,
   UpdateUserUsecase,
 } from './core/usecases';
-import { UserControllerByAdmin } from './app/controller';
-import { UserControllerByEmployee } from './app/controller/employee/employee.controller';
-import { GetBlockedUserUsecase } from './core/usecases/get_blocked_user.usecase';
+import {
+  UserControllerByAdmin,
+  UserControllerByCustomer,
+  UserControllerByEmployee,
+} from './app/controller';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({
@@ -32,6 +37,8 @@ import { AuthModule } from '../auth/auth.module';
     UpdateUserUsecase,
     UpdateUserPassword,
     ListUserUsecase,
+    BlockUserUsecase,
+    GeneratePasswordUsecase,
     GetBlockedUserUsecase,
   ],
   exports: [
@@ -42,6 +49,10 @@ import { AuthModule } from '../auth/auth.module';
     UpdateUserPassword,
     GetBlockedUserUsecase,
   ],
-  controllers: [UserControllerByAdmin, UserControllerByEmployee],
+  controllers: [
+    UserControllerByAdmin,
+    UserControllerByEmployee,
+    UserControllerByCustomer,
+  ],
 })
 export class UserModule {}

@@ -12,6 +12,26 @@ import { UserRole } from 'src/modules/user/core/enums/user_role';
 @Injectable()
 export class UserRepo implements IUserRepo {
   constructor(private readonly userDatasource: UserDatasource) {}
+  public async create(user: UserModel): Promise<void> {
+    await this.userDatasource.create(user);
+  }
+
+  public getUserBy(
+    key: string,
+    value: unknown,
+    relations: string[] | undefined = undefined,
+  ): Promise<UserModel | undefined> {
+    return this.userDatasource.getUserBy(key, value, relations);
+  }
+  public async updatePassword(id: string, password: string): Promise<boolean> {
+    return await this.userDatasource.updatePassword(id, password);
+  }
+  public async update(
+    id: string,
+    updatedFields: Partial<UserModelParams>,
+  ): Promise<boolean> {
+    return await this.userDatasource.update(id, updatedFields);
+  }
 
   public async list(
     role: UserRole,
@@ -26,27 +46,9 @@ export class UserRepo implements IUserRepo {
       relations,
     );
   }
-  public async update(
-    id: string,
-    updatedFields: Partial<UserModelParams>,
-  ): Promise<boolean> {
-    return await this.userDatasource.update(id, updatedFields);
-  }
 
-  public async updatePassword(id: string, password: string): Promise<boolean> {
-    return await this.userDatasource.updatePassword(id, password);
-  }
-
-  public getUserBy(
-    key: string,
-    value: unknown,
-    relations: string[] | undefined = undefined,
-  ): Promise<UserModel | undefined> {
-    return this.userDatasource.getUserBy(key, value, relations);
-  }
-
-  public async create(user: UserModel): Promise<void> {
-    await this.userDatasource.create(user);
+  public async updateBlocked(id: string, isBlocked: boolean): Promise<boolean> {
+    return this.userDatasource.updateBlocked(id, isBlocked);
   }
 
   public getBlockedUser(): Promise<string[]> {
