@@ -6,6 +6,7 @@ import { UserModel, UserModelParams } from '../../core/models/user.model';
 import { Page, PageParams, SortParams } from 'src/common/models';
 import { UserSort } from '../../core/enums/user_sort';
 import { UserRole } from '../../core/enums/user_role';
+import { paginate } from 'src/common/helpers/pagination.helper';
 
 @Injectable()
 export class UserDatasource {
@@ -60,38 +61,29 @@ export class UserDatasource {
     sortParams: SortParams<UserSort>,
     relations: string[] | undefined = undefined,
   ) {
-    const condition: FindOptionsWhere<UserEntity> = {
+    const conditions: FindOptionsWhere<UserEntity> = {
       role: role,
     };
-    const orderBy: Record<any, any> = {};
 
-    let totalCount = 0;
-    let users: UserEntity[] = [];
+    const { page, totalCount, rawItems } = await paginate<UserEntity>(
+      this.userRepo,
+      pageParams,
+      sortParams,
+      relations,
+      conditions,
+    );
 
-    if (sortParams) {
-      orderBy[sortParams.sort] = sortParams.direction;
-    }
+    const items = rawItems.map((item) => new UserModel(item));
 
-    const query = this.userRepo.createQueryBuilder();
+    return new Page(page, totalCount, items);
+  }
 
-    query.setFindOptions({
-      where: condition,
-      relations: relations,
-      skip: pageParams.limit * (pageParams.page - 1),
-      take: pageParams.limit,
-      order: orderBy,
-    });
+  public async updateBlocked(
+    id: string,
+    isBlocked: boolean = false,
+  ): Promise<boolean> {
+    const result = await this.userRepo.update(id, { isBlocked: isBlocked });
 
-    if (pageParams.needTotalCount) {
-      totalCount = await query.getCount();
-    }
-
-    if (!pageParams.onlyCount) {
-      users = await query.getMany();
-    }
-
-    const userModels = users.map((user) => new UserModel(user));
-
-    return new Page(pageParams.page, totalCount, userModels);
+    return result.affected > 0;
   }
 }

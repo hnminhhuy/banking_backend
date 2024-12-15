@@ -37,6 +37,26 @@ export class ResponseInterceptor<T>
     context: ExecutionContext,
     next: CallHandler,
   ): Observable<ISuccessResponse<T>> {
-    return next.handle().pipe(map((data) => respond(data)));
+    const httpContext = context.switchToHttp();
+    const response = httpContext.getResponse();
+
+    return next.handle().pipe(
+      map((data) => {
+        const formatedResponse = respond(data);
+        if (
+          data &&
+          typeof data === 'object' &&
+          Object.prototype.hasOwnProperty.call(data, 'statusCode')
+        ) {
+          const { statusCode } = data as { statusCode: number };
+          response.status(statusCode);
+        } else {
+          // Set a default HTTP status code, e.g., 200
+          response.status(200);
+        }
+
+        return formatedResponse;
+      }),
+    );
   }
 }

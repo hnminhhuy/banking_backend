@@ -9,7 +9,7 @@ import { filterAllowedFields } from 'src/common/helpers/filter_allowed_fields.he
 
 @Injectable()
 export class UpdateUserUsecase {
-  private readonly allowedFieldsToUpdate = ['isBlocked'];
+  private readonly allowedFieldsToUpdate = ['fullName', 'isBlocked'];
   constructor(private readonly userRepo: IUserRepo) {}
 
   public async execute(
