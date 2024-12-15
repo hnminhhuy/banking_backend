@@ -20,10 +20,16 @@ import {
   UserControllerByEmployee,
 } from './app/controller';
 import { AuthModule } from '../auth/auth.module';
+import { BankModule } from '../bank/bank.module';
+import { BankAccountModule } from '../bank_account/bank_account.module';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity]),
+    forwardRef(() => BankAccountModule),
+    forwardRef(() => BankModule),
+    forwardRef(() => MailModule),
     forwardRef(() => AuthModule),
   ],
   providers: [
@@ -42,12 +48,12 @@ import { AuthModule } from '../auth/auth.module';
     GetBlockedUserUsecase,
   ],
   exports: [
-    IUserRepo,
     CreateUserUsecase,
     UpdateUserUsecase,
     GetUserUsecase,
     UpdateUserPassword,
     GetBlockedUserUsecase,
+    ListUserUsecase,
   ],
   controllers: [
     UserControllerByAdmin,

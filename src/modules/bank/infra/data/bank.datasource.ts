@@ -5,6 +5,7 @@ import { FindOptionsWhere, Repository } from 'typeorm';
 import { BankModel } from '../../core/models/bank.model';
 import { Page, PageParams, SortParams } from '../../../../common/models';
 import { BankSort } from '../../core/enums/bank_sort';
+import { paginate } from '../../../../common/helpers/pagination.helper';
 
 @Injectable()
 export class BankDatasource {
@@ -29,7 +30,7 @@ export class BankDatasource {
 
     if (relations) {
       relations.forEach((relation) => {
-        query.leftJoinAndSelect(`users.${relation}`, relation);
+        query.leftJoinAndSelect(`banks.${relation}`, relation);
       });
     }
 
@@ -42,34 +43,18 @@ export class BankDatasource {
     sortParams: SortParams<BankSort> | undefined,
     relations: string[] | undefined = undefined,
   ): Promise<Page<BankModel>> {
-    const condition: FindOptionsWhere<BankEntity> = {};
-    const orderBy: Record<any, any> = {};
+    const conditions: FindOptionsWhere<BankEntity> = {};
 
-    if (sortParams) {
-      orderBy[sortParams.sort] = sortParams.direction;
-    }
-    const query = this.bankRepo.createQueryBuilder();
+    const { page, totalCount, rawItems } = await paginate<BankEntity>(
+      this.bankRepo,
+      pageParams,
+      sortParams,
+      relations,
+      conditions,
+    );
 
-    query.setFindOptions({
-      where: condition,
-      relations: relations,
-      skip: pageParams.limit * (pageParams.page - 1),
-      take: pageParams.limit,
-      order: orderBy,
-    });
+    const bankModels = rawItems.map((bank) => new BankModel(bank));
 
-    let totalCount;
-    if (pageParams.needTotalCount) {
-      totalCount = await query.getCount();
-    }
-
-    let banks: BankEntity[] = [];
-    if (!pageParams.onlyCount) {
-      banks = await query.getMany();
-    }
-
-    const bankModels = banks.map((bank) => new BankModel(bank));
-
-    return new Page(pageParams.page, totalCount, bankModels);
+    return new Page(page, totalCount, bankModels);
   }
 }

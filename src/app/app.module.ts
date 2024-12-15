@@ -13,6 +13,10 @@ import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
 import { UserModule } from 'src/modules/user/user.module';
 import { BankModule } from '../modules/bank/bank.module';
+import { BankAccountModule } from '../modules/bank_account/bank_account.module';
+import constantConfig from '../config/constant.config';
+import mailConfig from '../config/mail_service.config';
+import { MailModule } from '../modules/mail/mail.module';
 import { AuthModule } from 'src/modules/auth/auth.module';
 import redisConfig from 'src/config/redis.config';
 import { SetCacheBlockedUserUsecase } from 'src/modules/auth/core/usecases';
@@ -22,7 +26,14 @@ import Redis from 'ioredis';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [databaseConfig, swaggerConfig, authConfig, redisConfig],
+      load: [
+        databaseConfig,
+        swaggerConfig,
+        authConfig,
+        constantConfig,
+        mailConfig,
+        redisConfig,
+      ],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -40,6 +51,8 @@ import Redis from 'ioredis';
     }),
     forwardRef(() => UserModule),
     forwardRef(() => BankModule),
+    forwardRef(() => BankAccountModule),
+    forwardRef(() => MailModule),
     forwardRef(() => AuthModule),
   ],
   controllers: [AppController],

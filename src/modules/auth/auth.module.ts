@@ -62,7 +62,6 @@ import { GetBlockedUserUsecase } from '../user/core/usecases';
   ],
   controllers: [AuthController],
   providers: [
-    GetBlockedUserUsecase,
     RoleAuthGuard,
     JwtUserStrategy,
     CacheBlockedUserDatasource,

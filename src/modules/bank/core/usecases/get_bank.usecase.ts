@@ -9,7 +9,7 @@ export class GetBankUsecase {
   public async execute(
     key: string,
     value: unknown,
-    relations: string[] | undefined,
+    relations: string[] | undefined = undefined,
   ): Promise<BankModel | undefined> {
     return await this.bankRepo.get(key, value, relations);
   }
