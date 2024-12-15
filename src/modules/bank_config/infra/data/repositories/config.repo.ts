@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigModel } from 'src/modules/config/core/models/config.model';
-import { IConfigRepo } from 'src/modules/config/core/repositories/config.irepo';
 import { ConfigDatasource } from '../config.datasource';
+import { IConfigRepo } from 'src/modules/bank_config/core/repositories/config.irepo';
+import { ConfigModel } from 'src/modules/bank_config/core/models/config.model';
 
 @Injectable()
 export class ConfigRepo implements IConfigRepo {

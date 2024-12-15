@@ -21,6 +21,7 @@ import { AuthModule } from 'src/modules/auth/auth.module';
 import redisConfig from 'src/config/redis.config';
 import { SetCacheBlockedUserUsecase } from 'src/modules/auth/core/usecases';
 import Redis from 'ioredis';
+import { BankConfigModule } from 'src/modules/bank_config/bank_config.module';
 
 @Module({
   imports: [
@@ -54,6 +55,8 @@ import Redis from 'ioredis';
     forwardRef(() => BankModule),
     forwardRef(() => BankAccountModule),
     forwardRef(() => MailModule),
+    forwardRef(() => AuthModule),
+    forwardRef(() => BankConfigModule),
   ],
   controllers: [AppController],
   providers: [

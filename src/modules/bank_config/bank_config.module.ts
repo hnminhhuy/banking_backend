@@ -15,4 +15,4 @@ import { ConfigRepo } from './infra/data/repositories/config.repo';
   ],
   exports: [],
 })
-export class ConfigModule {}
+export class BankConfigModule {}

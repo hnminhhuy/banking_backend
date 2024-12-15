@@ -1,4 +1,4 @@
-import { ConfigModel } from 'src/modules/config/core/models/config.model';
+import { ConfigModel } from 'src/modules/bank_config/core/models/config.model';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity({ name: 'configs' })
