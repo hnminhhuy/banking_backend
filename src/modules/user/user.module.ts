@@ -7,6 +7,7 @@ import { UserDatasource } from './infra/data/user.datasource';
 import {
   BlockUserUsecase,
   CreateUserUsecase,
+  GeneratePasswordUsecase,
   GetUserUsecase,
   ListUserUsecase,
   UpdateUserPassword,
@@ -14,6 +15,7 @@ import {
 } from './core/usecases';
 import {
   UserControllerByAdmin,
+  UserControllerByCustomer,
   UserControllerByEmployee,
 } from './app/controller';
 
@@ -39,7 +41,12 @@ import {
     UpdateUserPassword,
     ListUserUsecase,
     BlockUserUsecase,
+    GeneratePasswordUsecase,
   ],
-  controllers: [UserControllerByAdmin, UserControllerByEmployee],
+  controllers: [
+    UserControllerByAdmin,
+    UserControllerByEmployee,
+    UserControllerByCustomer,
+  ],
 })
 export class UserModule {}

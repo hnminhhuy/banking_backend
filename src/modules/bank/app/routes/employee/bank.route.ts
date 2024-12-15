@@ -1,6 +1,5 @@
 import { RequestMethod, HttpStatus } from '@nestjs/common';
 import { IRouteParams } from '../../../../../decorators';
-import { UserModel } from '../../../../user/core/models/user.model';
 import { Page } from '../../../../../common/models';
 import { BankModel } from '../../../core/models/bank.model';
 import { ListBankDto } from '../../dto/list_banks.dto';

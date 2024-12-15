@@ -5,6 +5,7 @@ import { CreateUserDto, ListUserDto } from '../dtos';
 import { UserModelParams } from 'src/modules/user/core/models/user.model';
 import {
   CreateUserUsecase,
+  GeneratePasswordUsecase,
   GetUserUsecase,
   ListUserUsecase,
 } from 'src/modules/user/core/usecases';
@@ -20,12 +21,16 @@ export class UserControllerByEmployee {
     private readonly createUserUsecase: CreateUserUsecase,
     private readonly listCustomersUsecase: ListUserUsecase,
     private readonly getUserUsecase: GetUserUsecase,
+    private readonly generatePasswordUsecase: GeneratePasswordUsecase,
   ) {}
 
   @Route(employeeRoute.createCustomer)
   async createCustomer(@Req() req, @Body() body: CreateUserDto) {
+    const rawPassword = this.generatePasswordUsecase.execute(10);
+
     const params: UserModelParams = {
       ...body,
+      password: rawPassword,
       role: UserRole.Customer,
       createdBy: req.user.authId,
       isBlocked: false,
@@ -33,6 +38,8 @@ export class UserControllerByEmployee {
 
     const createdUser = await this.createUserUsecase.execute(params);
     const { password, ...returnData } = createdUser;
+    returnData['rawPassword'] = rawPassword;
+
     return {
       data: returnData,
       statusCode: HttpStatus.CREATED,
