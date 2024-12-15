@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { CreateRefreshTokenUsecase } from './refresh_tokens/create_refresh_token.usecase';
 import { CreateAccessTokenUsecase } from './auth_services/create_access_token.usecase';
-import { GetRefreshTokenUsecase } from './refresh_tokens/get_refresh_token.usecase';
 import { GetUserUsecase } from 'src/modules/user/core/usecases';
 import { AuthProvider } from '../enums/auth.provider';
 
@@ -36,6 +35,7 @@ export class LoginUsecase {
     return {
       accessToken: accessToken,
       refreshToken: refreshToken.refreshToken,
+      role: user.role,
     };
   }
 }
