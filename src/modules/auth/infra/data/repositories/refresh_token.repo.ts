@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { IRefreshTokenRepo } from '../../core/repositories/refresh_token.irepo';
-import { RefreshTokenDatasource } from '../data/refresh_token.datasource';
-import { RefreshTokenModel } from '../../core/models/refresh_token.model';
+import { IRefreshTokenRepo } from '../../../core/repositories/refresh_token.irepo';
+import { RefreshTokenDatasource } from '../refresh_token.datasource';
+import { RefreshTokenModel } from '../../../core/models/refresh_token.model';
 
 @Injectable()
 export class RefreshTokenRepo implements IRefreshTokenRepo {

@@ -23,7 +23,7 @@ export class JwtUserStrategy extends PassportStrategy(Strategy, 'jwt_user') {
   async validate(payload: any) {
     const userId = payload.authId;
 
-    if (await this.checkCacheBlockedUserUsecase.execute(userId))
+    if (userId && (await this.checkCacheBlockedUserUsecase.execute(userId)))
       throw new ForbiddenException();
 
     return payload;

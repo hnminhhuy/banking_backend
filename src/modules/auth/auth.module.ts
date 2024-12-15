@@ -8,7 +8,7 @@ import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { UserModule } from '../user/user.module';
 import { AuthController } from './app/controller/auth.controller';
 import { IRefreshTokenRepo } from './core/repositories/refresh_token.irepo';
-import { RefreshTokenRepo } from './infra/repositories/refresh_token.repo';
+import { RefreshTokenRepo } from './infra/data/repositories/refresh_token.repo';
 import { RefreshTokenDatasource } from './infra/data/refresh_token.datasource';
 import { RoleAuthGuard } from './core/guards/role_auth.guard';
 import { JwtUserStrategy } from './strategies/jwt_user.strategy';
@@ -24,11 +24,11 @@ import {
   UpdateCacheBlockedUserUsecase,
   VerifyTokenUsecase,
 } from './core/usecases';
-import { GetBlockedUserUsecase } from '../user/core/usecases/get_blocked_user.usecase';
 import { CacheBlockedUserIRepo } from './core/repositories/cache_blocked_user.irepo';
-import { CacheBlockedUserRepo } from './infra/repositories/cache_blocked_user.repo';
+import { CacheBlockedUserRepo } from './infra/data/repositories/cache_blocked_user.repo';
 import { CacheBlockedUserDatasource } from './infra/data/cache_blocked_user.datasource';
 import { AppModule } from 'src/app/app.module';
+import { GetBlockedUserUsecase } from '../user/core/usecases';
 
 @Module({
   imports: [

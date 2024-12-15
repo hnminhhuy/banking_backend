@@ -29,7 +29,7 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt_user'))
   async refresh(@Req() req) {
     const newAccessToken = await this.refreshAccessTokenUsecase.execute(
-      req.user.authId,
+      req.user.id,
     );
     return { accessToken: newAccessToken }; // Send the new access token in response
   }

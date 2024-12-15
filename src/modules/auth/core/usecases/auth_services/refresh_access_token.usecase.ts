@@ -20,15 +20,18 @@ export class RefreshAccessTokenUsecase {
     //Check if refresh token in DB
 
     const validRefreshToken = await this.getRefreshTokenUsecase.execute(
-      'auth_id',
+      'id',
       id,
     );
 
-    if (!validRefreshToken) throw ForbiddenException;
+    if (!validRefreshToken)
+      throw new ForbiddenException('Refresh token is not exist!');
+
     const user = await this.getUserUsecase.execute(
       'id',
       validRefreshToken.authId,
     );
+    if (user.isBlocked) throw new ForbiddenException('Your account is blocked');
 
     const accessToken = await this.createAccessTokenUsecase.execute({
       authId: validRefreshToken.authId,

@@ -24,7 +24,6 @@ export class RoleAuthGuard extends AuthGuard('jwt_user') {
     const request = context.switchToHttp().getRequest();
     const payload = request.user;
 
-    const userId = payload.authId;
     return requiredRoles.some((role) => payload.userRole.includes(role));
   }
 }

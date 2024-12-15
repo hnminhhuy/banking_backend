@@ -16,7 +16,7 @@ export class VerifyTokenUsecase {
         throw new UnauthorizedException('Refresh token is expired');
       else if (error.name === 'JsonWebTokenError')
         throw new ForbiddenException('Refresh token is invalid type');
-      throw UnauthorizedException;
+      throw new UnauthorizedException();
     }
   }
 }

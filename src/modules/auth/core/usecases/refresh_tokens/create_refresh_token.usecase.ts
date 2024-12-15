@@ -34,8 +34,6 @@ export class CreateRefreshTokenUsecase {
       userId,
     );
 
-    console.log('login', existingRefreshToken);
-
     if (existingRefreshToken) {
       try {
         // Verify the token
@@ -43,15 +41,10 @@ export class CreateRefreshTokenUsecase {
           existingRefreshToken.refreshToken,
         );
 
-        console.log('try: ', existingRefreshToken);
-
         // Token is valid, return it
         return existingRefreshToken;
       } catch (error) {
         if (error instanceof UnauthorizedException) {
-          // Token expired, delete it from the database
-          console.log('error');
-
           await this.deleteRefreshTokenUsecase.deleteById(
             existingRefreshToken.id,
           );

@@ -9,15 +9,10 @@ export class CacheBlockedUserDatasource {
   constructor(@Inject('REDIS_CLIENT') private redisClient: Redis) {}
   async setCache(blockedUserIds: string[]): Promise<void> {
     try {
-      // Use SADD to add all blocked users to the Redis set
-      const exists = await this.redisClient.exists(
+      await this.redisClient.del(
         CacheBlockedUserDatasource.CACHE_BLOCKED_USER_ID,
       );
-      if (exists) {
-        await this.redisClient.del(
-          CacheBlockedUserDatasource.CACHE_BLOCKED_USER_ID,
-        );
-      }
+      if (blockedUserIds.length === 0) return;
 
       const result = await this.redisClient.sadd(
         CacheBlockedUserDatasource.CACHE_BLOCKED_USER_ID,
