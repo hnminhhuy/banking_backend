@@ -24,7 +24,7 @@ export class ConfigModel {
     Object.assign(this, params);
   }
 
-  public convertValue(): unknown {
+  public getValue(): unknown {
     switch (this.type) {
       case ConfigType.STRING:
         return this.value;
