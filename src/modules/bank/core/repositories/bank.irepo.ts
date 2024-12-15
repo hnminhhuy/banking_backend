@@ -1,5 +1,5 @@
 import { Page, PageParams, SortParams } from '../../../../common/models';
-import { BANK_SORT_KEY } from '../enums/bank_sort_key';
+import { BankSort } from '../enums/bank_sort';
 import { BankModel } from '../models/bank.model';
 
 export abstract class IBankRepo {
@@ -11,7 +11,7 @@ export abstract class IBankRepo {
   ): Promise<BankModel | undefined>;
   public abstract list(
     pageParams: PageParams,
-    sortParams: SortParams<BANK_SORT_KEY> | undefined,
+    sortParams: SortParams<BankSort> | undefined,
     relations: string[] | undefined,
   ): Promise<Page<BankModel>>;
 }

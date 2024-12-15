@@ -24,11 +24,11 @@ export class ChangeBalanceUsecase {
       throw new NotFoundException('Account not found');
     }
 
-    if (bankAccount.balance < amount) {
+    if (amount < 0 && bankAccount.balance < Math.abs(amount)) {
       throw new BadRequestException('Insufficient balance');
     }
 
-    const balance = bankAccount.balance - amount;
+    const balance = bankAccount.balance + amount;
 
     return await this.bankAccountRepo.changeBalance(bankAccount, balance);
   }

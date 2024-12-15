@@ -3,7 +3,7 @@ import { GetBankUsecase, ListBanksUsecase } from '../../../core/usecases';
 import { Route } from '../../../../../decorators';
 import { GetBankDto, ListBankDto } from '../../dto';
 import { PageParams, SortParams } from '../../../../../common/models';
-import { BANK_SORT_KEY as BANK_SORT_KEY } from '../../../core/enums/bank_sort_key';
+import { BankSort } from '../../../core/enums/bank_sort';
 import bankRoute from '../../routes/customer/bank.route';
 
 @Controller({ path: 'api/customer/v1/banks' })
@@ -22,16 +22,24 @@ export class BankController {
       query.onlyCount,
     );
 
-    const sortParams: SortParams<BANK_SORT_KEY> = new SortParams(
-      query.sort as BANK_SORT_KEY,
+    const sortParams: SortParams<BankSort> = new SortParams(
+      query.sort as BankSort,
       query.direction,
     );
     const banks = await this.listBanksUsecase.execute(pageParams, sortParams);
 
-    return banks.data.map((bank) => {
+    banks.data.map((bank) => {
       const { publicKey, id, createdAt, updatedAt, ...bankData } = bank;
       return bankData;
     });
+
+    return {
+      data: banks.data,
+      metadata: {
+        page: banks.page,
+        totalCount: banks.totalCount,
+      },
+    };
   }
 
   @Route(bankRoute.getBank)

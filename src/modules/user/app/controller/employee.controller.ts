@@ -17,7 +17,9 @@ import { SendMailUseCase } from '../../../mail/core/usecases/send_mail.usecase';
 import { BankAccountParams } from '../../../bank_account/core/models/bank_account.model';
 import { PageParams, SortParams } from '../../../../common/models';
 import { UserRole } from '../../core/enums/user_role';
-import { SEND_MAIL_TYPE } from '../../../mail/core/enums/send_mail_type';
+import { SendMailType } from '../../../mail/core/enums/send_mail_type';
+import { mailList } from '../../../mail/core/models/mail_list';
+import { Transactional } from 'typeorm-transactional';
 
 @ApiTags('User By Employee')
 @Controller({ path: 'api/employee/v1/users' })
@@ -33,6 +35,7 @@ export class UserControllerByEmployee {
   ) {}
 
   @Route(employeeRoute.createCustomer)
+  @Transactional()
   async createCustomer(@Req() req, @Body() body: CreateCustomerDto) {
     const rawPassword = this.generatePasswordUsecase.execute(10);
 
@@ -60,7 +63,7 @@ export class UserControllerByEmployee {
 
     await this.sendMailUsecase.execute(
       createdUser.email,
-      SEND_MAIL_TYPE.MAIL_GET_INITIAL_PASSWORD,
+      mailList.getInitPassword,
       {
         fullName: createdUser.fullName,
         initialPassword: rawPassword,

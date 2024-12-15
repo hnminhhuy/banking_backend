@@ -4,7 +4,8 @@ import { BankAccountEntity } from './entities/bank_account.entity';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { BankAccountModel } from '../../core/models/bank_account.model';
 import { Page, PageParams, SortParams } from '../../../../common/models';
-import { BANK_ACCOUNT_SORT_KEY } from '../../core/enums/bank_account_sort_key';
+import { BankAccountSort } from '../../core/enums/bank_account_sort';
+import { paginate } from '../../../../common/helpers/pagination.helper';
 
 @Injectable()
 export class BankAccountDatasource {
@@ -49,37 +50,20 @@ export class BankAccountDatasource {
 
   public async list(
     pageParams: PageParams,
-    sortParams: SortParams<BANK_ACCOUNT_SORT_KEY> | undefined,
+    sortParams: SortParams<BankAccountSort> | undefined,
     relations: string[] | undefined = undefined,
   ): Promise<Page<BankAccountModel>> {
-    const condition: FindOptionsWhere<BankAccountEntity> = {};
-    const orderBy: Record<any, any> = {};
+    const conditions: FindOptionsWhere<BankAccountEntity> = {};
 
-    if (sortParams) {
-      orderBy[sortParams.sort] = sortParams.direction;
-    }
-    const query = this.bankAccountRepo.createQueryBuilder();
+    const { page, totalCount, rawItems } = await paginate<BankAccountEntity>(
+      this.bankAccountRepo,
+      pageParams,
+      sortParams,
+      relations,
+      conditions,
+    );
+    const bankModels = rawItems.map((bank) => new BankAccountModel(bank));
 
-    query.setFindOptions({
-      where: condition,
-      relations: relations,
-      skip: pageParams.limit * (pageParams.page - 1),
-      take: pageParams.limit,
-      order: orderBy,
-    });
-
-    let totalCount;
-    if (pageParams.needTotalCount) {
-      totalCount = await query.getCount();
-    }
-
-    let bankAccounts: BankAccountEntity[] = [];
-    if (!pageParams.onlyCount) {
-      bankAccounts = await query.getMany();
-    }
-
-    const bankModels = bankAccounts.map((bank) => new BankAccountModel(bank));
-
-    return new Page(pageParams.page, totalCount, bankModels);
+    return new Page(page, totalCount, bankModels);
   }
 }

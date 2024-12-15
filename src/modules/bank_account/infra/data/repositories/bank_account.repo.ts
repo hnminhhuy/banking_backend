@@ -3,7 +3,7 @@ import { IBankAccountRepo } from '../../../core/repositories/bank_account.irepo'
 import { BankAccountDatasource } from '../bank_account.datasource';
 import { BankAccountModel } from '../../../core/models/bank_account.model';
 import { PageParams, SortParams, Page } from '../../../../../common/models';
-import { BANK_ACCOUNT_SORT_KEY } from '../../../core/enums/bank_account_sort_key';
+import { BankAccountSort } from '../../../core/enums/bank_account_sort';
 
 @Injectable()
 export class BankAccountRepo implements IBankAccountRepo {
@@ -11,7 +11,7 @@ export class BankAccountRepo implements IBankAccountRepo {
 
   public async list(
     pageParams: PageParams,
-    sortParams: SortParams<BANK_ACCOUNT_SORT_KEY> | undefined,
+    sortParams: SortParams<BankAccountSort> | undefined,
     relations: string[] | undefined,
   ): Promise<Page<BankAccountModel>> {
     return await this.bankAccountDatasource.list(

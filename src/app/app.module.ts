@@ -15,7 +15,7 @@ import { UserModule } from 'src/modules/user/user.module';
 import { BankModule } from '../modules/bank/bank.module';
 import { BankAccountModule } from '../modules/bank_account/bank_account.module';
 import constantConfig from '../config/constant.config';
-import mailConfig from '../config/mail.config';
+import mailConfig from '../config/mail_service.config';
 import { MailModule } from '../modules/mail/mail.module';
 import { AuthModule } from 'src/modules/auth/auth.module';
 

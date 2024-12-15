@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { google } from 'googleapis';
 import { ConfigService } from '@nestjs/config';
@@ -18,11 +18,17 @@ export class MailService {
   private oAuth2Client;
 
   constructor(private readonly configService: ConfigService) {
-    this.MAIL = this.configService.get<string>('mail.mail');
-    this.CLIENT_ID = this.configService.get<string>('mail.clientId');
-    this.CLIENT_SECRET = this.configService.get<string>('mail.clientSecret');
-    this.REDIRECT_URI = this.configService.get<string>('mail.redirectUri');
-    this.REFRESH_TOKEN = this.configService.get<string>('mail.refreshToken');
+    this.MAIL = this.configService.get<string>('mail_service.mail');
+    this.CLIENT_ID = this.configService.get<string>('mail_service.clientId');
+    this.CLIENT_SECRET = this.configService.get<string>(
+      'mail_service.clientSecret',
+    );
+    this.REDIRECT_URI = this.configService.get<string>(
+      'mail_service.redirectUri',
+    );
+    this.REFRESH_TOKEN = this.configService.get<string>(
+      'mail_service.refreshToken',
+    );
   }
 
   private async getAccessToken() {
@@ -78,7 +84,7 @@ export class MailService {
       return true;
     } catch (error) {
       console.error('Error sending email:', error);
-      throw error;
+      throw new BadRequestException(error.message);
     }
   }
 }

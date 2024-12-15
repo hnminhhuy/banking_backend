@@ -5,7 +5,7 @@ import { GetBankAccountDto } from '../../dtos';
 import { BankAccountRouteByEmployee } from '../../routes/employee/bank_account.route';
 import { PageParams, SortParams } from '../../../../../common/models';
 import { ListBankAccountDto } from '../../dtos/list_bank_account.dto';
-import { BANK_ACCOUNT_SORT_KEY } from '../../../core/enums/bank_account_sort_key';
+import { BankAccountSort } from '../../../core/enums/bank_account_sort';
 import { ListBankAccountsUsecase } from '../../../core/usecases/list_bank_account.usecase';
 
 @Controller({ path: 'api/customer/v1/bank-accounts' })
@@ -34,8 +34,8 @@ export class BankAccountController {
       query.onlyCount,
     );
 
-    const sortParams: SortParams<BANK_ACCOUNT_SORT_KEY> = new SortParams(
-      query.sort as BANK_ACCOUNT_SORT_KEY,
+    const sortParams: SortParams<BankAccountSort> = new SortParams(
+      query.sort as BankAccountSort,
       query.direction,
     );
     const bankAccounts = await this.listBankAccountsUsecase.execute(
@@ -43,6 +43,12 @@ export class BankAccountController {
       sortParams,
     );
 
-    return bankAccounts;
+    return {
+      data: bankAccounts.data,
+      metadata: {
+        page: bankAccounts.page,
+        totalCount: bankAccounts.totalCount,
+      },
+    };
   }
 }
