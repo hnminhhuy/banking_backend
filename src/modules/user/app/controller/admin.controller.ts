@@ -14,6 +14,7 @@ import { UserSort } from 'src/modules/user/core/enums/user_sort';
 import {
   BlockUserUsecase,
   CreateUserUsecase,
+  GeneratePasswordUsecase,
   GetUserUsecase,
   ListUserUsecase,
   UpdateUserUsecase,
@@ -35,12 +36,16 @@ export class UserControllerByAdmin {
     private readonly updateUserUsecase: UpdateUserUsecase,
     private readonly getUserUsecase: GetUserUsecase,
     private readonly blockUserUsecase: BlockUserUsecase,
+    private readonly generatePasswordUsecase: GeneratePasswordUsecase,
   ) {}
 
   @Route(adminRoute.createEmployee)
   async createEmployee(@Req() req, @Body() body: CreateUserDto) {
+    const rawPassword = this.generatePasswordUsecase.execute(10);
+
     const params: UserModelParams = {
       ...body,
+      password: rawPassword,
       role: UserRole.Employee,
       createdBy: req.user.authId,
       isBlocked: false,
@@ -48,6 +53,8 @@ export class UserControllerByAdmin {
 
     const createdUser = await this.createUserUsecase.execute(params);
     const { password, ...returnData } = createdUser;
+    returnData['rawPassword'] = rawPassword;
+
     return {
       data: returnData,
       statusCode: HttpStatus.CREATED,

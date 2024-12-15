@@ -7,10 +7,7 @@ import {
 } from '@nestjs/common';
 import { isDevelopmentEnv } from 'src/common/helpers/env.helper';
 import { Route } from 'src/decorators';
-import {
-  UserModel,
-  UserModelParams,
-} from 'src/modules/user/core/models/user.model';
+import { UserModelParams } from 'src/modules/user/core/models/user.model';
 import {
   CreateUserUsecase,
   UpdateUserUsecase,
