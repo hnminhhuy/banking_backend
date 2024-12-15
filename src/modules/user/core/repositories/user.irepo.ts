@@ -28,4 +28,9 @@ export abstract class IUserRepo {
     sortParams: SortParams<UserSort>,
     relations: string[] | undefined,
   ): Promise<Page<UserModel>>;
+
+  public abstract updateBlocked(
+    id: string,
+    isBlocked: boolean,
+  ): Promise<boolean>;
 }

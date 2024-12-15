@@ -5,16 +5,19 @@ import { IUserRepo } from './core/repositories/user.irepo';
 import { UserRepo } from './infra/data/repositories/user.repo';
 import { UserDatasource } from './infra/data/user.datasource';
 import {
+  BlockUserUsecase,
   CreateUserUsecase,
+  GeneratePasswordUsecase,
   GetUserUsecase,
   ListUserUsecase,
   UpdateUserPassword,
   UpdateUserUsecase,
 } from './core/usecases';
-import { UserControllerByAdmin } from './app/controller';
-import { UserControllerByEmployee } from './app/controller/employee/employee.controller';
-import { BankAccountModule } from '../bank_account/bank_account.module';
-import { BankModule } from '../bank/bank.module';
+import {
+  UserControllerByAdmin,
+  UserControllerByCustomer,
+  UserControllerByEmployee,
+} from './app/controller';
 
 @Module({
   imports: [
@@ -27,6 +30,8 @@ import { BankModule } from '../bank/bank.module';
     UpdateUserUsecase,
     GetUserUsecase,
     UpdateUserPassword,
+    BlockUserUsecase,
+    ListUserUsecase,
   ],
   providers: [
     {
@@ -39,7 +44,13 @@ import { BankModule } from '../bank/bank.module';
     UpdateUserUsecase,
     UpdateUserPassword,
     ListUserUsecase,
+    BlockUserUsecase,
+    GeneratePasswordUsecase,
   ],
-  controllers: [UserControllerByAdmin, UserControllerByEmployee],
+  controllers: [
+    UserControllerByAdmin,
+    UserControllerByEmployee,
+    UserControllerByCustomer,
+  ],
 })
 export class UserModule {}

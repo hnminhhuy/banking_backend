@@ -7,5 +7,7 @@ export class ChangeUsersTableColumns1734016067690
     await queryRunner.renameColumn('users', 'is_active', 'is_blocked');
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {}
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.renameColumn('users', 'is_blocked', 'is_active');
+  }
 }
