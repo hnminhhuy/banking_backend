@@ -1,7 +1,7 @@
 import { Body, Controller, HttpStatus, Query, Req } from '@nestjs/common';
 import { Route } from 'src/decorators';
 import employeeRoute from '../routes/employee.route';
-import { CreateUserDto, ListUserDto } from '../dtos';
+import { CreateCustomerDto, CreateUserDto, ListUserDto } from '../dtos';
 import { UserModelParams } from 'src/modules/user/core/models/user.model';
 import {
   CreateUserUsecase,
@@ -9,10 +9,15 @@ import {
   GetUserUsecase,
   ListUserUsecase,
 } from 'src/modules/user/core/usecases';
-import { UserRole } from 'src/modules/user/core/enums/user_role';
-import { PageParams, SortParams } from 'src/common/models';
 import { UserSort } from 'src/modules/user/core/enums/user_sort';
 import { ApiTags } from '@nestjs/swagger';
+import { GetBankUsecase } from '../../../bank/core/usecases';
+import { CreateBankAccountUsecase } from '../../../bank_account/core/usecases';
+import { SendMailUseCase } from '../../../mail/core/usecases/send_mail.usecase';
+import { BankAccountParams } from '../../../bank_account/core/models/bank_account.model';
+import { PageParams, SortParams } from '../../../../common/models';
+import { UserRole } from '../../core/enums/user_role';
+import { SEND_MAIL_TYPE } from '../../../mail/core/enums/send_mail_type';
 
 @ApiTags('User By Employee')
 @Controller({ path: 'api/employee/v1/users' })
@@ -22,13 +27,16 @@ export class UserControllerByEmployee {
     private readonly listCustomersUsecase: ListUserUsecase,
     private readonly getUserUsecase: GetUserUsecase,
     private readonly generatePasswordUsecase: GeneratePasswordUsecase,
+    private readonly getBankUsecase: GetBankUsecase,
+    private readonly createBankAccountUsecase: CreateBankAccountUsecase,
+    private readonly sendMailUsecase: SendMailUseCase,
   ) {}
 
   @Route(employeeRoute.createCustomer)
-  async createCustomer(@Req() req, @Body() body: CreateUserDto) {
+  async createCustomer(@Req() req, @Body() body: CreateCustomerDto) {
     const rawPassword = this.generatePasswordUsecase.execute(10);
 
-    const params: UserModelParams = {
+    const userParams: UserModelParams = {
       ...body,
       password: rawPassword,
       role: UserRole.Customer,
@@ -36,9 +44,28 @@ export class UserControllerByEmployee {
       isBlocked: false,
     };
 
-    const createdUser = await this.createUserUsecase.execute(params);
+    const createdUser = await this.createUserUsecase.execute(userParams);
     const { password, ...returnData } = createdUser;
     returnData['rawPassword'] = rawPassword;
+
+    const bank = await this.getBankUsecase.execute('code', 'NHB');
+
+    const bankAccountParams: BankAccountParams = {
+      bankId: bank.id,
+      userId: createdUser.id,
+      balance: body.balance,
+    };
+
+    await this.createBankAccountUsecase.execute(bankAccountParams);
+
+    await this.sendMailUsecase.execute(
+      createdUser.email,
+      SEND_MAIL_TYPE.MAIL_GET_INITIAL_PASSWORD,
+      {
+        fullName: createdUser.fullName,
+        initialPassword: rawPassword,
+      },
+    );
 
     return {
       data: returnData,

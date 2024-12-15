@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BaseModel, BaseModelParams } from '../../../../common/models';
 
 export interface BankAccountParams extends BaseModelParams {
-  id: string;
+  id?: string;
   bankId: string;
   userId: string;
   balance: number;

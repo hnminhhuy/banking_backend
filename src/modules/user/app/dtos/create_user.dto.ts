@@ -9,6 +9,6 @@ export class CreateUserDto extends PickType(UserDto, [
 ]) {}
 
 export class CreateCustomerDto extends IntersectionType(
-  PickType(UserDto, ['email', 'username', 'password', 'fullName']),
+  PickType(UserDto, ['email', 'username', 'fullName']),
   PickType(BankAccountDto, ['balance']),
 ) {}

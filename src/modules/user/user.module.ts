@@ -20,12 +20,14 @@ import {
 } from './app/controller';
 import { BankModule } from '../bank/bank.module';
 import { BankAccountModule } from '../bank_account/bank_account.module';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity]),
     forwardRef(() => BankAccountModule),
     forwardRef(() => BankModule),
+    forwardRef(() => MailModule),
   ],
   exports: [
     CreateUserUsecase,
