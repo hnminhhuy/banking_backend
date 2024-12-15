@@ -15,11 +15,13 @@ import {
   BankAccountControllerByEmployee,
 } from './app/controller';
 import { ListBankAccountsUsecase } from './core/usecases/list_bank_account.usecase';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([BankAccountEntity]),
     forwardRef(() => BankModule),
+    forwardRef(() => UserModule),
   ],
   controllers: [
     BankAccountControllerByCustomer,
@@ -36,6 +38,6 @@ import { ListBankAccountsUsecase } from './core/usecases/list_bank_account.useca
     ChangeBalanceUsecase,
     ListBankAccountsUsecase,
   ],
-  exports: [GetBankAccountUsecase],
+  exports: [GetBankAccountUsecase, CreateBankAccountUsecase],
 })
 export class BankAccountModule {}

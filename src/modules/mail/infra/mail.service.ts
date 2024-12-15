@@ -37,7 +37,11 @@ export class MailService {
   }
 
   async renderTemplate(templateName: string, data: any): Promise<string> {
-    const templatePath = path.join(cwd(),  'dist/src/modules/mail/core/templates/', `${templateName}.hbs`);
+    const templatePath = path.join(
+      cwd(),
+      'dist/src/modules/mail/core/templates/',
+      `${templateName}.hbs`,
+    );
     const templateContent = fs.readFileSync(templatePath, 'utf-8');
     const template = Handlebars.compile(templateContent);
     return template(data);
@@ -46,7 +50,7 @@ export class MailService {
   async sendMail(
     to: string,
     subject: string,
-    htmlContent: string
+    htmlContent: string,
   ): Promise<boolean> {
     try {
       const accessToken = await this.getAccessToken();

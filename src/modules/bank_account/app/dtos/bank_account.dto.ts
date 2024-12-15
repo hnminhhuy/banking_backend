@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsUUID, Length } from 'class-validator';
+import { IsInt, IsString, IsUUID, Length, Max, Min } from 'class-validator';
 
 export class BankAccountDto {
   @ApiProperty()
@@ -10,4 +10,10 @@ export class BankAccountDto {
   @ApiProperty()
   @IsUUID()
   userId!: string;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  @Max(Number.MAX_SAFE_INTEGER)
+  balance!: number;
 }

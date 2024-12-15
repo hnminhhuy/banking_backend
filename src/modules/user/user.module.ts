@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './infra/data/entities/user.entity';
 import { IUserRepo } from './core/repositories/user.irepo';
@@ -13,9 +13,15 @@ import {
 } from './core/usecases';
 import { UserControllerByAdmin } from './app/controller';
 import { UserControllerByEmployee } from './app/controller/employee/employee.controller';
+import { BankAccountModule } from '../bank_account/bank_account.module';
+import { BankModule } from '../bank/bank.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity])],
+  imports: [
+    TypeOrmModule.forFeature([UserEntity]),
+    forwardRef(() => BankAccountModule),
+    forwardRef(() => BankModule),
+  ],
   exports: [
     CreateUserUsecase,
     UpdateUserUsecase,
