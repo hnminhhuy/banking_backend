@@ -18,21 +18,21 @@ export class RefreshAccessTokenUsecase {
 
   public async execute(id: string): Promise<string> {
     //Check if refresh token in DB
+
     const validRefreshToken = await this.getRefreshTokenUsecase.execute(
       'id',
       id,
     );
-    if (!validRefreshToken) throw ForbiddenException;
+
+    if (!validRefreshToken)
+      throw new ForbiddenException('Refresh token is not exist!');
+
     const user = await this.getUserUsecase.execute(
       'id',
       validRefreshToken.authId,
     );
-    if (!user.isBlocked) {
-      this.deleteRefreshTokenUsecase.deleteById(id);
-      throw ForbiddenException;
-    }
+    if (user.isBlocked) throw new ForbiddenException('Your account is blocked');
 
-    //Create a new access token if the refreshtoken is valid
     const accessToken = await this.createAccessTokenUsecase.execute({
       authId: validRefreshToken.authId,
       userRole: user.role,

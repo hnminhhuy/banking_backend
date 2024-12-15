@@ -8,6 +8,7 @@ import {
   BlockUserUsecase,
   CreateUserUsecase,
   GeneratePasswordUsecase,
+  GetBlockedUserUsecase,
   GetUserUsecase,
   ListUserUsecase,
   UpdateUserPassword,
@@ -18,6 +19,7 @@ import {
   UserControllerByCustomer,
   UserControllerByEmployee,
 } from './app/controller';
+import { AuthModule } from '../auth/auth.module';
 import { BankModule } from '../bank/bank.module';
 import { BankAccountModule } from '../bank_account/bank_account.module';
 import { MailModule } from '../mail/mail.module';
@@ -36,6 +38,9 @@ import { MailModule } from '../mail/mail.module';
     UpdateUserPassword,
     BlockUserUsecase,
     ListUserUsecase,
+  imports: [
+    TypeOrmModule.forFeature([UserEntity]),
+    forwardRef(() => AuthModule),
   ],
   providers: [
     {
@@ -50,6 +55,15 @@ import { MailModule } from '../mail/mail.module';
     ListUserUsecase,
     BlockUserUsecase,
     GeneratePasswordUsecase,
+    GetBlockedUserUsecase,
+  ],
+  exports: [
+    IUserRepo,
+    CreateUserUsecase,
+    UpdateUserUsecase,
+    GetUserUsecase,
+    UpdateUserPassword,
+    GetBlockedUserUsecase,
   ],
   controllers: [
     UserControllerByAdmin,

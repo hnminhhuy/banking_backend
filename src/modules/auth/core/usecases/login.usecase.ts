@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -14,25 +15,19 @@ export class LoginUsecase {
   constructor(
     private readonly createRefreshTokenUsecase: CreateRefreshTokenUsecase,
     private readonly createAccessTokenUsecase: CreateAccessTokenUsecase,
-    private readonly getRefreshTokenUsecase: GetRefreshTokenUsecase,
     private readonly getUserUsecase: GetUserUsecase,
   ) {}
   public async execute(username: string, password: string) {
     const user = await this.getUserUsecase.execute('username', username);
     if (!user) throw new NotFoundException();
+    if (user.isBlocked) throw new ForbiddenException();
     if (!user.verifyPassword(password)) throw new BadRequestException();
 
-    let refreshToken = await this.getRefreshTokenUsecase.execute(
-      'auth_id',
+    let refreshToken = await this.createRefreshTokenUsecase.execute(
       user.id,
+      AuthProvider.USER,
     );
 
-    if (!refreshToken) {
-      refreshToken = await this.createRefreshTokenUsecase.execute(
-        user.id,
-        AuthProvider.USER,
-      );
-    }
     const accessToken = await this.createAccessTokenUsecase.execute({
       authId: user.id,
       userRole: user.role,
