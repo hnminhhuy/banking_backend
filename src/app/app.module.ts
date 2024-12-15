@@ -32,6 +32,7 @@ import Redis from 'ioredis';
         authConfig,
         constantConfig,
         mailConfig,
+        redisConfig,
       ],
     }),
     TypeOrmModule.forRootAsync({

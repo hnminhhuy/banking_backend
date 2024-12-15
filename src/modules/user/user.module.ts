@@ -30,16 +30,6 @@ import { MailModule } from '../mail/mail.module';
     forwardRef(() => BankAccountModule),
     forwardRef(() => BankModule),
     forwardRef(() => MailModule),
-  ],
-  exports: [
-    CreateUserUsecase,
-    UpdateUserUsecase,
-    GetUserUsecase,
-    UpdateUserPassword,
-    BlockUserUsecase,
-    ListUserUsecase,
-  imports: [
-    TypeOrmModule.forFeature([UserEntity]),
     forwardRef(() => AuthModule),
   ],
   providers: [
@@ -58,12 +48,12 @@ import { MailModule } from '../mail/mail.module';
     GetBlockedUserUsecase,
   ],
   exports: [
-    IUserRepo,
     CreateUserUsecase,
     UpdateUserUsecase,
     GetUserUsecase,
     UpdateUserPassword,
     GetBlockedUserUsecase,
+    ListUserUsecase,
   ],
   controllers: [
     UserControllerByAdmin,
