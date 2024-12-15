@@ -55,6 +55,7 @@ import { BankConfigModule } from 'src/modules/bank_config/bank_config.module';
     forwardRef(() => BankModule),
     forwardRef(() => BankAccountModule),
     forwardRef(() => MailModule),
+    forwardRef(() => AuthModule),
     forwardRef(() => BankConfigModule),
   ],
   controllers: [AppController],
