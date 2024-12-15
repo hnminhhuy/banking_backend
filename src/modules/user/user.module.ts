@@ -18,6 +18,8 @@ import {
   UserControllerByCustomer,
   UserControllerByEmployee,
 } from './app/controller';
+import { BankModule } from '../bank/bank.module';
+import { BankAccountModule } from '../bank_account/bank_account.module';
 
 @Module({
   imports: [
