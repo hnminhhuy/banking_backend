@@ -86,4 +86,12 @@ export class UserDatasource {
 
     return result.affected > 0;
   }
+
+  async getBlockedUser(): Promise<string[]> {
+    const blockedUsers = await this.userRepo.find({
+      where: { isBlocked: true },
+    });
+
+    return blockedUsers.map((user) => user.id);
+  }
 }

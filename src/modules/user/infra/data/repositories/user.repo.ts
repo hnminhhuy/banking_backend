@@ -50,4 +50,8 @@ export class UserRepo implements IUserRepo {
   public async updateBlocked(id: string, isBlocked: boolean): Promise<boolean> {
     return this.userDatasource.updateBlocked(id, isBlocked);
   }
+
+  public getBlockedUser(): Promise<string[]> {
+    return this.userDatasource.getBlockedUser();
+  }
 }

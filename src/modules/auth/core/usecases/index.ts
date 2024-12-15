@@ -4,4 +4,7 @@ export * from './refresh_tokens/delete_refresh_token.usecase';
 export * from './refresh_tokens/get_refresh_token.usecase';
 export * from './refresh_tokens/create_refresh_token.usecase';
 export * from './auth_services/refresh_access_token.usecase';
+export * from './cache_blocked_service/set_cache_blocked_user.usecase';
+export * from './cache_blocked_service/check_cache_blocked_user.usecase';
+export * from './cache_blocked_service/update_cache_blocked_user.usecase';
 export * from './login.usecase';

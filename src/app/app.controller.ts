@@ -21,7 +21,7 @@ export class AppController {
   ) {}
 
   @Route({ path: '/', method: RequestMethod.GET })
-  getHealth(): string {
+  async getHealth(): Promise<string> {
     return 'OK!';
   }
 
