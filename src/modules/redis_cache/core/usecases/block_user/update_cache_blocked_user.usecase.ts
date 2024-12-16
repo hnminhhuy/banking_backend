@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CacheBlockedUserIRepo } from '../../repositories/cache_blocked_user.irepo';
+import { ICacheBlockedUserRepo } from '../../repositories/cache_blocked_user.irepo';
 
 @Injectable()
 export class UpdateCacheBlockedUserUsecase {
-  constructor(private readonly cacheBlockedUserRepo: CacheBlockedUserIRepo) {}
+  constructor(private readonly cacheBlockedUserRepo: ICacheBlockedUserRepo) {}
   public async execute(userId: string, isBlocked: boolean): Promise<void> {
     await this.cacheBlockedUserRepo.updateCache(userId, isBlocked);
   }

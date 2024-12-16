@@ -20,16 +20,16 @@ import {
   UserControllerByCustomer,
   UserControllerByEmployee,
 } from './app/controller';
-import { AuthModule } from '../auth/auth.module';
 import { BankModule } from '../bank/bank.module';
 import { BankAccountModule } from '../bank_account/bank_account.module';
 import { MailModule } from '../mail/mail.module';
 import { AppModule } from 'src/app/app.module';
+import { RedisCacheModule } from '../redis_cache/redis_cache.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity]),
-    forwardRef(() => AuthModule),
+    forwardRef(() => RedisCacheModule),
     forwardRef(() => BankAccountModule),
     forwardRef(() => BankModule),
     forwardRef(() => MailModule),
