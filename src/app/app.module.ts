@@ -65,6 +65,11 @@ import Redis from 'ioredis';
       },
       inject: [ConfigService],
     },
+    {
+      provide: 'CircularDependencyLog',
+      useFactory: () => (msg: string) =>
+        console.warn(`Circular dependency: ${msg}`),
+    },
   ],
   exports: ['REDIS_CLIENT'],
 })
