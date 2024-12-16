@@ -50,10 +50,10 @@ import Redis from 'ioredis';
       },
     }),
     forwardRef(() => UserModule),
+    forwardRef(() => AuthModule),
     forwardRef(() => BankModule),
     forwardRef(() => BankAccountModule),
     forwardRef(() => MailModule),
-    forwardRef(() => AuthModule),
   ],
   controllers: [AppController],
   providers: [
