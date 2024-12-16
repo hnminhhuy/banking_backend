@@ -33,6 +33,8 @@ import { query } from 'express';
 import { PageParams, SortParams } from '../../../../common/models';
 import { BankSort } from '../../../bank/core/enums/bank_sort';
 import { TransactionSort } from '../../core/enums/transaction_sort';
+import { GetConfigUsecase } from '../../../bank_config/core/usecase';
+import { ConfigKey } from '../../../bank_config/core/enum/config_key';
 
 @Controller({ path: 'api/customers/v1/transactions' })
 export class TransactionController {
@@ -42,6 +44,7 @@ export class TransactionController {
     private readonly getUserUsecase: GetUserUsecase,
     private readonly getTransactionUsecase: GetTransactionUsecase,
     private readonly listTransactionUsecase: ListTransactionUsecase,
+    private readonly getConfigUsecase: GetConfigUsecase,
     @InjectQueue('transaction-queue')
     private readonly queue: Queue,
   ) {}
@@ -73,11 +76,16 @@ export class TransactionController {
         `Can not found beneficiary with ${body.beneficiaryId}`,
       );
     }
+
+    const fee = (
+      await this.getConfigUsecase.execute(ConfigKey.INTERNAL_TRANSACTION_FEE)
+    ).getValue();
+
     const params: TransactionModelParams = {
       amount: body.amount,
       remitterId: body.remitterId,
       type: TransactionType.NORMAL,
-      transactionFee: 1300, // fix later when have configs
+      transactionFee: fee,
       beneficiaryId: beneficiary.id,
       beneficiaryBankId: beneficiary.bankId,
       remitterPaidFee: body.remitterPaidFee,

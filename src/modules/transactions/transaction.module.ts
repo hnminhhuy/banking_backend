@@ -16,6 +16,7 @@ import { BullModule } from '@nestjs/bullmq';
 import { UpdateTransactionStatusUsecase } from './core/usecases/update_transaction_status.usecase';
 import { TransactionConsumer } from './app/consumer/transaction.consumer';
 import { UserModule } from '../user/user.module';
+import { BankConfigModule } from '../bank_config/bank_config.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UserModule } from '../user/user.module';
     forwardRef(() => AppModule),
     forwardRef(() => BankAccountModule),
     forwardRef(() => UserModule),
+    forwardRef(() => BankConfigModule),
   ],
   controllers: [TransactionController],
   providers: [
