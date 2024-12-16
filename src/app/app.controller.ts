@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { isDevelopmentEnv } from 'src/common/helpers/env.helper';
 import { Route } from 'src/decorators';
+import { GetConfigUsecase } from 'src/modules/bank_config/core/usecase';
 import { UserModelParams } from 'src/modules/user/core/models/user.model';
 import {
   CreateUserUsecase,
@@ -18,6 +19,7 @@ export class AppController {
   constructor(
     private readonly updateUserUsecase: UpdateUserUsecase,
     private readonly createUserUsecase: CreateUserUsecase,
+    private readonly getConfigUsecase: GetConfigUsecase,
   ) {}
 
   @Route({ path: '/', method: RequestMethod.GET })

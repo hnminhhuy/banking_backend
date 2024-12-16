@@ -24,6 +24,7 @@ import Redis from 'ioredis';
 import { TransactionModule } from '../modules/transactions/transaction.module';
 import bullmqConfig from '../config/bullmq.config';
 import { BullModule } from '@nestjs/bullmq';
+import { BankConfigModule } from 'src/modules/bank_config/bank_config.module';
 
 @Module({
   imports: [
@@ -70,6 +71,7 @@ import { BullModule } from '@nestjs/bullmq';
     forwardRef(() => MailModule),
     forwardRef(() => AuthModule),
     forwardRef(() => TransactionModule),
+    forwardRef(() => BankConfigModule),
   ],
   controllers: [AppController],
   providers: [
