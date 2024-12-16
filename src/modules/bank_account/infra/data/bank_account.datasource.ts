@@ -66,4 +66,13 @@ export class BankAccountDatasource {
 
     return new Page(page, totalCount, bankModels);
   }
+
+  public async getMaxBankAccountId(): Promise<number | null> {
+    const result = await this.bankAccountRepo
+      .createQueryBuilder('bank_account')
+      .select('MAX(CAST(bank_account.id AS INT))', 'maxId')
+      .getRawOne();
+
+    return result?.maxId ? parseInt(result.maxId, 10) : null;
+  }
 }

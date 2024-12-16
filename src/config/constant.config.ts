@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
 
 export default registerAs('constant', () => ({
-  bankAccountStart: process.env.BANK_ACCOUNT_START,
+  bankAccountStart: process.env.START_BANK_ACCOUNT_NUMBER,
 }));

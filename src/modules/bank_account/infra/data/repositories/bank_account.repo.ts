@@ -39,4 +39,8 @@ export class BankAccountRepo implements IBankAccountRepo {
   ): Promise<boolean> {
     return await this.bankAccountDatasource.changeBalance(bankAccount, balance);
   }
+
+  public async getMaxBankAccountId(): Promise<number | null> {
+    return await this.bankAccountDatasource.getMaxBankAccountId();
+  }
 }

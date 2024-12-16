@@ -21,4 +21,6 @@ export abstract class IBankAccountRepo {
     sortParams: SortParams<BankAccountSort> | undefined,
     relations: string[] | undefined,
   ): Promise<Page<BankAccountModel>>;
+
+  public abstract getMaxBankAccountId(): Promise<number | null>;
 }
