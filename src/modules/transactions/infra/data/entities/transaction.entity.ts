@@ -1,7 +1,8 @@
-import { BaseEntity, Column, Entity } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { TransactionType } from '../../../core/enums/transaction_type';
 import { TransactionStatus } from '../../../core/enums/transaction_status';
 import { TransactionModel } from '../../../core/models/transaction.model';
+import { BaseEntity } from '../../../../../common/entitites';
 
 @Entity('transactions')
 export class TransactionEntity extends BaseEntity {
@@ -33,7 +34,7 @@ export class TransactionEntity extends BaseEntity {
   transactionFee!: number;
 
   @Column({ name: 'remitter_paid_fee' })
-  remitterPairdFee: boolean;
+  remitterPaidFee: boolean;
 
   constructor(partial: Partial<TransactionModel>) {
     super();

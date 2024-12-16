@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   HttpStatus,
@@ -22,6 +23,13 @@ export class TransactionController {
 
   @Route(TransactionRoute.createTransaction)
   async create(@Req() req: any, @Body() body: CreateTransactionDto) {
+    const remitter = await this.getBankAccountUsecase.execute(
+      'id',
+      body.remitterId,
+    );
+    if (remitter.userId !== req.user.authId) {
+      throw new BadRequestException('This account does not belong to you');
+    }
     const beneficiary = await this.getBankAccountUsecase.execute(
       'id',
       body.beneficiaryId,
@@ -35,15 +43,15 @@ export class TransactionController {
     }
     const params: TransactionModelParams = {
       amount: body.amount,
-      remitterId: req.user.authId,
+      remitterId: body.remitterId,
       type: TransactionType.NORMAL,
-      transactionFee: 0, // fix later
+      transactionFee: 0, // fix later when have configs
       beneficiaryId: beneficiary.id,
       beneficiaryBankId: beneficiary.bankId,
       remitterPaidFee: body.remitterPaidFee,
       message: body.message,
       status: undefined,
-      beneficiaryName: 'hehe',
+      beneficiaryName: beneficiary.user?.fullName,
     };
 
     const transaction = await this.createTransactionUsecase.execute(params);

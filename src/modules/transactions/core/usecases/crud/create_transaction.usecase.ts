@@ -8,10 +8,7 @@ import { TransactionStatus } from '../../enums/transaction_status';
 
 @Injectable()
 export class CreateTransactionUsecase {
-  constructor(
-    private readonly transactionRepo: ITransactionRepo,
-    private readonly getBankAccountUsecase,
-  ) {}
+  constructor(private readonly transactionRepo: ITransactionRepo) {}
 
   public async execute(
     params: TransactionModelParams,

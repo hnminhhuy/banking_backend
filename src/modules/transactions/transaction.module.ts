@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TransactionEntity } from './infra/data/entities/transaction.entity';
 import { ITransactionRepo } from './core/repositories/transaction.irepo';
@@ -10,10 +10,17 @@ import {
   ListTransactionUsecase,
   UpdateTransactionUsecase,
 } from './core/usecases';
+import { TransactionController } from './app/controller/transaction.controller';
+import { AppModule } from '../../app/app.module';
+import { BankAccountModule } from '../bank_account/bank_account.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TransactionEntity])],
-  controllers: [],
+  imports: [
+    TypeOrmModule.forFeature([TransactionEntity]),
+    forwardRef(() => AppModule),
+    forwardRef(() => BankAccountModule),
+  ],
+  controllers: [TransactionController],
   providers: [
     {
       provide: ITransactionRepo,

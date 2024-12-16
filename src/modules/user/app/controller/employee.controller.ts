@@ -1,7 +1,7 @@
 import { Body, Controller, HttpStatus, Query, Req } from '@nestjs/common';
 import { Route } from 'src/decorators';
 import employeeRoute from '../routes/employee.route';
-import { CreateCustomerDto, CreateUserDto, ListUserDto } from '../dtos';
+import { CreateCustomerDto, ListUserDto } from '../dtos';
 import { UserModelParams } from 'src/modules/user/core/models/user.model';
 import {
   CreateUserUsecase,
@@ -17,7 +17,6 @@ import { SendMailUseCase } from '../../../mail/core/usecases/send_mail.usecase';
 import { BankAccountParams } from '../../../bank_account/core/models/bank_account.model';
 import { PageParams, SortParams } from '../../../../common/models';
 import { UserRole } from '../../core/enums/user_role';
-import { SendMailType } from '../../../mail/core/enums/send_mail_type';
 import { mailList } from '../../../mail/core/models/mail_list';
 import { Transactional } from 'typeorm-transactional';
 
