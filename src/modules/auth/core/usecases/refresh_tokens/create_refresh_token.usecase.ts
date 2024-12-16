@@ -29,7 +29,7 @@ export class CreateRefreshTokenUsecase {
     userId: string,
     provider: AuthProvider,
   ): Promise<RefreshTokenModel> {
-    let existingRefreshToken = await this.getRefreshTokenUsecase.execute(
+    const existingRefreshToken = await this.getRefreshTokenUsecase.execute(
       'auth_id',
       userId,
     );

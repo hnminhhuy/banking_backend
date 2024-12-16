@@ -2,7 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { IUserRepo } from '../repositories/user.irepo';
 import { BaseException } from 'src/exceptions';
 import { ERROR_CODES } from 'src/common/utils/constants';
-import { UpdateCacheBlockedUserUsecase } from 'src/modules/auth/core/usecases';
+import { UpdateCacheBlockedUserUsecase } from 'src/modules/redis_cache/core/usecases';
 
 @Injectable()
 export class BlockUserUsecase {

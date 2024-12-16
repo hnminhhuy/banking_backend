@@ -1,4 +1,4 @@
-export abstract class CacheBlockedUserIRepo {
+export abstract class ICacheBlockedUserRepo {
   public abstract setCache(blockedUserIds: string[]): Promise<void>;
   public abstract getCache(): Promise<string[]>;
   public abstract isBlockedUser(userId: string): Promise<boolean>;
