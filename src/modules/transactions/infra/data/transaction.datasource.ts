@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TransactionEntity } from './entities/transaction.entity';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import {
+  Brackets,
+  FindOptionsOrder,
+  FindOptionsWhere,
+  Repository,
+} from 'typeorm';
 import {
   TransactionModel,
   TransactionModelParams,
@@ -50,39 +55,69 @@ export class TransactionDatasource {
   public async list(
     pageParams: PageParams,
     sortParams: SortParams<TransactionSort> | undefined,
-    type: TransactionType | undefined,
+    remitterId: string | undefined,
+    beneficiaryId: string | undefined,
     status: TransactionStatus | undefined,
     relations: string[] | undefined = undefined,
   ): Promise<Page<TransactionModel>> {
     const conditions: FindOptionsWhere<TransactionEntity> = {};
-
-    if (type) {
-      conditions['type'] = type;
-    }
+    const orderBy: FindOptionsOrder<TransactionEntity> = {};
 
     if (status) {
       conditions['status'] = status;
     }
 
-    const { page, totalCount, rawItems } = await paginate<TransactionEntity>(
-      this.transactionRepository,
-      pageParams,
-      sortParams,
-      relations,
-      conditions,
-    );
+    if (sortParams) {
+      orderBy[sortParams.sort] = sortParams.direction;
+    }
+    const query = this.transactionRepository.createQueryBuilder('transaction');
 
-    const transactions = rawItems.map((bank) => new TransactionModel(bank));
+    if (remitterId || beneficiaryId) {
+      query.andWhere(
+        new Brackets((qb) => {
+          if (remitterId) {
+            qb.orWhere('transaction.remitterId = :remitterId', { remitterId });
+          }
+          if (beneficiaryId) {
+            qb.orWhere('transaction.beneficiaryId = :beneficiaryId', {
+              beneficiaryId,
+            });
+          }
+        }),
+      );
+    }
 
-    return new Page(page, totalCount, transactions);
+    query.setFindOptions({
+      where: conditions,
+      relations: relations,
+      skip: pageParams.limit * (pageParams.page - 1),
+      take: pageParams.limit,
+      order: orderBy,
+    });
+
+    let totalCount = 0;
+    let items: TransactionEntity[] = [];
+    if (pageParams.needTotalCount) {
+      totalCount = await query.getCount();
+    }
+
+    if (!pageParams.onlyCount) {
+      items = await query.getMany();
+    }
+
+    const transactions = items.map((bank) => new TransactionModel(bank));
+
+    return new Page(pageParams.page, totalCount, transactions);
   }
 
   public async update(
     id: string,
-    updatedFields: Partial<TransactionModelParams>,
+    status: TransactionStatus | undefined,
   ): Promise<boolean> {
-    return (
-      (await this.transactionRepository.update(id, updatedFields)).affected > 0
-    );
+    const result = await this.transactionRepository.update(id, {
+      status: status,
+      updatedAt: new Date(),
+    });
+    return result.affected > 0;
   }
 }

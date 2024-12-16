@@ -3,6 +3,8 @@ import { BaseDto } from '../../../../common/dtos';
 import { IsBoolean, IsNumber, IsString, Max, Min } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { parseBoolean } from '../../../../common/helpers/parse_boolean';
+import { TransactionStatus } from '../../core/enums/transaction_status';
+import { TransactionType } from '../../core/enums/transaction_type';
 
 export class TransactionDto extends BaseDto {
   @ApiProperty()
@@ -30,6 +32,14 @@ export class TransactionDto extends BaseDto {
   @ApiProperty()
   @IsString()
   transactionFee: number;
+
+  @ApiProperty()
+  @IsString()
+  status: TransactionStatus;
+
+  @ApiProperty()
+  @IsString()
+  type: TransactionType;
 
   @ApiProperty()
   @IsBoolean()

@@ -22,6 +22,8 @@ import redisConfig from 'src/config/redis.config';
 import { SetCacheBlockedUserUsecase } from 'src/modules/auth/core/usecases';
 import Redis from 'ioredis';
 import { TransactionModule } from '../modules/transactions/transaction.module';
+import bullmqConfig from '../config/bullmq.config';
+import { BullModule } from '@nestjs/bullmq';
 
 @Module({
   imports: [
@@ -34,6 +36,7 @@ import { TransactionModule } from '../modules/transactions/transaction.module';
         constantConfig,
         mailConfig,
         redisConfig,
+        bullmqConfig,
       ],
     }),
     TypeOrmModule.forRootAsync({
@@ -49,6 +52,17 @@ import { TransactionModule } from '../modules/transactions/transaction.module';
         }
         return addTransactionalDataSource(new DataSource(options));
       },
+    }),
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        connection: {
+          host: configService.get('redis.host'),
+          port: <number>configService.get('redis.port'),
+          db: <number>configService.get('bullmq.db'),
+        },
+      }),
     }),
     forwardRef(() => UserModule),
     forwardRef(() => BankModule),

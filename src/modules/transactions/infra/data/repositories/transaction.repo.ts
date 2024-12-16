@@ -29,14 +29,16 @@ export class TransactionRepo implements ITransactionRepo {
   public async list(
     pageParams: PageParams,
     sortParams: SortParams<TransactionSort> | undefined,
-    type: TransactionType | undefined,
+    remitterId: string | undefined,
+    beneficiaryId: string | undefined,
     status: TransactionStatus | undefined,
     relations: string[] | undefined,
   ): Promise<Page<TransactionModel>> {
     return await this.transactionDatasource.list(
       pageParams,
       sortParams,
-      type,
+      remitterId,
+      beneficiaryId,
       status,
       relations,
     );
@@ -44,8 +46,8 @@ export class TransactionRepo implements ITransactionRepo {
 
   public async update(
     id: string,
-    updatedFields: Partial<TransactionModelParams>,
+    status: TransactionStatus | undefined,
   ): Promise<boolean> {
-    return await this.transactionDatasource.update(id, updatedFields);
+    return await this.transactionDatasource.update(id, status);
   }
 }

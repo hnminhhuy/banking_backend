@@ -42,6 +42,10 @@ import { CacheModule } from '@nestjs/cache-manager';
     ListBankAccountsUsecase,
     GetMaxBankAccountUsecase,
   ],
-  exports: [GetBankAccountUsecase, CreateBankAccountUsecase],
+  exports: [
+    GetBankAccountUsecase,
+    CreateBankAccountUsecase,
+    ChangeBalanceUsecase,
+  ],
 })
 export class BankAccountModule {}

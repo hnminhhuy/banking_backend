@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { ITransactionRepo } from '../../repositories/transaction.irepo';
-import { TransactionModel } from '../../models/transaction.model';
+import { ITransactionRepo } from '../repositories/transaction.irepo';
+import { TransactionModel } from '../models/transaction.model';
 
 @Injectable()
 export class GetTransactionUsecase {

@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { ITransactionRepo } from '../../repositories/transaction.irepo';
+import { ITransactionRepo } from '../repositories/transaction.irepo';
 import {
   TransactionModel,
   TransactionModelParams,
-} from '../../models/transaction.model';
-import { TransactionStatus } from '../../enums/transaction_status';
+} from '../models/transaction.model';
+import { TransactionStatus } from '../enums/transaction_status';
 
 @Injectable()
 export class CreateTransactionUsecase {

@@ -4,7 +4,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { IBankAccountRepo } from '../repositories/bank_account.irepo';
-import { UserModel } from '../../../user/core/models/user.model';
 import { GetBankAccountUsecase } from './get_bank_account.usecase';
 
 @Injectable()
@@ -14,12 +13,8 @@ export class ChangeBalanceUsecase {
     private readonly getBankAccountUsecase: GetBankAccountUsecase,
   ) {}
 
-  public async execute(customer: UserModel, amount: number): Promise<boolean> {
-    const bankAccount = await this.getBankAccountUsecase.execute(
-      'user_id',
-      customer.id,
-    );
-
+  public async execute(id: string, amount: number): Promise<boolean> {
+    const bankAccount = await this.bankAccountRepo.get('id', id, undefined);
     if (!bankAccount) {
       throw new NotFoundException('Account not found');
     }
