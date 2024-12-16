@@ -18,11 +18,11 @@ export class AddTransactionTable1734248595606 implements MigrationInterface {
           },
           {
             name: 'remitter_id',
-            type: 'uuid',
+            type: 'varchar',
           },
           {
             name: 'beneficiary_id',
-            type: 'uuid',
+            type: 'varchar',
           },
           {
             name: 'beneficiary_name',
