@@ -17,6 +17,7 @@ import {
   GeneratePasswordUsecase,
   GetUserUsecase,
   ListUserUsecase,
+  UnblockUserUsecase,
   UpdateUserUsecase,
 } from 'src/modules/user/core/usecases';
 import { CreateUserDto, ListUserDto } from '../dtos';
@@ -37,6 +38,7 @@ export class UserControllerByAdmin {
     private readonly getUserUsecase: GetUserUsecase,
     private readonly blockUserUsecase: BlockUserUsecase,
     private readonly generatePasswordUsecase: GeneratePasswordUsecase,
+    private readonly unblockUserUsecase: UnblockUserUsecase,
   ) {}
 
   @Route(adminRoute.createEmployee)
@@ -119,5 +121,18 @@ export class UserControllerByAdmin {
     }
 
     return await this.blockUserUsecase.execute(params.id);
+  }
+
+  @Route(adminRoute.unblockUser)
+  async unblockUser(@Req() req, @Param() params: IdDto) {
+    if (req.user.authId === params.id) {
+      throw new BadRequestException({
+        code: ERROR_CODES.BAD_REQUEST,
+        message: 'You cannot unblock yourself.',
+        status: HttpStatus.BAD_REQUEST,
+      });
+    }
+
+    return await this.unblockUserUsecase.execute(params.id);
   }
 }

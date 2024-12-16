@@ -11,6 +11,7 @@ import {
   GetBlockedUserUsecase,
   GetUserUsecase,
   ListUserUsecase,
+  UnblockUserUsecase,
   UpdateUserPassword,
   UpdateUserUsecase,
 } from './core/usecases';
@@ -48,6 +49,7 @@ import { AppModule } from 'src/app/app.module';
     GetBlockedUserUsecase,
     GeneratePasswordUsecase,
     BlockUserUsecase,
+    UnblockUserUsecase,
   ],
   exports: [
     CreateUserUsecase,
@@ -57,6 +59,7 @@ import { AppModule } from 'src/app/app.module';
     UpdateUserPassword,
     GetBlockedUserUsecase,
     BlockUserUsecase,
+    UnblockUserUsecase,
   ],
   controllers: [
     UserControllerByAdmin,

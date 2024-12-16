@@ -28,7 +28,6 @@ import { CacheBlockedUserIRepo } from './core/repositories/cache_blocked_user.ir
 import { CacheBlockedUserRepo } from './infra/data/repositories/cache_blocked_user.repo';
 import { CacheBlockedUserDatasource } from './infra/data/cache_blocked_user.datasource';
 import { AppModule } from 'src/app/app.module';
-import { GetBlockedUserUsecase } from '../user/core/usecases';
 
 @Module({
   imports: [
