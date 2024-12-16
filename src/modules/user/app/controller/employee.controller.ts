@@ -56,7 +56,7 @@ export class UserControllerByEmployee {
     const bankAccountParams: BankAccountParams = {
       bankId: bank.id,
       userId: createdUser.id,
-      balance: body.balance,
+      balance: body.balance ?? 0,
     };
 
     await this.createBankAccountUsecase.execute(bankAccountParams);

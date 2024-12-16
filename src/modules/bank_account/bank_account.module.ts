@@ -16,10 +16,13 @@ import {
 } from './app/controller';
 import { ListBankAccountsUsecase } from './core/usecases/list_bank_account.usecase';
 import { UserModule } from '../user/user.module';
+import { GetMaxBankAccountUsecase } from './core/usecases/get_max_bank_account.usecase';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([BankAccountEntity]),
+    CacheModule.register(),
     forwardRef(() => BankModule),
     forwardRef(() => UserModule),
   ],
@@ -37,6 +40,7 @@ import { UserModule } from '../user/user.module';
     GetBankAccountUsecase,
     ChangeBalanceUsecase,
     ListBankAccountsUsecase,
+    GetMaxBankAccountUsecase,
   ],
   exports: [GetBankAccountUsecase, CreateBankAccountUsecase],
 })
