@@ -37,7 +37,7 @@ export class UserDatasource {
 
     const entity = await query.getOne();
     if (entity) {
-      return new UserModel(entity);
+      return entity.toModel();
     } else {
       return undefined;
     }
@@ -73,7 +73,7 @@ export class UserDatasource {
       conditions,
     );
 
-    const items = rawItems.map((item) => new UserModel(item));
+    const items = rawItems.map((item) => item.toModel());
 
     return new Page(page, totalCount, items);
   }

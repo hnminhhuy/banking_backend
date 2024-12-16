@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { BaseModel, BaseModelParams } from 'src/common/models';
 import { UserRole } from '../enums/user_role';
 import * as bcrypt from 'bcrypt';
+import { BankAccountModel } from '../../../bank_account/core/models/bank_account.model';
 
 export interface UserModelParams extends BaseModelParams {
   createdBy: string | undefined;
@@ -35,9 +36,9 @@ export class UserModel extends BaseModel {
   @ApiProperty()
   public readonly role: UserRole;
 
-  public verifyPassword(password: string): boolean {
-    return bcrypt.compareSync(password, this.password);
-  }
+  //** Relation */
+  @ApiPropertyOptional()
+  public readonly bankAccount: BankAccountModel | undefined;
 
   public static async hashPassword(newPassword: string): Promise<string> {
     const salt = await bcrypt.genSaltSync(10);
@@ -47,5 +48,9 @@ export class UserModel extends BaseModel {
   constructor(partial: Partial<UserModel>) {
     super(partial);
     Object.assign(this, partial);
+  }
+
+  public verifyPassword(password: string): boolean {
+    return bcrypt.compareSync(password, this.password);
   }
 }

@@ -9,6 +9,8 @@ export class UserControllerByCustomer {
 
   @Route(customerRoute.getMe)
   async getUser(@Req() req) {
-    return await this.getUserUsecase.execute('id', req.user.authId);
+    return await this.getUserUsecase.execute('id', req.user.authId, [
+      'bankAccount',
+    ]);
   }
 }

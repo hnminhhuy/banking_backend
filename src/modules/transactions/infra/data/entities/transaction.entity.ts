@@ -11,6 +11,9 @@ export class TransactionEntity extends BaseEntity {
   @Column({ name: 'beneficiary_id' })
   beneficiaryId!: string;
 
+  @Column({ name: 'beneficiary_name' })
+  beneficiaryName!: string;
+
   @Column({ name: 'beneficiary_bank_id' })
   beneficiaryBankId!: string;
 
@@ -18,7 +21,7 @@ export class TransactionEntity extends BaseEntity {
   message!: string;
 
   @Column()
-  ammount!: number;
+  amount!: number;
 
   @Column()
   type!: TransactionType;

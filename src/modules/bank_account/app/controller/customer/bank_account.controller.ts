@@ -13,7 +13,7 @@ export class BankAccountController {
     const bankAccount = await this.getBankAccountUsecase.execute(
       'id',
       param.id,
-      undefined,
+      ['user'],
     );
     const { createdAt, updatedAt, bankId, userId, ...bankAccountData } =
       bankAccount;

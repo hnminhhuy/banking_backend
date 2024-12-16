@@ -2,10 +2,17 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToOne,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { BankAccountModel } from '../../../core/models/bank_account.model';
+import {
+  BankAccountModel,
+  BankAccountParams,
+} from '../../../core/models/bank_account.model';
+import { UserEntity } from '../../../../user/infra/data/entities/user.entity';
+import { UserModel } from '../../../../user/core/models/user.model';
 
 @Entity('bank_accounts')
 export class BankAccountEntity {
@@ -27,7 +34,16 @@ export class BankAccountEntity {
   @UpdateDateColumn({ name: 'updated_at' })
   public updatedAt: Date;
 
+  /** Relations */
+  @OneToOne(() => UserEntity, (user) => user.bankAccount)
+  @JoinColumn({ name: 'user_id' }) // Join at the user_id column in bank_accounts
+  user: UserEntity;
+
   constructor(model: Partial<BankAccountModel>) {
     Object.assign(this, model);
+  }
+
+  public toModel(): BankAccountModel {
+    return new BankAccountModel({} as BankAccountParams);
   }
 }

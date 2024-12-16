@@ -6,8 +6,9 @@ import { TransactionStatus } from '../enums/transaction_status';
 export interface TransactionModelParams extends BaseModelParams {
   remitterId: string;
   beneficiaryId: string;
+  beneficiaryName: string;
   beneficiaryBankId: string;
-  ammount: number;
+  amount: number;
   message: string;
   type: TransactionType;
   status: TransactionStatus;
@@ -23,10 +24,13 @@ export class TransactionModel extends BaseModel {
   public readonly beneficiaryId: string;
 
   @ApiProperty()
+  public readonly beneficiaryName: string;
+
+  @ApiProperty()
   public readonly beneficiaryBankId: string;
 
   @ApiProperty()
-  public readonly ammount: number;
+  public readonly amount: number;
 
   @ApiProperty()
   public readonly message: string;
