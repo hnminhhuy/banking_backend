@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './infra/data/entities/user.entity';
 import { IUserRepo } from './core/repositories/user.irepo';
@@ -8,6 +8,7 @@ import {
   BlockUserUsecase,
   CreateUserUsecase,
   GeneratePasswordUsecase,
+  GetBlockedUserUsecase,
   GetUserUsecase,
   ListUserUsecase,
   UpdateUserPassword,
@@ -18,16 +19,18 @@ import {
   UserControllerByCustomer,
   UserControllerByEmployee,
 } from './app/controller';
+import { AuthModule } from '../auth/auth.module';
+import { BankModule } from '../bank/bank.module';
+import { BankAccountModule } from '../bank_account/bank_account.module';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity])],
-  exports: [
-    CreateUserUsecase,
-    UpdateUserUsecase,
-    GetUserUsecase,
-    UpdateUserPassword,
-    BlockUserUsecase,
-    ListUserUsecase,
+  imports: [
+    TypeOrmModule.forFeature([UserEntity]),
+    forwardRef(() => BankAccountModule),
+    forwardRef(() => BankModule),
+    forwardRef(() => MailModule),
+    forwardRef(() => AuthModule),
   ],
   providers: [
     {
@@ -42,6 +45,15 @@ import {
     ListUserUsecase,
     BlockUserUsecase,
     GeneratePasswordUsecase,
+    GetBlockedUserUsecase,
+  ],
+  exports: [
+    CreateUserUsecase,
+    UpdateUserUsecase,
+    GetUserUsecase,
+    UpdateUserPassword,
+    GetBlockedUserUsecase,
+    ListUserUsecase,
   ],
   controllers: [
     UserControllerByAdmin,

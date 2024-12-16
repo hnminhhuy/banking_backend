@@ -4,8 +4,11 @@ import { BankEntity } from './infra/data/entities/bank.entity';
 import { IBankRepo } from './core/repositories/bank.irepo';
 import { BankRepo } from './infra/data/repositories/bank.repo';
 import { BankDatasource } from './infra/data/bank.datasource';
-import { CreateBankUsecase, GetBankUsecase } from './core/usecases';
-import { ListBanksUsecase } from './core/usecases/list-banks.usecase';
+import {
+  CreateBankUsecase,
+  GetBankUsecase,
+  ListBanksUsecase,
+} from './core/usecases';
 import { BankController } from './app/controller/customer/bank.controller';
 
 @Module({
@@ -21,5 +24,6 @@ import { BankController } from './app/controller/customer/bank.controller';
     GetBankUsecase,
     ListBanksUsecase,
   ],
+  exports: [GetBankUsecase],
 })
 export class BankModule {}

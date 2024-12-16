@@ -1,3 +1,3 @@
 export enum BankSort {
-  createdAt = 'created_at',
+  CREATED_AT = 'createdAt',
 }

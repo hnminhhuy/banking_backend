@@ -8,19 +8,27 @@ import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { UserModule } from '../user/user.module';
 import { AuthController } from './app/controller/auth.controller';
 import { IRefreshTokenRepo } from './core/repositories/refresh_token.irepo';
-import { RefreshTokenRepo } from './infra/repositories/refresh_token.repo';
+import { RefreshTokenRepo } from './infra/data/repositories/refresh_token.repo';
 import { RefreshTokenDatasource } from './infra/data/refresh_token.datasource';
 import { RoleAuthGuard } from './core/guards/role_auth.guard';
 import { JwtUserStrategy } from './strategies/jwt_user.strategy';
 import {
+  CheckCacheBlockedUserUsecase,
   CreateAccessTokenUsecase,
   CreateRefreshTokenUsecase,
   DeleteRefreshTokenUsecase,
   GetRefreshTokenUsecase,
   LoginUsecase,
   RefreshAccessTokenUsecase,
+  SetCacheBlockedUserUsecase,
+  UpdateCacheBlockedUserUsecase,
   VerifyTokenUsecase,
 } from './core/usecases';
+import { CacheBlockedUserIRepo } from './core/repositories/cache_blocked_user.irepo';
+import { CacheBlockedUserRepo } from './infra/data/repositories/cache_blocked_user.repo';
+import { CacheBlockedUserDatasource } from './infra/data/cache_blocked_user.datasource';
+import { AppModule } from 'src/app/app.module';
+import { GetBlockedUserUsecase } from '../user/core/usecases';
 
 @Module({
   imports: [
@@ -37,15 +45,33 @@ import {
       useFactory: (configService: ConfigService): any =>
         configService.get<JwtModuleOptions>('auth.jwt'),
     }),
+    // CacheModule.registerAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService],
+    //   useFactory: async (configService: ConfigService) => {
+    //     const redisConfig = configService.get<CacheModuleAsyncOptions>('redis');
+
+    //     return {
+    //       ...redisConfig,
+    //       store: redisStore,
+    //     } as CacheModuleAsyncOptions;
+    //   },
+    // }),
     forwardRef(() => UserModule),
+    forwardRef(() => AppModule),
   ],
   controllers: [AuthController],
   providers: [
     RoleAuthGuard,
     JwtUserStrategy,
+    CacheBlockedUserDatasource,
     {
       provide: IRefreshTokenRepo,
       useClass: RefreshTokenRepo,
+    },
+    {
+      provide: CacheBlockedUserIRepo,
+      useClass: CacheBlockedUserRepo,
     },
     RefreshTokenDatasource,
     VerifyTokenUsecase,
@@ -54,8 +80,15 @@ import {
     DeleteRefreshTokenUsecase,
     GetRefreshTokenUsecase,
     CreateAccessTokenUsecase,
-    VerifyTokenUsecase,
     LoginUsecase,
+    SetCacheBlockedUserUsecase,
+    CheckCacheBlockedUserUsecase,
+    UpdateCacheBlockedUserUsecase,
+  ],
+  exports: [
+    SetCacheBlockedUserUsecase,
+    CheckCacheBlockedUserUsecase,
+    UpdateCacheBlockedUserUsecase,
   ],
 })
 export class AuthModule {}

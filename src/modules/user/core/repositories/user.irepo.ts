@@ -33,4 +33,6 @@ export abstract class IUserRepo {
     id: string,
     isBlocked: boolean,
   ): Promise<boolean>;
+
+  public abstract getBlockedUser(): Promise<string[]>;
 }

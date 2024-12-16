@@ -12,9 +12,11 @@ export class VerifyTokenUsecase {
     try {
       return await this.jwtService.verify(token);
     } catch (error) {
-      if (error.name === 'TokenExpiredError') throw UnauthorizedException;
-      else if (error.name === 'JsonWebTokenError') throw ForbiddenException;
-      throw UnauthorizedException;
+      if (error.name === 'TokenExpiredError')
+        throw new UnauthorizedException('Refresh token is expired');
+      else if (error.name === 'JsonWebTokenError')
+        throw new ForbiddenException('Refresh token is invalid type');
+      throw new UnauthorizedException();
     }
   }
 }
