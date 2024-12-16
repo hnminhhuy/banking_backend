@@ -13,6 +13,7 @@ import {
 } from '../../../core/models/bank_account.model';
 import { UserEntity } from '../../../../user/infra/data/entities/user.entity';
 import { UserModel } from '../../../../user/core/models/user.model';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('bank_accounts')
 export class BankAccountEntity {
@@ -36,14 +37,11 @@ export class BankAccountEntity {
 
   /** Relations */
   @OneToOne(() => UserEntity, (user) => user.bankAccount)
-  @JoinColumn({ name: 'user_id' }) // Join at the user_id column in bank_accounts
+  @ApiProperty({ type: () => UserEntity })
+  @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
   constructor(model: Partial<BankAccountModel>) {
     Object.assign(this, model);
-  }
-
-  public toModel(): BankAccountModel {
-    return new BankAccountModel({} as BankAccountParams);
   }
 }

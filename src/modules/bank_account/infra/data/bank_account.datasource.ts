@@ -35,7 +35,7 @@ export class BankAccountDatasource {
     }
 
     const entity = await query.getOne();
-    return entity ? entity.toModel() : undefined;
+    return entity ? new BankAccountModel(entity) : undefined;
   }
 
   public async changeBalance(
@@ -62,8 +62,17 @@ export class BankAccountDatasource {
       relations,
       conditions,
     );
-    const bankModels = rawItems.map((bank) => bank.toModel());
+    const bankModels = rawItems.map((bank) => new BankAccountModel(bank));
 
     return new Page(page, totalCount, bankModels);
+  }
+
+  public async getMaxBankAccountId(): Promise<number | null> {
+    const result = await this.bankAccountRepo
+      .createQueryBuilder('bank_account')
+      .select('MAX(CAST(bank_account.id AS INT))', 'maxId')
+      .getRawOne();
+
+    return result?.maxId ? parseInt(result.maxId, 10) : null;
   }
 }
