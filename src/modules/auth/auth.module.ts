@@ -64,7 +64,6 @@ import { GetBlockedUserUsecase } from '../user/core/usecases';
   providers: [
     RoleAuthGuard,
     JwtUserStrategy,
-    CacheBlockedUserDatasource,
     {
       provide: IRefreshTokenRepo,
       useClass: RefreshTokenRepo,
@@ -73,6 +72,7 @@ import { GetBlockedUserUsecase } from '../user/core/usecases';
       provide: CacheBlockedUserIRepo,
       useClass: CacheBlockedUserRepo,
     },
+    CacheBlockedUserDatasource,
     RefreshTokenDatasource,
     VerifyTokenUsecase,
     RefreshAccessTokenUsecase,

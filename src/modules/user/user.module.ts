@@ -23,14 +23,16 @@ import { AuthModule } from '../auth/auth.module';
 import { BankModule } from '../bank/bank.module';
 import { BankAccountModule } from '../bank_account/bank_account.module';
 import { MailModule } from '../mail/mail.module';
+import { AppModule } from 'src/app/app.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity]),
+    forwardRef(() => AuthModule),
     forwardRef(() => BankAccountModule),
     forwardRef(() => BankModule),
     forwardRef(() => MailModule),
-    forwardRef(() => AuthModule),
+    forwardRef(() => AppModule),
   ],
   providers: [
     {
@@ -43,17 +45,18 @@ import { MailModule } from '../mail/mail.module';
     UpdateUserUsecase,
     UpdateUserPassword,
     ListUserUsecase,
-    BlockUserUsecase,
-    GeneratePasswordUsecase,
     GetBlockedUserUsecase,
+    GeneratePasswordUsecase,
+    BlockUserUsecase,
   ],
   exports: [
     CreateUserUsecase,
     UpdateUserUsecase,
     GetUserUsecase,
+    ListUserUsecase,
     UpdateUserPassword,
     GetBlockedUserUsecase,
-    ListUserUsecase,
+    BlockUserUsecase,
   ],
   controllers: [
     UserControllerByAdmin,

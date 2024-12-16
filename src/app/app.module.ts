@@ -67,6 +67,11 @@ import { BankConfigModule } from 'src/modules/bank_config/bank_config.module';
       },
       inject: [ConfigService],
     },
+    {
+      provide: 'CircularDependencyLog',
+      useFactory: () => (msg: string) =>
+        console.warn(`Circular dependency: ${msg}`),
+    },
   ],
   exports: ['REDIS_CLIENT'],
 })
