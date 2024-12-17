@@ -6,3 +6,4 @@ export * from './list_user.usecase';
 export * from './block_user.usecase';
 export * from './generate_password.usecase';
 export * from './get_blocked_user.usecase';
+export * from './unblock_user.usecase';

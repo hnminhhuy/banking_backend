@@ -93,4 +93,11 @@ export default {
     roles: [UserRole.Admin],
     swaggerParams: {},
   },
+  unblockUser: <IRouteParams>{
+    path: 'unblock/:id',
+    method: RequestMethod.PATCH,
+    secure: true,
+    roles: [UserRole.Admin],
+    swaggerParams: {},
+  },
 };

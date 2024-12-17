@@ -13,22 +13,16 @@ import { RefreshTokenDatasource } from './infra/data/refresh_token.datasource';
 import { RoleAuthGuard } from './core/guards/role_auth.guard';
 import { JwtUserStrategy } from './strategies/jwt_user.strategy';
 import {
-  CheckCacheBlockedUserUsecase,
   CreateAccessTokenUsecase,
   CreateRefreshTokenUsecase,
   DeleteRefreshTokenUsecase,
   GetRefreshTokenUsecase,
   LoginUsecase,
   RefreshAccessTokenUsecase,
-  SetCacheBlockedUserUsecase,
-  UpdateCacheBlockedUserUsecase,
   VerifyTokenUsecase,
 } from './core/usecases';
-import { CacheBlockedUserIRepo } from './core/repositories/cache_blocked_user.irepo';
-import { CacheBlockedUserRepo } from './infra/data/repositories/cache_blocked_user.repo';
-import { CacheBlockedUserDatasource } from './infra/data/cache_blocked_user.datasource';
 import { AppModule } from 'src/app/app.module';
-import { GetBlockedUserUsecase } from '../user/core/usecases';
+import { RedisCacheModule } from '../redis_cache/redis_cache.module';
 
 @Module({
   imports: [
@@ -45,18 +39,7 @@ import { GetBlockedUserUsecase } from '../user/core/usecases';
       useFactory: (configService: ConfigService): any =>
         configService.get<JwtModuleOptions>('auth.jwt'),
     }),
-    // CacheModule.registerAsync({
-    //   imports: [ConfigModule],
-    //   inject: [ConfigService],
-    //   useFactory: async (configService: ConfigService) => {
-    //     const redisConfig = configService.get<CacheModuleAsyncOptions>('redis');
-
-    //     return {
-    //       ...redisConfig,
-    //       store: redisStore,
-    //     } as CacheModuleAsyncOptions;
-    //   },
-    // }),
+    forwardRef(() => RedisCacheModule),
     forwardRef(() => UserModule),
     forwardRef(() => AppModule),
   ],
@@ -64,14 +47,9 @@ import { GetBlockedUserUsecase } from '../user/core/usecases';
   providers: [
     RoleAuthGuard,
     JwtUserStrategy,
-    CacheBlockedUserDatasource,
     {
       provide: IRefreshTokenRepo,
       useClass: RefreshTokenRepo,
-    },
-    {
-      provide: CacheBlockedUserIRepo,
-      useClass: CacheBlockedUserRepo,
     },
     RefreshTokenDatasource,
     VerifyTokenUsecase,
@@ -81,14 +59,7 @@ import { GetBlockedUserUsecase } from '../user/core/usecases';
     GetRefreshTokenUsecase,
     CreateAccessTokenUsecase,
     LoginUsecase,
-    SetCacheBlockedUserUsecase,
-    CheckCacheBlockedUserUsecase,
-    UpdateCacheBlockedUserUsecase,
   ],
-  exports: [
-    SetCacheBlockedUserUsecase,
-    CheckCacheBlockedUserUsecase,
-    UpdateCacheBlockedUserUsecase,
-  ],
+  exports: [],
 })
 export class AuthModule {}
