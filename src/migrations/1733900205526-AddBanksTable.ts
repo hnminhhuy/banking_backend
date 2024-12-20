@@ -1,5 +1,4 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 
 export class AddBanksTable1733900205526 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -48,22 +47,6 @@ export class AddBanksTable1733900205526 implements MigrationInterface {
           },
         ],
       }),
-    );
-
-    const bankId = uuidv4();
-    await queryRunner.query(
-      `
-          INSERT INTO banks (id, code, name, short_name, public_key, logo_url, created_at, updated_at)
-          VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
-        `,
-      [
-        bankId,
-        'NHB',
-        'National Heritage Bank',
-        'NH Bank',
-        process.env.JWT_PUBLIC_KEY,
-        'https://example.com/logo.png',
-      ],
     );
   }
 

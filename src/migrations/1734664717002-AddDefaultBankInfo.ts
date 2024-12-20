@@ -8,13 +8,6 @@ export class AddDefaultBankInfo1734664717002 implements MigrationInterface {
       `
           INSERT INTO banks (id, code, name, short_name, public_key, logo_url, created_at, updated_at)
           VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
-          ON CONFLICT (code) 
-          DO UPDATE SET 
-            name = EXCLUDED.name,
-            short_name = EXCLUDED.short_name,
-            public_key = EXCLUDED.public_key,
-            logo_url = EXCLUDED.logo_url,
-            updated_at = NOW()
         `,
       [
         bankId,
@@ -30,22 +23,10 @@ export class AddDefaultBankInfo1734664717002 implements MigrationInterface {
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
       `
-          UPDATE banks
-          SET 
-            name = $2,
-            short_name = $3,
-            public_key = $4,
-            logo_url = $5,
-            updated_at = NOW()
+          DELETE FROM banks
           WHERE code = $1
         `,
-      [
-        'NHB',
-        'National Heritage Bank',
-        'NH Bank',
-        process.env.JWT_PUBLIC_KEY,
-        'https://example.com/logo.png',
-      ],
+      [process.env.BANK_DEFAULT_CODE],
     );
   }
 }

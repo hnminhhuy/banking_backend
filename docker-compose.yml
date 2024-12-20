@@ -1,4 +1,47 @@
 services:
+  main:
+    image: nhbank/main:18-alpine
+    build:
+      context: .
+    command: >
+      /bin/sh -c "npm install &&
+                  npm run build &&
+                  npm run migration:run &&
+                  npm run start:dev"
+    restart: on-failure
+    ports:
+      - '4000:3000'
+    volumes:
+      - ./:/var/www
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - another-main
+
+  another-main:
+    image: another-bank/main:18-alpine
+    build:
+      context: .
+    command: >
+      /bin/sh -c "npm install &&
+                  npm run build &&
+                  npm run migration:run &&
+                  npm run start:dev"
+    restart: on-failure
+    ports:
+      - '4001:3000'
+    volumes:
+      - ./:/var/www
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+    env_file:
+      - .env.another-bank
+    depends_on:
+      - postgres
+
   postgres:
     image: postgres:16-alpine
     container_name: postgres
@@ -23,7 +66,6 @@ services:
       - redis_data:/data
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
-    # command: redis-server --requirepass redis
 volumes:
   banking_postgres:
   redis_data:

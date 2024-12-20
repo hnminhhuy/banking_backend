@@ -1,5 +1,8 @@
+# Use Node.js 20 Alpine image
 FROM node:20-alpine
 
 WORKDIR /var/www
-#
-CMD ["start", "migration:run"]
+
+
+
+CMD ["npm run migration:run && npm run start:debug"]
