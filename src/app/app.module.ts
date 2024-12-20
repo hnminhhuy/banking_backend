@@ -18,7 +18,6 @@ import constantConfig from '../config/constant.config';
 import mailConfig from '../config/mail_service.config';
 import { MailModule } from '../modules/mail/mail.module';
 import redisConfig from 'src/config/redis.config';
-import { SetCacheBlockedUserUsecase } from 'src/modules/auth/core/usecases';
 import Redis from 'ioredis';
 import { TransactionModule } from '../modules/transactions/transaction.module';
 import bullmqConfig from '../config/bullmq.config';
