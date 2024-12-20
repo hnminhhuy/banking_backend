@@ -22,7 +22,7 @@ export class LoginUsecase {
     if (user.isBlocked) throw new ForbiddenException();
     if (!user.verifyPassword(password)) throw new BadRequestException();
 
-    let refreshToken = await this.createRefreshTokenUsecase.execute(
+    const refreshToken = await this.createRefreshTokenUsecase.execute(
       user.id,
       AuthProvider.USER,
     );

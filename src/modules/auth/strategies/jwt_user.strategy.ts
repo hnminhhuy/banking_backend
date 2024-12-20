@@ -2,7 +2,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { CheckCacheBlockedUserUsecase } from '../core/usecases';
+import { CheckCacheBlockedUserUsecase } from 'src/modules/redis_cache/core/usecases';
 
 @Injectable()
 export class JwtUserStrategy extends PassportStrategy(Strategy, 'jwt_user') {

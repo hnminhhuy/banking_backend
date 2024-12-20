@@ -11,6 +11,7 @@ import {
   GetBlockedUserUsecase,
   GetUserUsecase,
   ListUserUsecase,
+  UnblockUserUsecase,
   UpdateUserPassword,
   UpdateUserUsecase,
 } from './core/usecases';
@@ -19,18 +20,20 @@ import {
   UserControllerByCustomer,
   UserControllerByEmployee,
 } from './app/controller';
-import { AuthModule } from '../auth/auth.module';
 import { BankModule } from '../bank/bank.module';
 import { BankAccountModule } from '../bank_account/bank_account.module';
 import { MailModule } from '../mail/mail.module';
+import { AppModule } from 'src/app/app.module';
+import { RedisCacheModule } from '../redis_cache/redis_cache.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity]),
+    forwardRef(() => RedisCacheModule),
     forwardRef(() => BankAccountModule),
     forwardRef(() => BankModule),
     forwardRef(() => MailModule),
-    forwardRef(() => AuthModule),
+    forwardRef(() => AppModule),
   ],
   providers: [
     {
@@ -43,17 +46,20 @@ import { MailModule } from '../mail/mail.module';
     UpdateUserUsecase,
     UpdateUserPassword,
     ListUserUsecase,
-    BlockUserUsecase,
-    GeneratePasswordUsecase,
     GetBlockedUserUsecase,
+    GeneratePasswordUsecase,
+    BlockUserUsecase,
+    UnblockUserUsecase,
   ],
   exports: [
     CreateUserUsecase,
     UpdateUserUsecase,
     GetUserUsecase,
+    ListUserUsecase,
     UpdateUserPassword,
     GetBlockedUserUsecase,
-    ListUserUsecase,
+    BlockUserUsecase,
+    UnblockUserUsecase,
   ],
   controllers: [
     UserControllerByAdmin,

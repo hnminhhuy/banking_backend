@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CacheBlockedUserDatasource } from '../cache_blocked_user.datasource';
-import { CacheBlockedUserIRepo } from '../../../core/repositories/cache_blocked_user.irepo';
+import { ICacheBlockedUserRepo } from 'src/modules/redis_cache/core/repositories/cache_blocked_user.irepo';
 
 @Injectable()
-export class CacheBlockedUserRepo implements CacheBlockedUserIRepo {
+export class CacheBlockedUserRepo implements ICacheBlockedUserRepo {
   constructor(
     private readonly cacheBlockedUserDatasource: CacheBlockedUserDatasource,
   ) {}

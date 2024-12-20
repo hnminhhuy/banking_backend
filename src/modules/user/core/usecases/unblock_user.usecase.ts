@@ -5,7 +5,7 @@ import { ERROR_CODES } from 'src/common/utils/constants';
 import { UpdateCacheBlockedUserUsecase } from 'src/modules/redis_cache/core/usecases';
 
 @Injectable()
-export class BlockUserUsecase {
+export class UnblockUserUsecase {
   constructor(
     private readonly userRepo: IUserRepo,
     private readonly updateCacheBlockedUserUsecase: UpdateCacheBlockedUserUsecase,
@@ -13,7 +13,7 @@ export class BlockUserUsecase {
 
   public async execute(id: string): Promise<boolean> {
     try {
-      const result = await this.userRepo.updateBlocked(id, true);
+      const result = await this.userRepo.updateBlocked(id, false);
       if (!result) {
         throw new BaseException({
           code: ERROR_CODES.INTERNAL_SERVER_ERROR,
@@ -23,7 +23,7 @@ export class BlockUserUsecase {
       }
 
       // TODO: Update cache after blocked user in database.
-      await this.updateCacheBlockedUserUsecase.execute(id, true);
+      await this.updateCacheBlockedUserUsecase.execute(id, false);
 
       return result;
     } catch (error) {

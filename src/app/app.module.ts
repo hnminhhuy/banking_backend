@@ -17,7 +17,6 @@ import { BankAccountModule } from '../modules/bank_account/bank_account.module';
 import constantConfig from '../config/constant.config';
 import mailConfig from '../config/mail_service.config';
 import { MailModule } from '../modules/mail/mail.module';
-import { AuthModule } from 'src/modules/auth/auth.module';
 import redisConfig from 'src/config/redis.config';
 import { SetCacheBlockedUserUsecase } from 'src/modules/auth/core/usecases';
 import Redis from 'ioredis';
@@ -25,6 +24,9 @@ import { TransactionModule } from '../modules/transactions/transaction.module';
 import bullmqConfig from '../config/bullmq.config';
 import { BullModule } from '@nestjs/bullmq';
 import { BankConfigModule } from 'src/modules/bank_config/bank_config.module';
+import { AuthModule } from 'src/modules/auth/auth.module';
+import { SetCacheBlockedUserUsecase } from 'src/modules/redis_cache/core/usecases';
+import { RedisCacheModule } from 'src/modules/redis_cache/redis_cache.module';
 
 @Module({
   imports: [
@@ -65,7 +67,9 @@ import { BankConfigModule } from 'src/modules/bank_config/bank_config.module';
         },
       }),
     }),
+    forwardRef(() => RedisCacheModule),
     forwardRef(() => UserModule),
+    forwardRef(() => AuthModule),
     forwardRef(() => BankModule),
     forwardRef(() => BankAccountModule),
     forwardRef(() => MailModule),
@@ -74,17 +78,8 @@ import { BankConfigModule } from 'src/modules/bank_config/bank_config.module';
     forwardRef(() => BankConfigModule),
   ],
   controllers: [AppController],
-  providers: [
-    {
-      provide: 'REDIS_CLIENT',
-      useFactory: async (configService: ConfigService) => {
-        const redisConfig = configService.get('redis');
-        return new Redis(redisConfig);
-      },
-      inject: [ConfigService],
-    },
-  ],
-  exports: ['REDIS_CLIENT'],
+  providers: [],
+  exports: [],
 })
 export class AppModule implements OnModuleInit {
   constructor(

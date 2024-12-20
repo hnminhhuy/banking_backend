@@ -1,11 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { CacheBlockedUserIRepo } from '../../repositories/cache_blocked_user.irepo';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { GetBlockedUserUsecase } from 'src/modules/user/core/usecases';
+import { ICacheBlockedUserRepo } from '../../repositories/cache_blocked_user.irepo';
 
 @Injectable()
 export class SetCacheBlockedUserUsecase {
   constructor(
-    private readonly cacheBlockedUserRepo: CacheBlockedUserIRepo,
+    private readonly cacheBlockedUserRepo: ICacheBlockedUserRepo,
+
+    @Inject(forwardRef(() => GetBlockedUserUsecase))
     private readonly getBlockedUserUsecase: GetBlockedUserUsecase,
   ) {}
   public async execute(): Promise<void> {
