@@ -10,11 +10,13 @@ import {
   ListBanksUsecase,
 } from './core/usecases';
 import { BankController } from './app/controller/customer/bank.controller';
+import { BankCode } from './core/enums/bank_code';
 
 @Module({
   imports: [TypeOrmModule.forFeature([BankEntity])],
   controllers: [BankController],
   providers: [
+    BankCode,
     {
       provide: IBankRepo,
       useClass: BankRepo,
@@ -24,6 +26,6 @@ import { BankController } from './app/controller/customer/bank.controller';
     GetBankUsecase,
     ListBanksUsecase,
   ],
-  exports: [GetBankUsecase],
+  exports: [GetBankUsecase, BankCode],
 })
 export class BankModule {}

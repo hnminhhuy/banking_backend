@@ -9,6 +9,7 @@ import { GetBankAccountUsecase } from './get_bank_account.usecase';
 import { GetMaxBankAccountUsecase } from './get_max_bank_account.usecase';
 import { ConfigService } from '@nestjs/config';
 import { Cache } from 'cache-manager';
+import { BankCode } from '../../../bank/core/enums/bank_code';
 
 @Injectable()
 export class CreateBankAccountUsecase {
@@ -18,10 +19,14 @@ export class CreateBankAccountUsecase {
     private readonly getMaxBankAccountUsecase: GetMaxBankAccountUsecase,
     @Inject('CACHE_MANAGER') private cacheManager: Cache,
     private readonly configService: ConfigService,
+    private readonly bankCode: BankCode,
   ) {}
 
   public async execute(params: BankAccountParams): Promise<BankAccountModel> {
-    const bank = await this.getBankUsecase.execute('code', 'NHB');
+    const bank = await this.getBankUsecase.execute(
+      'code',
+      this.bankCode.DEFAULT,
+    );
     type CreateBankAccountParams = Pick<
       BankAccountParams,
       'bankId' | 'userId' | 'balance' | 'id'
