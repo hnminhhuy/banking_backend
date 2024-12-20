@@ -14,7 +14,11 @@ export class ChangeBalanceUsecase {
   ) {}
 
   public async execute(id: string, amount: number): Promise<boolean> {
-    const bankAccount = await this.bankAccountRepo.get('id', id, undefined);
+    const bankAccount = await this.getBankAccountUsecase.execute(
+      'id',
+      id,
+      undefined,
+    );
     if (!bankAccount) {
       throw new NotFoundException('Account not found');
     }

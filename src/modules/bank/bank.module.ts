@@ -11,11 +11,13 @@ import {
 } from './core/usecases';
 import { BankController } from './app/controller/customer/bank.controller';
 import { BankCode } from './core/enums/bank_code';
+import { CreateAuthClientCommand } from './app/console/create_bank_client.command';
 
 @Module({
   imports: [TypeOrmModule.forFeature([BankEntity])],
   controllers: [BankController],
   providers: [
+    CreateAuthClientCommand,
     BankCode,
     {
       provide: IBankRepo,
