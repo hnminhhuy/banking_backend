@@ -26,7 +26,7 @@ export class CreateTransactionUsecase {
       | 'remitterPaidFee'
     >;
 
-    params['status'] = TransactionStatus.PROCESSING;
+    params['status'] = TransactionStatus.CREATED;
 
     const transaction = new TransactionModel(params as CreateTransactionParams);
 

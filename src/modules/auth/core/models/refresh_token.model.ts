@@ -12,7 +12,7 @@ export interface RefreshTokenModelParams {
 
 export interface PayloadModel {
   authId: string;
-  userRole: UserRole;
+  userRole?: UserRole;
   provider: AuthProvider;
 }
 

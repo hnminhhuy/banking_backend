@@ -26,6 +26,7 @@ import { MailModule } from '../mail/mail.module';
 import { AppModule } from 'src/app/app.module';
 import { RedisCacheModule } from '../redis_cache/redis_cache.module';
 import { CreateAdminCommand } from './app/console/create_admin.command';
+import { ConsoleModule } from 'nestjs-console';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { CreateAdminCommand } from './app/console/create_admin.command';
     forwardRef(() => AppModule),
   ],
   providers: [
+    CreateAdminCommand,
     {
       provide: IUserRepo,
       useClass: UserRepo,
@@ -51,7 +53,6 @@ import { CreateAdminCommand } from './app/console/create_admin.command';
     GeneratePasswordUsecase,
     BlockUserUsecase,
     UnblockUserUsecase,
-    CreateAdminCommand,
   ],
   exports: [
     CreateUserUsecase,

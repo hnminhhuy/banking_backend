@@ -11,7 +11,7 @@ export interface TransactionModelParams extends BaseModelParams {
   amount: number;
   message: string;
   type: TransactionType;
-  status: TransactionStatus;
+  status?: TransactionStatus;
   transactionFee: number;
   remitterPaidFee: boolean;
 }

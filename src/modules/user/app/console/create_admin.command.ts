@@ -14,6 +14,7 @@ export class CreateAdminCommand {
 
   @Command({
     command: 'admin:create',
+    description: 'Create admin',
     options: [
       {
         flags: '-e --email <email>',
@@ -22,7 +23,7 @@ export class CreateAdminCommand {
       },
 
       {
-        flags: '-fn --fullName <fullName>',
+        flags: '-fn --full-name <fullName>',
         required: true,
         description: 'Admin fullName',
       },
@@ -46,7 +47,6 @@ export class CreateAdminCommand {
     adminDto.password = options.password.toLowerCase().trim();
 
     const errors = await validate(adminDto);
-
     if (errors.length > 0) {
       this.logger.error('Validation errors occurred while creating an admin:');
       errors.forEach((error) => {
@@ -69,5 +69,7 @@ export class CreateAdminCommand {
     };
 
     await this.createUserUsecase.execute(userParams);
+
+    console.log('Create admin success');
   }
 }

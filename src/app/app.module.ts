@@ -27,6 +27,8 @@ import { AuthModule } from 'src/modules/auth/auth.module';
 import { SetCacheBlockedUserUsecase } from 'src/modules/redis_cache/core/usecases';
 import { RedisCacheModule } from 'src/modules/redis_cache/redis_cache.module';
 import { ConsoleModule } from 'nestjs-console';
+import appConfig from '../config/app.config';
+import anotherBankConfig from '../config/another-bank.config';
 
 @Module({
   imports: [
@@ -41,6 +43,8 @@ import { ConsoleModule } from 'nestjs-console';
         mailConfig,
         redisConfig,
         bullmqConfig,
+        appConfig,
+        anotherBankConfig,
       ],
     }),
     TypeOrmModule.forRootAsync({

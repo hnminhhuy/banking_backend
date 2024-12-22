@@ -45,8 +45,8 @@ export class TransactionController {
     private readonly getTransactionUsecase: GetTransactionUsecase,
     private readonly listTransactionUsecase: ListTransactionUsecase,
     private readonly getConfigUsecase: GetConfigUsecase,
-    @InjectQueue('transaction-queue')
-    private readonly queue: Queue,
+    // @InjectQueue('transaction-queue')
+    // private readonly queue: Queue,
   ) {}
 
   @Route(TransactionRoute.createTransaction)
@@ -90,13 +90,12 @@ export class TransactionController {
       beneficiaryBankId: beneficiary.bankId,
       remitterPaidFee: body.remitterPaidFee,
       message: body.message,
-      status: undefined,
       beneficiaryName: beneficiary.user?.fullName,
     };
 
     const transaction = await this.createTransactionUsecase.execute(params);
 
-    await this.queue.add(transaction.id, { transaction: transaction });
+    // await this.queue.add(transaction.id, { transaction: transaction });
 
     return {
       data: transaction,

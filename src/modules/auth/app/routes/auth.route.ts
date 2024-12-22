@@ -12,4 +12,9 @@ export default {
     method: RequestMethod.POST,
     secure: false,
   },
+  oauthToken: <IRouteParams>{
+    path: 'oauth/token',
+    method: RequestMethod.POST,
+    secure: false,
+  },
 };

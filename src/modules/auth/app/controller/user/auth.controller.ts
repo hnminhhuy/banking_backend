@@ -1,10 +1,13 @@
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { LoginDto } from '../dtos/auth.dto';
+import { LoginDto } from '../../dtos/auth.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { LoginUsecase, RefreshAccessTokenUsecase } from '../../core/usecases';
+import {
+  LoginUsecase,
+  RefreshAccessTokenUsecase,
+} from '../../../core/usecases';
 import { Route } from 'src/decorators';
-import authRoute from '../routes/auth.route';
+import authRoute from '../../routes/auth.route';
 
 @ApiTags('Public')
 @Controller({ path: 'api/auth/v1' })
