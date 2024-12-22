@@ -29,6 +29,7 @@ import { ConsoleModule } from 'nestjs-console';
 import appConfig from '../config/app.config';
 import anotherBankConfig from '../config/another-bank.config';
 import { AnotherBankModule } from '../modules/another-bank/another_bank.module';
+import { OtpModule } from 'src/modules/otp/otp.module';
 
 @Module({
   imports: [
@@ -82,6 +83,7 @@ import { AnotherBankModule } from '../modules/another-bank/another_bank.module';
     forwardRef(() => TransactionModule),
     forwardRef(() => BankConfigModule),
     forwardRef(() => AnotherBankModule),
+    forwardRef(() => OtpModule),
   ],
   controllers: [AppController],
   providers: [],

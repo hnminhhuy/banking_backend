@@ -1,0 +1,4 @@
+export enum OtpType {
+  TRANSACTION = 'TRANSACTION',
+  FORGOT_PASSWORD = 'FORGOT_PASSWORD',
+}
