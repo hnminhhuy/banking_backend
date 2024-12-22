@@ -18,7 +18,6 @@ import constantConfig from '../config/constant.config';
 import mailConfig from '../config/mail_service.config';
 import { MailModule } from '../modules/mail/mail.module';
 import redisConfig from 'src/config/redis.config';
-import Redis from 'ioredis';
 import { TransactionModule } from '../modules/transactions/transaction.module';
 import bullmqConfig from '../config/bullmq.config';
 import { BullModule } from '@nestjs/bullmq';
@@ -29,6 +28,7 @@ import { RedisCacheModule } from 'src/modules/redis_cache/redis_cache.module';
 import { ConsoleModule } from 'nestjs-console';
 import appConfig from '../config/app.config';
 import anotherBankConfig from '../config/another-bank.config';
+import { AnotherBankModule } from '../modules/another-bank/another_bank.module';
 
 @Module({
   imports: [
@@ -81,6 +81,7 @@ import anotherBankConfig from '../config/another-bank.config';
     forwardRef(() => AuthModule),
     forwardRef(() => TransactionModule),
     forwardRef(() => BankConfigModule),
+    forwardRef(() => AnotherBankModule),
   ],
   controllers: [AppController],
   providers: [],

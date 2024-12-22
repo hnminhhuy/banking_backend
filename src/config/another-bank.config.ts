@@ -1,6 +1,6 @@
 import { registerAs } from '@nestjs/config';
 
-export default registerAs('another_bank_service', () => ({
+export default registerAs('another_bank', () => ({
   apiUrl: process.env.ANOTHER_BANK_API_URL,
   auth: {
     url: process.env.ANOTHER_BANK_AUTH_URL,

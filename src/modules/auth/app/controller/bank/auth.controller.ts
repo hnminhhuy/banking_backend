@@ -51,7 +51,6 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt_bank'))
   @ApiBearerAuth()
   async refreshOAuthToken(@Req() req: any) {
-    console.log(req.user);
     const newAccessToken = await this.createAccessTokenUsecase.execute({
       authId: req.user.id,
       provider: AuthProvider.BANK,
