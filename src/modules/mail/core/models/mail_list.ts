@@ -10,4 +10,8 @@ export const mailList = {
     subject: MailSubject.MAIL_GET_INITIAL_PASSWORD,
     templateName: 'get_initial_password',
   },
+  transactionOtp: <MailParams>{
+    subject: MailSubject.TRANSACTION_OTP,
+    templateName: 'transaction_otp',
+  },
 };

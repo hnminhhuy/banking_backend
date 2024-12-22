@@ -5,14 +5,20 @@ import { CacheBlockedUserRepo } from './infra/data/repositories/cache_blocked_us
 import { CacheBlockedUserDatasource } from './infra/data/cache_blocked_user.datasource';
 import {
   CheckCacheBlockedUserUsecase,
+  GetOtpUsecase,
   SetCacheBlockedUserUsecase,
+  SetOtpUsecase,
   UpdateCacheBlockedUserUsecase,
 } from './core/usecases';
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
+import { IOtpRepo } from './core/repositories/otp.irepo';
+import { OtpRepo } from './infra/data/repositories/otp.repo';
+import { OtpDatasource } from './infra/data/otp.datasource';
+import { BankConfigModule } from '../bank_config/bank_config.module';
 
 @Module({
-  imports: [forwardRef(() => UserModule)],
+  imports: [forwardRef(() => UserModule), forwardRef(() => BankConfigModule)],
   controllers: [],
   providers: [
     {
@@ -23,11 +29,7 @@ import Redis from 'ioredis';
       },
       inject: [ConfigService],
     },
-    {
-      provide: 'CircularDependencyLog',
-      useFactory: () => (msg: string) =>
-        console.warn(`Circular dependency: ${msg}`),
-    },
+    // Blocked user usecases
     {
       provide: ICacheBlockedUserRepo,
       useClass: CacheBlockedUserRepo,
@@ -36,12 +38,22 @@ import Redis from 'ioredis';
     SetCacheBlockedUserUsecase,
     UpdateCacheBlockedUserUsecase,
     CheckCacheBlockedUserUsecase,
+    // OTP usecases
+    {
+      provide: IOtpRepo,
+      useClass: OtpRepo,
+    },
+    OtpDatasource,
+    SetOtpUsecase,
+    GetOtpUsecase,
   ],
   exports: [
     'REDIS_CLIENT',
     SetCacheBlockedUserUsecase,
     UpdateCacheBlockedUserUsecase,
     CheckCacheBlockedUserUsecase,
+    SetOtpUsecase,
+    GetOtpUsecase,
   ],
 })
 export class RedisCacheModule {}
