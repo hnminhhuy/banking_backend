@@ -5,8 +5,10 @@ import { GetBankDto, ListBankDto } from '../../dto';
 import { PageParams, SortParams } from '../../../../../common/models';
 import { BankSort } from '../../../core/enums/bank_sort';
 import bankRoute from '../../routes/customer/bank.route';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller({ path: 'api/customer/v1/banks' })
+@ApiBearerAuth()
 export class BankController {
   constructor(
     private readonly listBanksUsecase: ListBanksUsecase,
