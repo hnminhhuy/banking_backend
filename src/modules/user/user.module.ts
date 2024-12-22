@@ -12,7 +12,7 @@ import {
   GetUserUsecase,
   ListUserUsecase,
   UnblockUserUsecase,
-  UpdateUserPassword,
+  UpdateUserPasswordUsecase,
   UpdateUserUsecase,
 } from './core/usecases';
 import {
@@ -44,7 +44,7 @@ import { RedisCacheModule } from '../redis_cache/redis_cache.module';
     CreateUserUsecase,
     GetUserUsecase,
     UpdateUserUsecase,
-    UpdateUserPassword,
+    UpdateUserPasswordUsecase,
     ListUserUsecase,
     GetBlockedUserUsecase,
     GeneratePasswordUsecase,
@@ -56,7 +56,7 @@ import { RedisCacheModule } from '../redis_cache/redis_cache.module';
     UpdateUserUsecase,
     GetUserUsecase,
     ListUserUsecase,
-    UpdateUserPassword,
+    UpdateUserPasswordUsecase,
     GetBlockedUserUsecase,
     BlockUserUsecase,
     UnblockUserUsecase,

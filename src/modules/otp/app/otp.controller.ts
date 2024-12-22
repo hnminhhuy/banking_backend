@@ -12,8 +12,8 @@ export class OtpController {
   @Get('/gen')
   async test() {
     const otp = await this.createOtpUsecase.execute(
-      OtpType.FORGOT_PASSWORD,
-      '385d4b9a-9f6c-408f-8129-c933d4693489',
+      OtpType.TRANSACTION,
+      '6e64af45-acaf-4d3b-bf7e-5dd046a186f6',
     );
 
     return otp;
@@ -22,8 +22,8 @@ export class OtpController {
   @Get('/verify/:otp')
   async verify(@Param('otp') otp: string) {
     const result = await this.verifyOtpUsecase.execute(
-      OtpType.FORGOT_PASSWORD,
-      '385d4b9a-9f6c-408f-8129-c933d4693489',
+      OtpType.TRANSACTION,
+      '6e64af45-acaf-4d3b-bf7e-5dd046a186f6',
       otp,
     );
 

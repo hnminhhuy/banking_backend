@@ -15,6 +15,6 @@ import { UserModule } from '../user/user.module';
   ],
   providers: [CreateOtpUsecase, VerifyOtpUsecase],
   controllers: [OtpController],
-  exports: [],
+  exports: [CreateOtpUsecase, VerifyOtpUsecase],
 })
 export class OtpModule {}
