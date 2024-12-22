@@ -21,6 +21,14 @@ export class AddTransactionTable1734248595606 implements MigrationInterface {
             type: 'varchar',
           },
           {
+            name: 'remitter_name',
+            type: 'varchar',
+          },
+          {
+            name: 'remitter_bank_id',
+            type: 'uuid',
+          },
+          {
             name: 'beneficiary_id',
             type: 'varchar',
           },
@@ -75,8 +83,9 @@ export class AddTransactionTable1734248595606 implements MigrationInterface {
     await queryRunner.createForeignKey(
       'transactions',
       new TableForeignKey({
-        columnNames: ['remitter_id'],
-        referencedTableName: 'bank_accounts',
+        name: 'fk_remitter_bank_id_to_bank',
+        columnNames: ['remitter_bank_id'],
+        referencedTableName: 'banks',
         referencedColumnNames: ['id'],
       }),
     );
@@ -84,6 +93,7 @@ export class AddTransactionTable1734248595606 implements MigrationInterface {
     await queryRunner.createForeignKey(
       'transactions',
       new TableForeignKey({
+        name: 'fk_beneficiary_bank_id_to_bank',
         columnNames: ['beneficiary_bank_id'],
         referencedTableName: 'banks',
         referencedColumnNames: ['id'],

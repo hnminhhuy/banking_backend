@@ -17,6 +17,7 @@ import { UpdateTransactionStatusUsecase } from './core/usecases/update_transacti
 import { TransactionConsumer } from './app/consumer/transaction.consumer';
 import { UserModule } from '../user/user.module';
 import { BankConfigModule } from '../bank_config/bank_config.module';
+import { OtpModule } from '../otp/otp.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { BankConfigModule } from '../bank_config/bank_config.module';
     forwardRef(() => BankAccountModule),
     forwardRef(() => UserModule),
     forwardRef(() => BankConfigModule),
+    forwardRef(() => OtpModule),
   ],
   controllers: [TransactionController],
   providers: [

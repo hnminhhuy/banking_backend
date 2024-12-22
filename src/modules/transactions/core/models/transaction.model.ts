@@ -5,6 +5,8 @@ import { TransactionStatus } from '../enums/transaction_status';
 
 export interface TransactionModelParams extends BaseModelParams {
   remitterId: string;
+  remitterName: string;
+  remitterBankId: string;
   beneficiaryId: string;
   beneficiaryName: string;
   beneficiaryBankId: string;
@@ -19,6 +21,12 @@ export interface TransactionModelParams extends BaseModelParams {
 export class TransactionModel extends BaseModel {
   @ApiProperty()
   public readonly remitterId: string;
+
+  @ApiProperty()
+  public readonly remitterName: string;
+
+  @ApiProperty()
+  public readonly remitterBankId: string;
 
   @ApiProperty()
   public readonly beneficiaryId: string;

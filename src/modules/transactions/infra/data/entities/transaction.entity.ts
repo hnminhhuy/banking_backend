@@ -9,6 +9,12 @@ export class TransactionEntity extends BaseEntity {
   @Column({ name: 'remitter_id' })
   remitterId!: string;
 
+  @Column({ name: 'remitter_name' })
+  remitterName!: string;
+
+  @Column({ name: 'remitter_bank_id' })
+  remitterBankId!: string;
+
   @Column({ name: 'beneficiary_id' })
   beneficiaryId!: string;
 

@@ -29,12 +29,14 @@ import {
   calculateAmountForBeneficiary,
   calculateAmountForRemitter,
 } from '../../core/helpers/calculate_amount';
-import { query } from 'express';
 import { PageParams, SortParams } from '../../../../common/models';
-import { BankSort } from '../../../bank/core/enums/bank_sort';
 import { TransactionSort } from '../../core/enums/transaction_sort';
 import { GetConfigUsecase } from '../../../bank_config/core/usecase';
 import { ConfigKey } from '../../../bank_config/core/enum/config_key';
+import { CreateOtpUsecase, VerifyOtpUsecase } from '../../../otp/core/usecases';
+import { OtpType } from '../../../otp/core/enums/otpType.enum';
+import { UpdateTransactionStatusUsecase } from '../../core/usecases/update_transaction_status.usecase';
+import { TransactionStatus } from '../../core/enums/transaction_status';
 
 @Controller({ path: 'api/customers/v1/transactions' })
 export class TransactionController {
@@ -45,8 +47,11 @@ export class TransactionController {
     private readonly getTransactionUsecase: GetTransactionUsecase,
     private readonly listTransactionUsecase: ListTransactionUsecase,
     private readonly getConfigUsecase: GetConfigUsecase,
-    // @InjectQueue('transaction-queue')
-    // private readonly queue: Queue,
+    private readonly createOtpUsecase: CreateOtpUsecase,
+    private readonly verifyOtpUsecase: VerifyOtpUsecase,
+    private readonly updateTransactionStatusUsecase: UpdateTransactionStatusUsecase,
+    @InjectQueue('transaction-queue')
+    private readonly queue: Queue,
   ) {}
 
   @Route(TransactionRoute.createTransaction)
@@ -55,6 +60,7 @@ export class TransactionController {
     const remitter = await this.getBankAccountUsecase.execute(
       'id',
       body.remitterId,
+      ['user'],
     );
 
     if (remitter.balance < body.amount) {
@@ -91,16 +97,66 @@ export class TransactionController {
       remitterPaidFee: body.remitterPaidFee,
       message: body.message,
       beneficiaryName: beneficiary.user?.fullName,
+      remitterBankId: remitter.bankId,
+      remitterName: remitter.user.fullName,
     };
 
     const transaction = await this.createTransactionUsecase.execute(params);
 
-    // await this.queue.add(transaction.id, { transaction: transaction });
+    await this.createOtpUsecase.execute(OtpType.TRANSACTION, remitter.userId, {
+      transactionId: transaction.id,
+    });
 
     return {
       data: transaction,
       statusCode: HttpStatus.CREATED,
     };
+  }
+
+  @Route(TransactionRoute.verifyOtp)
+  @Transactional()
+  async verify(@Req() req: any, @Body() body: any) {
+    const user = await this.getUserUsecase.execute('id', req.user.authId, [
+      'bankAccount',
+    ]);
+
+    if (!user) {
+      throw new BadRequestException(`User ${req.user.authId} not found`);
+    }
+
+    const transaction = await this.getTransactionUsecase.execute(
+      'id',
+      body.transactionId,
+      undefined,
+    );
+
+    if (!transaction) {
+      throw new BadRequestException(`Transaction ${body.id} not found`);
+    }
+
+    if (transaction.remitterId !== user.bankAccount.id) {
+      throw new BadRequestException(
+        `Transaction ${body.id} is not belong to you`,
+      );
+    }
+
+    const res = await this.verifyOtpUsecase.execute(
+      OtpType.TRANSACTION,
+      user.id,
+      body.otp,
+      {
+        transactionId: transaction.id,
+      },
+    );
+
+    await this.updateTransactionStatusUsecase.execute(
+      transaction.id,
+      TransactionStatus.PROCESSING,
+    );
+
+    await this.queue.add(transaction.id, { transaction: transaction });
+
+    return res;
   }
 
   @Route(TransactionRoute.getTransaction)

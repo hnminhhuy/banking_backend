@@ -32,4 +32,10 @@ export const TransactionRoute = {
     secure: true,
     roles: [UserRole.Customer],
   },
+  verifyOtp: <IRouteParams>{
+    path: '/verify-otp',
+    method: RequestMethod.POST,
+    secure: true,
+    roles: [UserRole.Customer],
+  },
 };
