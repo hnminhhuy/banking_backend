@@ -35,7 +35,9 @@ export class AnotherBankService {
           data: body,
           method: method,
           params: params,
-          headers: { Authorization: `Bearer ${await this.getAccessToken()}` },
+          headers: {
+            Authorization: `Bearer ${await this.getAccessToken()}`,
+          },
         }),
       );
     } catch (e: any) {
@@ -49,7 +51,7 @@ export class AnotherBankService {
   }
 
   protected async delCacheAccessToken(): Promise<void> {
-    await this.cacheManager.del('santa_service_access_token');
+    await this.cacheManager.del('another_bank_access_token');
   }
 
   protected async getCacheAccessToken(): Promise<
@@ -59,7 +61,7 @@ export class AnotherBankService {
   }
 
   protected async delCacheRefreshToken(): Promise<void> {
-    await this.cacheManager.del('santa_service_refresh_token');
+    await this.cacheManager.del('another_bank_refresh_token');
   }
 
   protected async getCacheRefreshToken(): Promise<
@@ -68,7 +70,55 @@ export class AnotherBankService {
     return await this.cacheManager.get('another_bank_refresh_token');
   }
 
+  protected async cacheAccessToken(token: Record<string, any>): Promise<void> {
+    await this.cacheManager.set(
+      'another_bank_access_token',
+      token.accessToken,
+      token.accessTokenExpiresAt,
+    );
+  }
+
+  protected async cacheRefreshToken(token: Record<string, any>): Promise<void> {
+    await this.cacheManager.set(
+      'another_bank_refresh_token',
+      token.refreshToken,
+      token.refreshTokenExpiresAt,
+    );
+  }
+
   protected async getAccessToken(): Promise<string> {
-    return 'Not available';
+    let accessTokenInfo = await this.getCacheAccessToken();
+    let refreshToken = await this.getCacheRefreshToken();
+
+    if (
+      (!accessTokenInfo && !refreshToken) ||
+      (refreshToken && refreshToken.refreshTokenExpiresAt < new Date())
+    ) {
+      const response = await lastValueFrom(
+        this.httpService.post(
+          this.configService.get<string>('another_bank.auth.url') ??
+            throwError(),
+          {
+            clientId:
+              this.configService.get<string>('another_bank.auth.clientId') ??
+              throwError(),
+            clientSecret:
+              this.configService.get<string>(
+                'another_bank.auth.clientSecret',
+              ) ?? throwError(),
+          },
+        ),
+      );
+
+      await this.cacheAccessToken(response.data);
+      await this.cacheRefreshToken(response.data);
+      accessTokenInfo = response.data.accessToken;
+    }
+
+    if (accessTokenInfo.accessTokenExpiresAt < new Date()) {
+      console.log('Implement later');
+    }
+
+    return accessTokenInfo.accessToken;
   }
 }

@@ -26,6 +26,7 @@ import { RedisCacheModule } from '../redis_cache/redis_cache.module';
 import { GetOAuthTokenUsecase } from './core/usecases/login_bank.usecase';
 import { BankModule } from '../bank/bank.module';
 import { AuthController } from './app/controller/bank/auth.controller';
+import { JwtBankStrategy } from './strategies/jwt_bank.strategy';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { AuthController } from './app/controller/bank/auth.controller';
   providers: [
     RoleAuthGuard,
     JwtUserStrategy,
+    JwtBankStrategy,
     {
       provide: IRefreshTokenRepo,
       useClass: RefreshTokenRepo,

@@ -34,7 +34,7 @@ export class AuthController {
     const newAccessToken = await this.refreshAccessTokenUsecase.execute(
       req.user.id,
     );
-    return { accessToken: newAccessToken }; // Send the new access token in response
+    return { accessToken: newAccessToken };
   }
 
   //Authorization
