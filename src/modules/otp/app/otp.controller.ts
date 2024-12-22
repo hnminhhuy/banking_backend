@@ -13,7 +13,7 @@ export class OtpController {
   async test() {
     const otp = await this.createOtpUsecase.execute(
       OtpType.FORGOT_PASSWORD,
-      'sample_user_id',
+      '385d4b9a-9f6c-408f-8129-c933d4693489',
     );
 
     return otp;
@@ -23,7 +23,7 @@ export class OtpController {
   async verify(@Param('otp') otp: string) {
     const result = await this.verifyOtpUsecase.execute(
       OtpType.FORGOT_PASSWORD,
-      'sample_user_id',
+      '385d4b9a-9f6c-408f-8129-c933d4693489',
       otp,
     );
 
