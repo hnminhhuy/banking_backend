@@ -30,6 +30,7 @@ import appConfig from '../config/app.config';
 import anotherBankConfig from '../config/another-bank.config';
 import { AnotherBankModule } from '../modules/another-bank/another_bank.module';
 import { OtpModule } from 'src/modules/otp/otp.module';
+import bankConfig from '../config/bank.config';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { OtpModule } from 'src/modules/otp/otp.module';
         bullmqConfig,
         appConfig,
         anotherBankConfig,
+        bankConfig,
       ],
     }),
     TypeOrmModule.forRootAsync({

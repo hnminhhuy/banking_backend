@@ -1,8 +1,8 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
-import { AxiosError, Method } from 'axios';
+import { AxiosError, AxiosResponse, Method } from 'axios';
 import { lastValueFrom } from 'rxjs';
 import { Cache } from 'cache-manager';
 import { throwError } from '../../../../common/helpers/throw_error';
@@ -63,6 +63,31 @@ export class AnotherBankService {
     }
   }
 
+  protected async safeRequest(
+    method: Method,
+    url: string,
+    body: Record<string, any> | undefined,
+    params: Record<string, any> | undefined,
+  ): Promise<AxiosResponse> {
+    try {
+      return await this.request(method, url, body, params);
+    } catch (error: any) {
+      if (error instanceof AxiosError) {
+        if (
+          error.response &&
+          [HttpStatus.UNAUTHORIZED, HttpStatus.FORBIDDEN].includes(
+            error.response.status,
+          )
+        ) {
+          await this.delCacheAccessToken();
+          return await this.request(method, url, body, params);
+        }
+      }
+
+      throw error;
+    }
+  }
+
   protected async delCacheAccessToken(): Promise<void> {
     await this.cacheManager.del('another_bank_access_token');
   }
@@ -70,9 +95,10 @@ export class AnotherBankService {
   protected async getCacheAccessToken(): Promise<
     Record<string, any> | undefined
   > {
-    return await this.cacheManager.get<Record<string, any>>(
+    const getCache = await this.cacheManager.get<string>(
       'another_bank_access_token',
     );
+    return getCache ? JSON.parse(getCache) : undefined;
   }
 
   protected async delCacheRefreshToken(): Promise<void> {
@@ -82,15 +108,19 @@ export class AnotherBankService {
   protected async getCacheRefreshToken(): Promise<
     Record<string, any> | undefined
   > {
-    return await this.cacheManager.get<Record<string, any>>(
+    const getCache = await this.cacheManager.get<string>(
       'another_bank_refresh_token',
     );
+    return getCache ? JSON.parse(getCache) : undefined;
   }
 
   protected async cacheAccessToken(token: Record<string, any>): Promise<void> {
     await this.cacheManager.set(
       'another_bank_access_token',
-      JSON.stringify({ ...token.accessToken, ...token.accessTokenExpiresAt }),
+      JSON.stringify({
+        accessToken: token.accessToken,
+        accessTokenExpiresAt: token.accessTokenExpiresAt,
+      }),
       Math.floor(
         (new Date(token.accessTokenExpiresAt).getTime() - Date.now()) / 1000,
       ),
@@ -100,7 +130,10 @@ export class AnotherBankService {
   protected async cacheRefreshToken(token: Record<string, any>): Promise<void> {
     await this.cacheManager.set(
       'another_bank_refresh_token',
-      JSON.stringify({ ...token.refreshToken, ...token.refreshTokenExpiresAt }),
+      JSON.stringify({
+        refreshToken: token.refreshToken,
+        refreshTokenExpiresAt: token.refreshTokenExpiresAt,
+      }),
       Math.floor(
         (new Date(token.refreshTokenExpiresAt).getTime() - Date.now()) / 1000,
       ),
@@ -131,14 +164,16 @@ export class AnotherBankService {
           },
         ),
       );
-
-      if (!response.data?.accessToken || !response.data?.accessTokenExpiresAt) {
+      if (
+        !response.data.data?.accessToken ||
+        !response.data.data?.accessTokenExpiresAt
+      ) {
         throw new Error('Invalid response data from authentication API');
       }
 
-      await this.cacheAccessToken(response.data);
-      await this.cacheRefreshToken(response.data);
-      accessTokenInfo = response.data;
+      await this.cacheAccessToken(response.data.data);
+      await this.cacheRefreshToken(response.data.data);
+      accessTokenInfo = response.data.data;
     }
 
     if (new Date(accessTokenInfo.accessTokenExpiresAt) < new Date()) {
@@ -155,12 +190,15 @@ export class AnotherBankService {
         ),
       );
 
-      if (!response.data?.accessToken || !response.data?.accessTokenExpiresAt) {
+      if (
+        !response.data.data?.accessToken ||
+        !response.data.data?.accessTokenExpiresAt
+      ) {
         throw new Error('Invalid response data from refresh token API');
       }
 
-      await this.cacheAccessToken(response.data);
-      accessTokenInfo = response.data;
+      await this.cacheAccessToken(response.data.data);
+      accessTokenInfo = response.data.data;
     }
 
     return accessTokenInfo.accessToken;

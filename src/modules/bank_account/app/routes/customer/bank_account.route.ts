@@ -6,12 +6,12 @@ import { UserRole } from '../../../../user/core/enums/user_role';
 
 export const BankAccountRouteByCustomer = {
   getBankAccount: <IRouteParams>{
-    path: '/:id',
-    method: RequestMethod.GET,
+    path: '/get-one',
+    method: RequestMethod.POST,
     secure: true,
     roles: [UserRole.Customer],
     swaggerParams: {
-      param: GetBankAccountDto,
+      body: GetBankAccountDto,
       responses: [
         {
           status: HttpStatus.OK,
