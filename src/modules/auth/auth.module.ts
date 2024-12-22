@@ -16,13 +16,17 @@ import {
   CreateAccessTokenUsecase,
   CreateRefreshTokenUsecase,
   DeleteRefreshTokenUsecase,
+  GenerateResetPasswordTokenUsecase,
   GetRefreshTokenUsecase,
   LoginUsecase,
   RefreshAccessTokenUsecase,
+  RequestOtpResetPasswordUsecase,
+  ResetPasswordUsecase,
   VerifyTokenUsecase,
 } from './core/usecases';
 import { AppModule } from 'src/app/app.module';
 import { RedisCacheModule } from '../redis_cache/redis_cache.module';
+import { OtpModule } from '../otp/otp.module';
 
 @Module({
   imports: [
@@ -42,6 +46,7 @@ import { RedisCacheModule } from '../redis_cache/redis_cache.module';
     forwardRef(() => RedisCacheModule),
     forwardRef(() => UserModule),
     forwardRef(() => AppModule),
+    forwardRef(() => OtpModule),
   ],
   controllers: [AuthController],
   providers: [
@@ -59,6 +64,10 @@ import { RedisCacheModule } from '../redis_cache/redis_cache.module';
     GetRefreshTokenUsecase,
     CreateAccessTokenUsecase,
     LoginUsecase,
+    //Reset password
+    RequestOtpResetPasswordUsecase,
+    GenerateResetPasswordTokenUsecase,
+    ResetPasswordUsecase,
   ],
   exports: [],
 })
