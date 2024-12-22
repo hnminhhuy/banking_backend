@@ -22,6 +22,7 @@ import { BankConfigModule } from 'src/modules/bank_config/bank_config.module';
 import { AuthModule } from 'src/modules/auth/auth.module';
 import { SetCacheBlockedUserUsecase } from 'src/modules/redis_cache/core/usecases';
 import { RedisCacheModule } from 'src/modules/redis_cache/redis_cache.module';
+import { OtpModule } from 'src/modules/otp/otp.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { RedisCacheModule } from 'src/modules/redis_cache/redis_cache.module';
     forwardRef(() => BankAccountModule),
     forwardRef(() => MailModule),
     forwardRef(() => BankConfigModule),
+    forwardRef(() => OtpModule),
   ],
   controllers: [AppController],
   providers: [],

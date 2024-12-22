@@ -15,9 +15,10 @@ import Redis from 'ioredis';
 import { IOtpRepo } from './core/repositories/otp.irepo';
 import { OtpRepo } from './infra/data/repositories/otp.repo';
 import { OtpDatasource } from './infra/data/otp.datasource';
+import { BankConfigModule } from '../bank_config/bank_config.module';
 
 @Module({
-  imports: [forwardRef(() => UserModule)],
+  imports: [forwardRef(() => UserModule), forwardRef(() => BankConfigModule)],
   controllers: [],
   providers: [
     {

@@ -1,6 +1,8 @@
 import { IOtpRepo as IOtpRepo } from 'src/modules/redis_cache/core/repositories/otp.irepo';
 import { OtpDatasource } from '../otp.datasource';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class OtpRepo implements IOtpRepo {
   constructor(private readonly optDatasource: OtpDatasource) {}
 
