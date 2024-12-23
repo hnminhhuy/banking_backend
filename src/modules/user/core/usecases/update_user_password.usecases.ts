@@ -7,20 +7,21 @@ import { IUserRepo } from '../repositories/user.irepo';
 import { UserModel } from '../models/user.model';
 
 @Injectable()
-export class UpdateUserPassword {
+export class UpdateUserPasswordUsecase {
   constructor(private readonly userRepo: IUserRepo) {}
 
   public async execute(
     id: string,
-    oldPassword: string,
+    requiredPasswordConfirmation: boolean = true,
     newPassword: string,
+    oldPassword?: string,
   ): Promise<boolean> {
     const user = await this.userRepo.getUserBy('id', id, undefined);
     if (!user) {
       throw new NotFoundException(`User ${id} does not exist`);
     }
 
-    if (!user.verifyPassword(oldPassword)) {
+    if (requiredPasswordConfirmation && !user.verifyPassword(oldPassword)) {
       throw new UnauthorizedException('Invalid old password');
     }
 

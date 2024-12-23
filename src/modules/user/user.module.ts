@@ -12,7 +12,7 @@ import {
   GetUserUsecase,
   ListUserUsecase,
   UnblockUserUsecase,
-  UpdateUserPassword,
+  UpdateUserPasswordUsecase,
   UpdateUserUsecase,
 } from './core/usecases';
 import {
@@ -47,7 +47,7 @@ import { ConsoleModule } from 'nestjs-console';
     CreateUserUsecase,
     GetUserUsecase,
     UpdateUserUsecase,
-    UpdateUserPassword,
+    UpdateUserPasswordUsecase,
     ListUserUsecase,
     GetBlockedUserUsecase,
     GeneratePasswordUsecase,
@@ -59,7 +59,7 @@ import { ConsoleModule } from 'nestjs-console';
     UpdateUserUsecase,
     GetUserUsecase,
     ListUserUsecase,
-    UpdateUserPassword,
+    UpdateUserPasswordUsecase,
     GetBlockedUserUsecase,
     BlockUserUsecase,
     UnblockUserUsecase,

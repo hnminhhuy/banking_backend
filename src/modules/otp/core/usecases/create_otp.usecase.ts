@@ -47,6 +47,8 @@ export class CreateOtpUsecase {
         break;
     }
 
+    console.log(mailParams);
+
     await this.sendMailUsecase.execute(user.email, mailParams, {
       fullname: user.fullName,
       otp: otp,

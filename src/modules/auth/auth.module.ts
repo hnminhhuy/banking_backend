@@ -16,9 +16,12 @@ import {
   CreateAccessTokenUsecase,
   CreateRefreshTokenUsecase,
   DeleteRefreshTokenUsecase,
+  GenerateResetPasswordTokenUsecase,
   GetRefreshTokenUsecase,
   LoginUsecase,
   RefreshAccessTokenUsecase,
+  RequestOtpResetPasswordUsecase,
+  ResetPasswordUsecase,
   VerifyTokenUsecase,
 } from './core/usecases';
 import { AppModule } from 'src/app/app.module';
@@ -27,6 +30,7 @@ import { GetOAuthTokenUsecase } from './core/usecases/login_bank.usecase';
 import { BankModule } from '../bank/bank.module';
 import { AuthController } from './app/controller/bank/auth.controller';
 import { JwtBankStrategy } from './strategies/jwt_bank.strategy';
+import { OtpModule } from '../otp/otp.module';
 
 @Module({
   imports: [
@@ -47,6 +51,7 @@ import { JwtBankStrategy } from './strategies/jwt_bank.strategy';
     forwardRef(() => UserModule),
     forwardRef(() => AppModule),
     forwardRef(() => BankModule),
+    forwardRef(() => OtpModule),
   ],
   controllers: [AuthControllerByUser, AuthController],
   providers: [
@@ -66,6 +71,10 @@ import { JwtBankStrategy } from './strategies/jwt_bank.strategy';
     CreateAccessTokenUsecase,
     LoginUsecase,
     GetOAuthTokenUsecase,
+    //Reset password
+    RequestOtpResetPasswordUsecase,
+    GenerateResetPasswordTokenUsecase,
+    ResetPasswordUsecase,
   ],
   exports: [],
 })

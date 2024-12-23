@@ -8,9 +8,24 @@ export default {
     secure: false,
   },
   refreshAccessToken: <IRouteParams>{
-    path: '/refresh_access',
+    path: '/refresh-access',
     method: RequestMethod.POST,
     secure: false,
+  },
+  requestPasswordReset: <IRouteParams>{
+    path: '/request-reset-password',
+    method: RequestMethod.POST,
+    secure: false,
+  },
+  verifyOtp: <IRouteParams>{
+    path: '/otp-verify',
+    method: RequestMethod.POST,
+    secure: false,
+  },
+  resetPassword: <IRouteParams>{
+    path: 'reset-password',
+    method: RequestMethod.POST,
+    secure: true,
   },
   oauthToken: <IRouteParams>{
     path: 'oauth/token',

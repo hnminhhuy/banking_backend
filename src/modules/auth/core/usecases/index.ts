@@ -5,3 +5,6 @@ export * from './refresh_tokens/get_refresh_token.usecase';
 export * from './refresh_tokens/create_refresh_token.usecase';
 export * from './auth_services/refresh_access_token.usecase';
 export * from './login.usecase';
+export * from './reset_password/generate_reset_password_token.usecase';
+export * from './reset_password/request_otp_reset_password.usecase';
+export * from './reset_password/reset_password.usecase';
