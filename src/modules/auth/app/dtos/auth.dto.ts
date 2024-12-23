@@ -19,9 +19,12 @@ export class AuthDto {
   clientSecret: string;
 }
 
-export class LoginDto extends PickType(AuthDto, ['username', 'password']) {}
-
 export class OAuthTokenDto extends PickType(AuthDto, [
   'clientId',
   'clientSecret',
 ]) {}
+export class LoginDto extends PickType(AuthDto, ['username', 'password']) {
+  @ApiProperty()
+  @IsString()
+  captchaToken: string;
+}

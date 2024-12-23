@@ -17,17 +17,11 @@ import {
   GenerateResetPasswordTokenUsecase,
   ResetPasswordUsecase,
 } from '../../../core/usecases';
+import { CaptchaService } from '../../../core/usecases/captcha.service';
 import { OtpDto } from '../../dtos/otp.dto';
 import { RequestResetPasswordDto } from '../../dtos/request_reset_password.dto';
 import { ResetPasswordDto } from '../../dtos/reset_password.dto';
 import authRoute from '../../routes/auth.route';
-} from '../../core/usecases';
-import { Route } from 'src/decorators';
-import authRoute from '../routes/auth.route';
-import { RequestResetPasswordDto } from '../dtos/request_reset_password.dto';
-import { OtpDto } from '../dtos/otp.dto';
-import { ResetPasswordDto } from '../dtos/reset_password.dto';
-import { CaptchaService } from '../../core/usecases/captcha.service';
 
 @ApiTags('Public')
 @Controller({ path: 'api/auth/v1' })
