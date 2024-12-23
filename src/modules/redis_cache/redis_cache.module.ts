@@ -6,6 +6,7 @@ import { CacheBlockedUserDatasource } from './infra/data/cache_blocked_user.data
 import {
   CheckCacheBlockedUserUsecase,
   GetOtpUsecase,
+  RemoveOtpUsecase,
   SetCacheBlockedUserUsecase,
   SetOtpUsecase,
   UpdateCacheBlockedUserUsecase,
@@ -46,6 +47,7 @@ import { BankConfigModule } from '../bank_config/bank_config.module';
     OtpDatasource,
     SetOtpUsecase,
     GetOtpUsecase,
+    RemoveOtpUsecase,
   ],
   exports: [
     'REDIS_CLIENT',
@@ -54,6 +56,7 @@ import { BankConfigModule } from '../bank_config/bank_config.module';
     CheckCacheBlockedUserUsecase,
     SetOtpUsecase,
     GetOtpUsecase,
+    RemoveOtpUsecase,
   ],
 })
 export class RedisCacheModule {}

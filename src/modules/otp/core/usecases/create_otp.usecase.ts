@@ -5,6 +5,7 @@ import { OtpCacheKey } from '../utils/otpCacheKey';
 import { OtpGenerator } from '../utils/optGenerator';
 import {
   GetOtpUsecase,
+  RemoveOtpUsecase,
   SetOtpUsecase,
 } from 'src/modules/redis_cache/core/usecases';
 import { SendMailUseCase } from 'src/modules/mail/core/usecases/send_mail.usecase';
@@ -25,6 +26,7 @@ export class CreateOtpUsecase {
     private readonly sendMailUsecase: SendMailUseCase,
     private readonly getConfigUsecase: GetConfigUsecase,
     private readonly getUserUsecase: GetUserUsecase,
+    private readonly removeOtpUsecase: RemoveOtpUsecase,
   ) {
     this.getConfigUsecase.execute(ConfigKey.OTP_TIMEOUT).then((config) => {
       this.otpTimeout = config.getValue() as number;
@@ -47,8 +49,6 @@ export class CreateOtpUsecase {
         break;
     }
 
-    console.log(mailParams);
-
     await this.sendMailUsecase.execute(user.email, mailParams, {
       fullname: user.fullName,
       otp: otp,
@@ -62,10 +62,24 @@ export class CreateOtpUsecase {
     extraData?: Record<string, unknown>,
   ): Promise<OtpModel> {
     const user = await this.getUserUsecase.execute('id', userId);
-
-    const key = OtpCacheKey.generate(userId, otpType);
+    let key: string = '';
+    switch (otpType) {
+      case OtpType.FORGOT_PASSWORD:
+        key = OtpCacheKey.generate(otpType, [userId]);
+        break;
+      case OtpType.TRANSACTION:
+        key = OtpCacheKey.generate(otpType, [
+          userId,
+          extraData?.transactionId as string,
+        ]);
+    }
     const existingOtp = (await this.getOtpUsecase.execute(key)) as OtpModel;
-    const otp = existingOtp ? existingOtp.otp : OtpGenerator.generateOtp();
+
+    if (existingOtp) {
+      await this.removeOtpUsecase.execute(key);
+    }
+
+    const otp = OtpGenerator.generateOtp();
     const otpData = new OtpModel({
       userId,
       otp,

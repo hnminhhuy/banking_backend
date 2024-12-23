@@ -6,3 +6,4 @@ export * from './block_user/check_cache_blocked_user.usecase';
 // OTP usecases
 export * from './otps/set_otp.usecase';
 export * from './otps/get_otp.usecase';
+export * from './otps/remove_otp.usecase';
