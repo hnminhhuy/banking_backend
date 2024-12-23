@@ -27,6 +27,8 @@ import {
 import { AppModule } from 'src/app/app.module';
 import { RedisCacheModule } from '../redis_cache/redis_cache.module';
 import { OtpModule } from '../otp/otp.module';
+import { CaptchaService } from './core/usecases/captcha.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -43,6 +45,7 @@ import { OtpModule } from '../otp/otp.module';
       useFactory: (configService: ConfigService): any =>
         configService.get<JwtModuleOptions>('auth.jwt'),
     }),
+    HttpModule,
     forwardRef(() => RedisCacheModule),
     forwardRef(() => UserModule),
     forwardRef(() => AppModule),
@@ -56,6 +59,7 @@ import { OtpModule } from '../otp/otp.module';
       provide: IRefreshTokenRepo,
       useClass: RefreshTokenRepo,
     },
+    CaptchaService,
     RefreshTokenDatasource,
     VerifyTokenUsecase,
     RefreshAccessTokenUsecase,

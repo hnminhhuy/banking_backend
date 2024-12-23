@@ -11,6 +11,16 @@ export const initApplication = async (): Promise<INestApplication> => {
 
   const configService = app.get(ConfigService);
 
+  const origins = configService.get<string>('CORS_ORIGINS', '');
+  console.log('origin', origins);
+
+  app.enableCors({
+    origin: origins.split(','),
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
+
   await configAppInterceptor(app);
   await configAppException(app);
   await configAppDocument(app, configService);
