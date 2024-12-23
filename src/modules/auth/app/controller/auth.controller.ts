@@ -42,7 +42,6 @@ export class AuthController {
     const isCaptchaValid =
       await this.captchaService.verifyCaptcha(captchaToken);
 
-    console.log('CAPTCHA in Backend: ', captchaToken);
     if (!isCaptchaValid)
       throw new ForbiddenException('CAPTCHA verification failed');
 
