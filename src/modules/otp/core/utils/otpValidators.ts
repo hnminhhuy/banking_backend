@@ -15,7 +15,7 @@ export class VerifyOtp {
 
   public setOtpType(otpType: OtpType): void {
     this.otpType = otpType;
-    switch (otpType) {
+    switch (this.otpType) {
       case OtpType.TRANSACTION:
         this.verifyOtpStrategy = new VerifyTransactionOtp();
         break;
