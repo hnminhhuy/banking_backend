@@ -20,4 +20,11 @@ export const BankAccountRouteByCustomer = {
       ],
     },
   },
+  depositToAccount: <IRouteParams>{
+    path: '/deposit',
+    method: RequestMethod.POST,
+    secure: true,
+    roles: [UserRole.Customer],
+    swaggerParams: {},
+  },
 };
