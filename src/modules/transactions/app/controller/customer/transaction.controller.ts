@@ -72,6 +72,7 @@ export class TransactionController {
       body.remitterId,
       ['user'],
     );
+
     if (!remitter || remitter.userId !== req.user.authId) {
       throw new BadRequestException('This account does not belong to you');
     }
@@ -167,7 +168,7 @@ export class TransactionController {
       TransactionStatus.PROCESSING,
     );
 
-    const queue = await this.queue.add(transaction.id, {
+    await this.queue.add(transaction.id, {
       transaction: transaction,
     });
 

@@ -9,3 +9,20 @@ export class CreateTransactionDto extends PickType(TransactionDto, [
   'message',
   'remitterPaidFee',
 ]) {}
+
+export class CreateTransactionForAnotherBankDto extends PickType(
+  TransactionDto,
+  [
+    'id',
+    'remitterId',
+    'remitterName',
+    'remitterBankId',
+    'beneficiaryId',
+    'beneficiaryBankId',
+    'beneficiaryName',
+    'amount',
+    'message',
+    'remitterPaidFee',
+    'transactionFee',
+  ],
+) {}

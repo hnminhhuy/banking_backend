@@ -48,5 +48,10 @@ import { TransactionController as TransactionControllerByEmployee } from './app/
     UpdateTransactionStatusUsecase,
     ListTransactionUsecase,
   ],
+  exports: [
+    CreateTransactionUsecase,
+    GetTransactionUsecase,
+    UpdateTransactionStatusUsecase,
+  ],
 })
 export class TransactionModule {}

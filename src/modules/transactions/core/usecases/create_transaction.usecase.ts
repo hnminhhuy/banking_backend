@@ -24,9 +24,12 @@ export class CreateTransactionUsecase {
       | 'status'
       | 'transactionFee'
       | 'remitterPaidFee'
+      | 'id'
     >;
 
-    params['status'] = TransactionStatus.CREATED;
+    params['status'] = !params['status']
+      ? TransactionStatus.CREATED
+      : params['status'];
 
     const transaction = new TransactionModel(params as CreateTransactionParams);
 

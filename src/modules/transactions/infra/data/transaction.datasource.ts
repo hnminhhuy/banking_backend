@@ -68,6 +68,7 @@ export class TransactionDatasource {
     const query = this.transactionRepository.createQueryBuilder('transaction');
 
     if (remitterId || beneficiaryId) {
+      console.log('Ua do hong');
       query.andWhere(
         new Brackets((qb) => {
           if (remitterId) {

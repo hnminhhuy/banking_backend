@@ -34,6 +34,18 @@ export class TransactionDto extends BaseDto {
   beneficiaryBankId!: string;
 
   @ApiProperty()
+  @IsString()
+  beneficiaryName!: string;
+
+  @ApiProperty()
+  @IsString()
+  remitterName!: string;
+
+  @ApiProperty()
+  @IsString()
+  remitterBankId!: string;
+
+  @ApiProperty()
   @IsNumber()
   @Min(1)
   @Max(Number.MAX_SAFE_INTEGER)
