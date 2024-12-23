@@ -2,23 +2,18 @@ import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { LoginDto } from '../../dtos/auth.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { Route } from '../../../../../decorators';
 import {
-  LoginUsecase,
-  RefreshAccessTokenUsecase,
-} from '../../../core/usecases';
-import {
-  GenerateResetPasswordTokenUsecase,
   LoginUsecase,
   RefreshAccessTokenUsecase,
   RequestOtpResetPasswordUsecase,
+  GenerateResetPasswordTokenUsecase,
   ResetPasswordUsecase,
-} from '../../core/usecases';
-import { Route } from 'src/decorators';
+} from '../../../core/usecases';
+import { OtpDto } from '../../dtos/otp.dto';
+import { RequestResetPasswordDto } from '../../dtos/request_reset_password.dto';
+import { ResetPasswordDto } from '../../dtos/reset_password.dto';
 import authRoute from '../../routes/auth.route';
-import authRoute from '../routes/auth.route';
-import { RequestResetPasswordDto } from '../dtos/request_reset_password.dto';
-import { OtpDto } from '../dtos/otp.dto';
-import { ResetPasswordDto } from '../dtos/reset_password.dto';
 
 @ApiTags('Public')
 @Controller({ path: 'api/auth/v1' })

@@ -198,6 +198,7 @@ export class TransactionController {
     return {
       id: transaction.id,
       date: transaction.updatedAt,
+      status: transaction.status,
       category: transactionCategory,
       amount: transactionAmount,
       message: transaction.message,
@@ -209,7 +210,6 @@ export class TransactionController {
     const user = await this.getUserUsecase.execute('id', req.user.authId, [
       'bankAccount',
     ]);
-
     const userBankAccountId = user.bankAccount.id;
     const pageParams = new PageParams(
       query.page,
@@ -250,6 +250,7 @@ export class TransactionController {
       return {
         id: transaction.id,
         date: transaction.updatedAt,
+        status: transaction.status,
         category: transactionCategory,
         amount: transactionAmount,
         message: transaction.message,
