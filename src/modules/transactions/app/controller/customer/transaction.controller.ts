@@ -12,32 +12,42 @@ import {
   CreateTransactionUsecase,
   GetTransactionUsecase,
   ListTransactionUsecase,
-} from '../../core/usecases';
-import { Route } from '../../../../decorators';
-import { TransactionRoute } from '../routes/transaction.route';
-import { CreateTransactionDto, ListTransactionDto } from '../dtos';
-import { GetBankAccountUsecase } from '../../../bank_account/core/usecases';
-import { TransactionType } from '../../core/enums/transaction_type';
-import { TransactionModelParams } from '../../core/models/transaction.model';
+} from '../../../core/usecases';
+import { Route } from '../../../../../decorators';
+import { TransactionRouteByCustomer } from '../../routes/customer/transaction.route';
+import {
+  CreateTransactionDto,
+  ListTransactionDto,
+  VerifyTransactionDto,
+} from '../../dtos';
+import { GetBankAccountUsecase } from '../../../../bank_account/core/usecases';
+import { TransactionType } from '../../../core/enums/transaction_type';
+import { TransactionModelParams } from '../../../core/models/transaction.model';
 import { Transactional } from 'typeorm-transactional';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
-import { GetTransactionDto } from '../dtos/get_transaction.dto';
-import { GetUserUsecase } from '../../../user/core/usecases';
-import { TransactionCategory } from '../../core/enums/transaction_category';
+import { GetTransactionDto } from '../../dtos/get_transaction.dto';
+import { GetUserUsecase } from '../../../../user/core/usecases';
+import { TransactionCategory } from '../../../core/enums/transaction_category';
 import {
   calculateAmountForBeneficiary,
   calculateAmountForRemitter,
-} from '../../core/helpers/calculate_amount';
-import { PageParams, SortParams } from '../../../../common/models';
-import { TransactionSort } from '../../core/enums/transaction_sort';
-import { GetConfigUsecase } from '../../../bank_config/core/usecase';
-import { ConfigKey } from '../../../bank_config/core/enum/config_key';
-import { CreateOtpUsecase, VerifyOtpUsecase } from '../../../otp/core/usecases';
-import { OtpType } from '../../../otp/core/enums/otpType.enum';
-import { UpdateTransactionStatusUsecase } from '../../core/usecases/update_transaction_status.usecase';
-import { TransactionStatus } from '../../core/enums/transaction_status';
+} from '../../../core/helpers/calculate_amount';
+import { PageParams, SortParams } from '../../../../../common/models';
+import { TransactionSort } from '../../../core/enums/transaction_sort';
+import { GetConfigUsecase } from '../../../../bank_config/core/usecase';
+import { ConfigKey } from '../../../../bank_config/core/enum/config_key';
+import {
+  CreateOtpUsecase,
+  VerifyOtpUsecase,
+} from '../../../../otp/core/usecases';
+import { OtpType } from '../../../../otp/core/enums/otpType.enum';
+import { UpdateTransactionStatusUsecase } from '../../../core/usecases/update_transaction_status.usecase';
+import { TransactionStatus } from '../../../core/enums/transaction_status';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags(`Customer \\ Transactions`)
+@ApiBearerAuth()
 @Controller({ path: 'api/customers/v1/transactions' })
 export class TransactionController {
   constructor(
@@ -54,7 +64,7 @@ export class TransactionController {
     private readonly queue: Queue,
   ) {}
 
-  @Route(TransactionRoute.createTransaction)
+  @Route(TransactionRouteByCustomer.createTransaction)
   @Transactional()
   async create(@Req() req: any, @Body() body: CreateTransactionDto) {
     const remitter = await this.getBankAccountUsecase.execute(
@@ -62,13 +72,12 @@ export class TransactionController {
       body.remitterId,
       ['user'],
     );
+    if (!remitter || remitter.userId !== req.user.authId) {
+      throw new BadRequestException('This account does not belong to you');
+    }
 
     if (remitter.balance < body.amount) {
       throw new BadRequestException('Insufficient balance');
-    }
-
-    if (remitter.userId !== req.user.authId) {
-      throw new BadRequestException('This account does not belong to you');
     }
 
     const beneficiary = await this.getBankAccountUsecase.execute(
@@ -78,7 +87,7 @@ export class TransactionController {
     );
 
     if (!beneficiary || beneficiary.bankId !== body.beneficiaryBankId) {
-      throw new NotFoundException(
+      throw new BadRequestException(
         `Can not found beneficiary with ${body.beneficiaryId}`,
       );
     }
@@ -113,9 +122,9 @@ export class TransactionController {
     };
   }
 
-  @Route(TransactionRoute.verifyOtp)
+  @Route(TransactionRouteByCustomer.verifyOtp)
   @Transactional()
-  async verify(@Req() req: any, @Body() body: any) {
+  async verify(@Req() req: any, @Body() body: VerifyTransactionDto) {
     const user = await this.getUserUsecase.execute('id', req.user.authId, [
       'bankAccount',
     ]);
@@ -126,12 +135,16 @@ export class TransactionController {
 
     const transaction = await this.getTransactionUsecase.execute(
       'id',
-      body.transactionId,
+      body.id,
       undefined,
     );
 
     if (!transaction) {
       throw new BadRequestException(`Transaction ${body.id} not found`);
+    }
+
+    if (transaction.status !== TransactionStatus.CREATED) {
+      throw new BadRequestException(`Transaction ${body.id} cannot verify OTP`);
     }
 
     if (transaction.remitterId !== user.bankAccount.id) {
@@ -154,12 +167,14 @@ export class TransactionController {
       TransactionStatus.PROCESSING,
     );
 
-    await this.queue.add(transaction.id, { transaction: transaction });
+    const queue = await this.queue.add(transaction.id, {
+      transaction: transaction,
+    });
 
     return res;
   }
 
-  @Route(TransactionRoute.getTransaction)
+  @Route(TransactionRouteByCustomer.getTransaction)
   async get(@Req() req: any, @Param() param: GetTransactionDto) {
     const transaction = await this.getTransactionUsecase.execute(
       'id',
@@ -205,7 +220,7 @@ export class TransactionController {
     };
   }
 
-  @Route(TransactionRoute.listTransaction)
+  @Route(TransactionRouteByCustomer.listTransaction)
   async list(@Req() req: any, @Query() query: ListTransactionDto) {
     const user = await this.getUserUsecase.execute('id', req.user.authId, [
       'bankAccount',
@@ -247,13 +262,18 @@ export class TransactionController {
         ? calculateAmountForRemitter(transaction)
         : calculateAmountForBeneficiary(transaction);
 
+      const transactionMessage =
+        transaction.status === TransactionStatus.SUCCESS
+          ? `Account ${userBankAccountId} ${transactionAmount} at ${transaction.updatedAt}. Balance: ${user.bankAccount.balance}. Transaction: ${transaction.id.toUpperCase()} - ${transaction.message}`
+          : transaction.message;
+
       return {
         id: transaction.id,
         date: transaction.updatedAt,
         status: transaction.status,
         category: transactionCategory,
         amount: transactionAmount,
-        message: transaction.message,
+        message: transactionMessage,
       };
     });
 

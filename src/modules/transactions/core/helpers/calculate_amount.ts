@@ -2,7 +2,7 @@ import { TransactionModel } from '../models/transaction.model';
 
 export function calculateAmountForRemitter(transaction: TransactionModel) {
   if (transaction.remitterPaidFee) {
-    return transaction.amount + transaction.transactionFee;
+    return (transaction.amount + transaction.transactionFee) * -1;
   }
   return transaction.amount * -1;
 }

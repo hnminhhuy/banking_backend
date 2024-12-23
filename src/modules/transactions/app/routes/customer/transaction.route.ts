@@ -1,11 +1,11 @@
 import { HttpStatus, RequestMethod } from '@nestjs/common';
-import { IRouteParams } from '../../../../decorators';
-import { TransactionModel } from '../../core/models/transaction.model';
-import { UserRole } from '../../../user/core/enums/user_role';
-import { CreateTransactionDto } from '../dtos';
-import { GetTransactionDto } from '../dtos/get_transaction.dto';
+import { IRouteParams } from '../../../../../decorators';
+import { TransactionModel } from '../../../core/models/transaction.model';
+import { UserRole } from '../../../../user/core/enums/user_role';
+import { CreateTransactionDto } from '../../dtos';
+import { GetTransactionDto } from '../../dtos/get_transaction.dto';
 
-export const TransactionRoute = {
+export const TransactionRouteByCustomer = {
   createTransaction: <IRouteParams>{
     path: '/',
     method: RequestMethod.POST,

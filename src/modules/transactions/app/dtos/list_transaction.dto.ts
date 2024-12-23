@@ -7,7 +7,7 @@ import {
 } from '@nestjs/swagger';
 import { PaginationDto, SortParamsDto } from '../../../../common/dtos';
 import { TransactionDto } from './transaction.dto';
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, IsUUID } from 'class-validator';
 import { TransactionCategory } from '../../core/enums/transaction_category';
 
 export class ListTransactionDto extends IntersectionType(

@@ -7,14 +7,9 @@ import {
   FindOptionsWhere,
   Repository,
 } from 'typeorm';
-import {
-  TransactionModel,
-  TransactionModelParams,
-} from '../../core/models/transaction.model';
+import { TransactionModel } from '../../core/models/transaction.model';
 import { Page, PageParams, SortParams } from '../../../../common/models';
 import { TransactionSort } from '../../core/enums/transaction_sort';
-import { paginate } from '../../../../common/helpers/pagination.helper';
-import { TransactionType } from '../../core/enums/transaction_type';
 import { TransactionStatus } from '../../core/enums/transaction_status';
 
 @Injectable()
@@ -79,9 +74,10 @@ export class TransactionDatasource {
             qb.orWhere('transaction.remitterId = :remitterId', { remitterId });
           }
           if (beneficiaryId) {
-            qb.orWhere('transaction.beneficiaryId = :beneficiaryId', {
-              beneficiaryId,
-            });
+            qb.orWhere(
+              'transaction.beneficiaryId = :beneficiaryId AND transaction.status = :status',
+              { beneficiaryId, status: TransactionStatus.SUCCESS },
+            );
           }
         }),
       );

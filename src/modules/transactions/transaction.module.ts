@@ -9,7 +9,7 @@ import {
   GetTransactionUsecase,
   ListTransactionUsecase,
 } from './core/usecases';
-import { TransactionController } from './app/controller/transaction.controller';
+import { TransactionController as TransactionControllerByCustomer } from './app/controller/customer/transaction.controller';
 import { AppModule } from '../../app/app.module';
 import { BankAccountModule } from '../bank_account/bank_account.module';
 import { BullModule } from '@nestjs/bullmq';
@@ -18,6 +18,7 @@ import { TransactionConsumer } from './app/consumer/transaction.consumer';
 import { UserModule } from '../user/user.module';
 import { BankConfigModule } from '../bank_config/bank_config.module';
 import { OtpModule } from '../otp/otp.module';
+import { TransactionController as TransactionControllerByEmployee } from './app/controller/employee/transaction.controller';
 
 @Module({
   imports: [
@@ -31,7 +32,10 @@ import { OtpModule } from '../otp/otp.module';
     forwardRef(() => BankConfigModule),
     forwardRef(() => OtpModule),
   ],
-  controllers: [TransactionController],
+  controllers: [
+    TransactionControllerByCustomer,
+    TransactionControllerByEmployee,
+  ],
   providers: [
     TransactionConsumer,
     {
