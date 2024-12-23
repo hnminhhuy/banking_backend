@@ -42,7 +42,7 @@ import {
   VerifyOtpUsecase,
 } from '../../../../otp/core/usecases';
 import { OtpType } from '../../../../otp/core/enums/otpType.enum';
-import { UpdateTransactionStatusUsecase } from '../../../core/usecases/update_transaction_status.usecase';
+import { UpdateTransactionUsecase } from '../../../core/usecases/update_transaction.usecase';
 import { TransactionStatus } from '../../../core/enums/transaction_status';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GetAnotherBankAccountInfoUsecase } from '../../../../another-bank/core/usecases/bank_account/get_another_bank_user.usecase';
@@ -63,7 +63,7 @@ export class TransactionController {
     private readonly getConfigUsecase: GetConfigUsecase,
     private readonly createOtpUsecase: CreateOtpUsecase,
     private readonly verifyOtpUsecase: VerifyOtpUsecase,
-    private readonly updateTransactionStatusUsecase: UpdateTransactionStatusUsecase,
+    private readonly updateTransactionStatusUsecase: UpdateTransactionUsecase,
     private readonly getAnotherBankAccountInfoUsecase: GetAnotherBankAccountInfoUsecase,
     private readonly createAnotherBankTransactionUsecase: CreateAnotherBankTransactionUsecase,
     private readonly getBankUsecase: GetBankUsecase,

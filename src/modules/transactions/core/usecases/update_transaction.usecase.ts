@@ -3,7 +3,7 @@ import { ITransactionRepo } from '../repositories/transaction.irepo';
 import { TransactionStatus } from '../enums/transaction_status';
 
 @Injectable()
-export class UpdateTransactionStatusUsecase {
+export class UpdateTransactionUsecase {
   constructor(private readonly transactionRepo: ITransactionRepo) {}
 
   public async execute(

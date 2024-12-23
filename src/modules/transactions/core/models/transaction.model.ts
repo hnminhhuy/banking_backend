@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { BaseModel, BaseModelParams } from '../../../../common/models';
 import { TransactionType } from '../enums/transaction_type';
 import { TransactionStatus } from '../enums/transaction_status';
@@ -54,6 +54,9 @@ export class TransactionModel extends BaseModel {
 
   @ApiProperty()
   public readonly remitterPaidFee: boolean;
+
+  @ApiPropertyOptional()
+  public readonly completedAt: Date | undefined;
 
   constructor(partial: Partial<TransactionModel>) {
     super(partial);

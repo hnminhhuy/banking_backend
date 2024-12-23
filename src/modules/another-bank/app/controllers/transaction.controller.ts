@@ -14,7 +14,7 @@ import { CreateTransactionForAnotherBankDto } from '../../../transactions/app/dt
 import { TransactionModelParams } from '../../../transactions/core/models/transaction.model';
 import { TransactionType } from '../../../transactions/core/enums/transaction_type';
 import { TransactionStatus } from '../../../transactions/core/enums/transaction_status';
-import { UpdateTransactionStatusUsecase } from '../../../transactions/core/usecases/update_transaction_status.usecase';
+import { UpdateTransactionUsecase } from '../../../transactions/core/usecases/update_transaction.usecase';
 import { GetBankUsecase } from '../../../bank/core/usecases';
 import { BankCode } from '../../../bank/core/enums/bank_code';
 import { ChangeBalanceUsecase } from '../../../bank_account/core/usecases';
@@ -27,7 +27,7 @@ import { Transactional } from 'typeorm-transactional';
 export class TransactionController {
   constructor(
     private readonly createTransactionUsecase: CreateTransactionUsecase,
-    private readonly updateTransactionUsecase: UpdateTransactionStatusUsecase,
+    private readonly updateTransactionUsecase: UpdateTransactionUsecase,
     private readonly changeBalanceUsecase: ChangeBalanceUsecase,
     private readonly getBankUsecase: GetBankUsecase,
     private readonly bankCode: BankCode,

@@ -112,6 +112,11 @@ export class TransactionDatasource {
   ): Promise<boolean> {
     const result = await this.transactionRepository.update(id, {
       status: status,
+      completedAt:
+        status === TransactionStatus.SUCCESS ||
+        status === TransactionStatus.FAILED
+          ? new Date()
+          : undefined,
       updatedAt: new Date(),
     });
     return result.affected > 0;

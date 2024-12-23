@@ -13,7 +13,7 @@ import { TransactionController as TransactionControllerByCustomer } from './app/
 import { AppModule } from '../../app/app.module';
 import { BankAccountModule } from '../bank_account/bank_account.module';
 import { BullModule } from '@nestjs/bullmq';
-import { UpdateTransactionStatusUsecase } from './core/usecases/update_transaction_status.usecase';
+import { UpdateTransactionUsecase } from './core/usecases/update_transaction.usecase';
 import { TransactionConsumer } from './app/consumer/transaction.consumer';
 import { UserModule } from '../user/user.module';
 import { BankConfigModule } from '../bank_config/bank_config.module';
@@ -49,13 +49,13 @@ import { BankModule } from '../bank/bank.module';
     TransactionDatasource,
     CreateTransactionUsecase,
     GetTransactionUsecase,
-    UpdateTransactionStatusUsecase,
+    UpdateTransactionUsecase,
     ListTransactionUsecase,
   ],
   exports: [
     CreateTransactionUsecase,
     GetTransactionUsecase,
-    UpdateTransactionStatusUsecase,
+    UpdateTransactionUsecase,
   ],
 })
 export class TransactionModule {}

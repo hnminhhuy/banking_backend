@@ -42,6 +42,9 @@ export class TransactionEntity extends BaseEntity {
   @Column({ name: 'remitter_paid_fee' })
   remitterPaidFee: boolean;
 
+  @Column({ name: 'completed_at', type: 'timestamp' })
+  completedAt?: Date;
+
   constructor(partial: Partial<TransactionModel>) {
     super();
     Object.assign(this, partial);

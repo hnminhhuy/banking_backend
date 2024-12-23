@@ -2,7 +2,7 @@ import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { ChangeBalanceUsecase } from '../../../bank_account/core/usecases';
 import { TransactionStatus } from '../../core/enums/transaction_status';
-import { UpdateTransactionStatusUsecase } from '../../core/usecases/update_transaction_status.usecase';
+import { UpdateTransactionUsecase } from '../../core/usecases/update_transaction.usecase';
 import { Transactional } from 'typeorm-transactional';
 import { CreateAnotherBankTransactionUsecase } from '../../../another-bank/core/usecases/transactions/create_another_bank_transaction.usecase';
 import { BankCode } from '../../../bank/core/enums/bank_code';
@@ -13,7 +13,7 @@ import { GetBankUsecase } from '../../../bank/core/usecases';
 export class TransactionConsumer extends WorkerHost {
   constructor(
     private readonly changeBalanceUsecase: ChangeBalanceUsecase,
-    private readonly updateStatusUsecase: UpdateTransactionStatusUsecase,
+    private readonly updateStatusUsecase: UpdateTransactionUsecase,
     private readonly createAnotherBankTransactionUsecase: CreateAnotherBankTransactionUsecase,
     private readonly bankCode: BankCode,
     private readonly getBankUsecase: GetBankUsecase,
