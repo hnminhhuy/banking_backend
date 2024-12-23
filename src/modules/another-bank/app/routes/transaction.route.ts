@@ -13,10 +13,4 @@ export const TransactionRouteByAnotherBank = {
       responses: [{ status: HttpStatus.CREATED, type: TransactionModel }],
     },
   },
-  notifyTransactionStatus: <IRouteParams>{
-    path: '/notify',
-    method: RequestMethod.POST,
-    secure: true,
-    swaggerParams: {},
-  },
 };

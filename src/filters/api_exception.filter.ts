@@ -12,6 +12,7 @@ import { isDevelopmentEnv } from 'src/common/helpers/env.helper';
 @Catch()
 export class ApiExceptionFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost): Response<IBaseExceptionResponse> {
+    console.log(exception);
     const response = host.switchToHttp()?.getResponse<Response>();
     if (!response) {
       console.error('No HTTP response context found');

@@ -19,6 +19,8 @@ import { UserModule } from '../user/user.module';
 import { BankConfigModule } from '../bank_config/bank_config.module';
 import { OtpModule } from '../otp/otp.module';
 import { TransactionController as TransactionControllerByEmployee } from './app/controller/employee/transaction.controller';
+import { AnotherBankModule } from '../another-bank/another_bank.module';
+import { BankModule } from '../bank/bank.module';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { TransactionController as TransactionControllerByEmployee } from './app/
     forwardRef(() => UserModule),
     forwardRef(() => BankConfigModule),
     forwardRef(() => OtpModule),
+    forwardRef(() => AnotherBankModule),
+    forwardRef(() => BankModule),
   ],
   controllers: [
     TransactionControllerByCustomer,

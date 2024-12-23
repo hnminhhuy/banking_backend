@@ -10,7 +10,7 @@ export class BankCode {
   constructor(private readonly configService: ConfigService) {
     this.DEFAULT =
       this.configService.get<string>('bank.default.code') ?? throwError();
-    this.DEFAULT =
+    this.ANOTHER_BANK =
       this.configService.get<string>('bank.another_bank.code') ?? throwError();
   }
 }

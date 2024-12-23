@@ -8,16 +8,14 @@ export class TransactionService extends AnotherBankService {
     params: TransactionModelParams,
   ): Promise<Record<string, any>> {
     const response = await this.safeRequest(
-      'GET',
+      'POST',
       `${this.getBaseUrl()}/api/another-bank/v1/transactions`,
       {
         id: params.id,
         remitterId: params.remitterId,
         beneficiaryId: params.beneficiaryId,
-        beneficiaryBankId: params.beneficiaryBankId,
         beneficiaryName: params.beneficiaryName,
         remitterName: params.remitterName,
-        remitterBankId: params.remitterBankId,
         amount: params.amount,
         message: params.message,
         transactionFee: params.transactionFee,

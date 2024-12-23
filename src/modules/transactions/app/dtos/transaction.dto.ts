@@ -56,7 +56,7 @@ export class TransactionDto extends BaseDto {
   message!: string;
 
   @ApiProperty()
-  @IsString()
+  @IsNumber()
   transactionFee: number;
 
   @ApiProperty()

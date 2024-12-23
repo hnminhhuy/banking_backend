@@ -45,6 +45,10 @@ import { OtpType } from '../../../../otp/core/enums/otpType.enum';
 import { UpdateTransactionStatusUsecase } from '../../../core/usecases/update_transaction_status.usecase';
 import { TransactionStatus } from '../../../core/enums/transaction_status';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { GetAnotherBankAccountInfoUsecase } from '../../../../another-bank/core/usecases/bank_account/get_another_bank_user.usecase';
+import { GetBankUsecase } from '../../../../bank/core/usecases';
+import { BankCode } from '../../../../bank/core/enums/bank_code';
+import { CreateAnotherBankTransactionUsecase } from '../../../../another-bank/core/usecases/transactions/create_another_bank_transaction.usecase';
 
 @ApiTags(`Customer \\ Transactions`)
 @ApiBearerAuth()
@@ -60,6 +64,10 @@ export class TransactionController {
     private readonly createOtpUsecase: CreateOtpUsecase,
     private readonly verifyOtpUsecase: VerifyOtpUsecase,
     private readonly updateTransactionStatusUsecase: UpdateTransactionStatusUsecase,
+    private readonly getAnotherBankAccountInfoUsecase: GetAnotherBankAccountInfoUsecase,
+    private readonly createAnotherBankTransactionUsecase: CreateAnotherBankTransactionUsecase,
+    private readonly getBankUsecase: GetBankUsecase,
+    private readonly bankCode: BankCode,
     @InjectQueue('transaction-queue')
     private readonly queue: Queue,
   ) {}
@@ -81,32 +89,57 @@ export class TransactionController {
       throw new BadRequestException('Insufficient balance');
     }
 
-    const beneficiary = await this.getBankAccountUsecase.execute(
-      'id',
-      body.beneficiaryId,
-      ['user'],
-    );
+    let beneficiary: any = undefined;
 
-    if (!beneficiary || beneficiary.bankId !== body.beneficiaryBankId) {
+    const beneficiaryBank = await this.getBankUsecase.execute(
+      'id',
+      body.beneficiaryBankId,
+    );
+    if (!beneficiaryBank) {
       throw new BadRequestException(
-        `Can not found beneficiary with ${body.beneficiaryId}`,
+        `Bank with ${body.beneficiaryBankId} not found`,
       );
     }
 
-    const fee = (
-      await this.getConfigUsecase.execute(ConfigKey.INTERNAL_TRANSACTION_FEE)
-    ).getValue();
+    let fee = undefined;
+
+    switch (beneficiaryBank.code) {
+      case this.bankCode.ANOTHER_BANK:
+        beneficiary = await this.getAnotherBankAccountInfoUsecase.execute(
+          body.beneficiaryId,
+        );
+        fee = (
+          await this.getConfigUsecase.execute(
+            ConfigKey.EXTERNAL_TRANSACTION_FEE,
+          )
+        ).getValue();
+        break;
+      case this.bankCode.DEFAULT:
+        beneficiary = await this.getBankAccountUsecase.execute(
+          'id',
+          body.beneficiaryId,
+          ['user'],
+        );
+        fee = (
+          await this.getConfigUsecase.execute(
+            ConfigKey.INTERNAL_TRANSACTION_FEE,
+          )
+        ).getValue();
+        break;
+      default:
+        throw new BadRequestException('Invalid beneficiary bank id');
+    }
 
     const params: TransactionModelParams = {
       amount: body.amount,
       remitterId: body.remitterId,
       type: TransactionType.NORMAL,
       transactionFee: fee,
-      beneficiaryId: beneficiary.id,
-      beneficiaryBankId: beneficiary.bankId,
+      beneficiaryId: body.beneficiaryId,
+      beneficiaryBankId: body.beneficiaryBankId,
       remitterPaidFee: body.remitterPaidFee,
       message: body.message,
-      beneficiaryName: beneficiary.user?.fullName,
+      beneficiaryName: beneficiary.user?.fullName ?? beneficiary?.data.fullName,
       remitterBankId: remitter.bankId,
       remitterName: remitter.user.fullName,
     };

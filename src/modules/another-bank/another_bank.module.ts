@@ -44,6 +44,9 @@ import { TransactionRepo } from './infra/repositories/transaction.repo';
     GetAnotherBankAccountInfoUsecase,
     CreateAnotherBankTransactionUsecase,
   ],
-  exports: [GetAnotherBankAccountInfoUsecase],
+  exports: [
+    GetAnotherBankAccountInfoUsecase,
+    CreateAnotherBankTransactionUsecase,
+  ],
 })
 export class AnotherBankModule {}
