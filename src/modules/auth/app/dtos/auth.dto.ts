@@ -11,4 +11,8 @@ export class AuthDto {
   password: string;
 }
 
-export class LoginDto extends PickType(AuthDto, ['username', 'password']) {}
+export class LoginDto extends PickType(AuthDto, ['username', 'password']) {
+  @ApiProperty()
+  @IsString()
+  captchaToken: string;
+}
