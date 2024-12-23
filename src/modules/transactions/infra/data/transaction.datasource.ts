@@ -2,13 +2,21 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TransactionEntity } from './entities/transaction.entity';
 import {
+  Between,
   Brackets,
   FindOptionsOrder,
   FindOptionsWhere,
+  LessThanOrEqual,
+  MoreThanOrEqual,
   Repository,
 } from 'typeorm';
 import { TransactionModel } from '../../core/models/transaction.model';
-import { Page, PageParams, SortParams } from '../../../../common/models';
+import {
+  DateFilter,
+  Page,
+  PageParams,
+  SortParams,
+} from '../../../../common/models';
 import { TransactionSort } from '../../core/enums/transaction_sort';
 import { TransactionStatus } from '../../core/enums/transaction_status';
 
@@ -49,14 +57,32 @@ export class TransactionDatasource {
 
   public async list(
     pageParams: PageParams,
-    sortParams: SortParams<TransactionSort> | undefined,
+    sortParams: SortParams<TransactionSort>,
+    dateFilterParams: DateFilter | undefined,
     remitterId: string | undefined,
     beneficiaryId: string | undefined,
+    bankId: string | undefined,
     status: TransactionStatus | undefined,
     relations: string[] | undefined = undefined,
   ): Promise<Page<TransactionModel>> {
     const conditions: FindOptionsWhere<TransactionEntity> = {};
     const orderBy: FindOptionsOrder<TransactionEntity> = {};
+
+    if (dateFilterParams && dateFilterParams.column !== undefined) {
+      if (dateFilterParams.from && dateFilterParams.to) {
+        conditions[dateFilterParams.column as keyof TransactionEntity] = <any>(
+          Between(dateFilterParams.from, dateFilterParams.to)
+        );
+      } else if (dateFilterParams.from) {
+        conditions[dateFilterParams.column as keyof TransactionEntity] = <any>(
+          MoreThanOrEqual(dateFilterParams.from)
+        );
+      } else if (dateFilterParams.to) {
+        conditions[dateFilterParams.column as keyof TransactionEntity] = <any>(
+          LessThanOrEqual(dateFilterParams.to)
+        );
+      }
+    }
 
     if (status) {
       conditions['status'] = status;
@@ -79,6 +105,15 @@ export class TransactionDatasource {
               { beneficiaryId, status: TransactionStatus.SUCCESS },
             );
           }
+        }),
+      );
+    }
+
+    if (bankId) {
+      query.andWhere(
+        new Brackets((qb) => {
+          qb.orWhere('transaction.beneficiaryBankId = :bankId', { remitterId });
+          qb.orWhere('transaction.remitterBankId = :bankId', { bankId });
         }),
       );
     }

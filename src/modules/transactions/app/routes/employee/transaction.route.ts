@@ -3,6 +3,7 @@ import { IRouteParams } from '../../../../../decorators';
 import { TransactionModel } from '../../../core/models/transaction.model';
 import { UserRole } from '../../../../user/core/enums/user_role';
 import { GetTransactionDto } from '../../dtos/get_transaction.dto';
+import { ListTransactionDto } from '../../dtos';
 
 export const TransactionRouteByEmployee = {
   getTransaction: <IRouteParams>{
@@ -20,5 +21,8 @@ export const TransactionRouteByEmployee = {
     method: RequestMethod.GET,
     secure: true,
     roles: [UserRole.Employee],
+    swaggerParams: {
+      query: ListTransactionDto,
+    },
   },
 };

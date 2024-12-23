@@ -1,4 +1,9 @@
-import { Page, PageParams, SortParams } from '../../../../common/models';
+import {
+  DateFilter,
+  Page,
+  PageParams,
+  SortParams,
+} from '../../../../common/models';
 import { TransactionSort } from '../enums/transaction_sort';
 import { TransactionStatus } from '../enums/transaction_status';
 import { TransactionModel } from '../models/transaction.model';
@@ -14,9 +19,11 @@ export abstract class ITransactionRepo {
 
   public abstract list(
     pageParams: PageParams,
-    sortParams: SortParams<TransactionSort> | undefined,
+    sortParams: SortParams<TransactionSort>,
+    dateFilterParams: DateFilter | undefined,
     remitterId: string | undefined,
     beneficiaryId: string | undefined,
+    bankId: string | undefined,
     status: TransactionStatus | undefined,
     relations: string[] | undefined,
   ): Promise<Page<TransactionModel>>;

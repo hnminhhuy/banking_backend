@@ -21,6 +21,7 @@ import { OtpModule } from '../otp/otp.module';
 import { TransactionController as TransactionControllerByEmployee } from './app/controller/employee/transaction.controller';
 import { AnotherBankModule } from '../another-bank/another_bank.module';
 import { BankModule } from '../bank/bank.module';
+import { TransactionController as TransactionControllerByAdmin } from './app/controller/admin/transaction.controller';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { BankModule } from '../bank/bank.module';
   controllers: [
     TransactionControllerByCustomer,
     TransactionControllerByEmployee,
+    TransactionControllerByAdmin,
   ],
   providers: [
     TransactionConsumer,

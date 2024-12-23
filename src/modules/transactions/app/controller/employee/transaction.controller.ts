@@ -60,12 +60,14 @@ export class TransactionController {
     const transactions = await this.listTransactionUsecase.execute(
       pageParams,
       sortParams,
+      undefined,
       query.category === TransactionCategory.OUTCOMING
         ? user?.bankAccount.id
         : undefined,
       query.category === TransactionCategory.INCOMING
         ? user?.bankAccount.id
         : undefined,
+      undefined,
       query.status,
       undefined,
     );

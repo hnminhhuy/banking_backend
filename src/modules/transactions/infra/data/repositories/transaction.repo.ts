@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ITransactionRepo } from '../../../core/repositories/transaction.irepo';
 import { TransactionDatasource } from '../transaction.datasource';
-import { PageParams, SortParams, Page } from '../../../../../common/models';
+import {
+  PageParams,
+  SortParams,
+  Page,
+  DateFilter,
+} from '../../../../../common/models';
 import { TransactionSort } from '../../../core/enums/transaction_sort';
 import { TransactionStatus } from '../../../core/enums/transaction_status';
 import { TransactionType } from '../../../core/enums/transaction_type';
@@ -28,17 +33,21 @@ export class TransactionRepo implements ITransactionRepo {
 
   public async list(
     pageParams: PageParams,
-    sortParams: SortParams<TransactionSort> | undefined,
+    sortParams: SortParams<TransactionSort>,
+    dateFilterParams: DateFilter | undefined,
     remitterId: string | undefined,
     beneficiaryId: string | undefined,
+    bankId: string | undefined,
     status: TransactionStatus | undefined,
-    relations: string[] | undefined,
+    relations: string[] | undefined = undefined,
   ): Promise<Page<TransactionModel>> {
     return await this.transactionDatasource.list(
       pageParams,
       sortParams,
+      dateFilterParams,
       remitterId,
       beneficiaryId,
+      bankId,
       status,
       relations,
     );

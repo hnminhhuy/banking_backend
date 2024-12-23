@@ -48,7 +48,6 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GetAnotherBankAccountInfoUsecase } from '../../../../another-bank/core/usecases/bank_account/get_another_bank_user.usecase';
 import { GetBankUsecase } from '../../../../bank/core/usecases';
 import { BankCode } from '../../../../bank/core/enums/bank_code';
-import { CreateAnotherBankTransactionUsecase } from '../../../../another-bank/core/usecases/transactions/create_another_bank_transaction.usecase';
 
 @ApiTags(`Customer \\ Transactions`)
 @ApiBearerAuth()
@@ -65,7 +64,6 @@ export class TransactionController {
     private readonly verifyOtpUsecase: VerifyOtpUsecase,
     private readonly updateTransactionStatusUsecase: UpdateTransactionUsecase,
     private readonly getAnotherBankAccountInfoUsecase: GetAnotherBankAccountInfoUsecase,
-    private readonly createAnotherBankTransactionUsecase: CreateAnotherBankTransactionUsecase,
     private readonly getBankUsecase: GetBankUsecase,
     private readonly bankCode: BankCode,
     @InjectQueue('transaction-queue')
@@ -275,12 +273,14 @@ export class TransactionController {
     const transactions = await this.listTransactionUsecase.execute(
       pageParams,
       sortParams,
+      undefined,
       query.category === TransactionCategory.OUTCOMING
         ? userBankAccountId
         : undefined,
       query.category === TransactionCategory.INCOMING
         ? userBankAccountId
         : undefined,
+      undefined,
       query.status,
       undefined,
     );
