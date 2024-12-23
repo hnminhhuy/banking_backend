@@ -14,6 +14,9 @@ export class OtpController {
     const otp = await this.createOtpUsecase.execute(
       OtpType.TRANSACTION,
       '6e64af45-acaf-4d3b-bf7e-5dd046a186f6',
+      {
+        transactionId: 'sampleId',
+      },
     );
 
     return otp;
@@ -25,6 +28,9 @@ export class OtpController {
       OtpType.TRANSACTION,
       '6e64af45-acaf-4d3b-bf7e-5dd046a186f6',
       otp,
+      {
+        transactionId: 'sampleId',
+      },
     );
 
     return result;

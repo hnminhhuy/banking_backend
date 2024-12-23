@@ -9,7 +9,11 @@ export class OtpRepo implements IOtpRepo {
   public async setCache(key: string, valueStr: string): Promise<void> {
     this.optDatasource.setOtp(key, valueStr);
   }
-  public getCache(key: string): Promise<unknown> {
+  public async getCache(key: string): Promise<unknown> {
     return this.optDatasource.getOtp(key);
+  }
+
+  public async removeCache(key: string): Promise<void> {
+    this.optDatasource.removeOtp(key);
   }
 }

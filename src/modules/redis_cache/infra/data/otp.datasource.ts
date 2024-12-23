@@ -24,4 +24,8 @@ export class OtpDatasource {
   public async getOtp(key: string): Promise<string> {
     return await this.redisClient.get(key);
   }
+
+  public async removeOtp(key: string): Promise<void> {
+    await this.redisClient.del(key);
+  }
 }
