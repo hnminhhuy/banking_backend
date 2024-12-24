@@ -1,3 +1,7 @@
+networks:
+  app-network:
+    driver: bridge
+
 services:
   main:
     image: nhbank/main:18-alpine
@@ -20,9 +24,11 @@ services:
     depends_on:
       - postgres
       - another-main
+    networks:
+      - app-network
 
   frontend:
-    image: frontend:20-alpine
+    image: frontend:22-alpine
     container_name: frontend
     build:
       context: ../banking_frontend
@@ -40,6 +46,10 @@ services:
     env_file:
       - ../banking_frontend/.env
     restart: on-failure
+    depends_on:
+      - main
+    networks:
+      - app-network
 
   another-main:
     image: another-bank/main:18-alpine
@@ -61,6 +71,8 @@ services:
       - TZ=Asia/Ho_Chi_Minh
     depends_on:
       - postgres
+    networks:
+      - app-network
 
   postgres:
     image: postgres:16-alpine
@@ -75,6 +87,8 @@ services:
     volumes:
       - ./multi_pg_databases:/docker-entrypoint-initdb.d
       - banking_postgres:/var/lib/postgresql/data
+    networks:
+      - app-network
 
   redis:
     image: redis:alpine
@@ -86,6 +100,9 @@ services:
       - redis_data:/data
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
+    networks:
+      - app-network
+
 volumes:
   banking_postgres:
   redis_data:
