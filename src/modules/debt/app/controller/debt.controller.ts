@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   HttpStatus,
@@ -51,9 +52,7 @@ export class DebtController {
         throw new NotFoundException('Debtor account not found');
       }
       if (error.message === 'CannotCreateDebtForSelfError') {
-        throw new InternalServerErrorException(
-          'Cannot create debt for yourself',
-        );
+        throw new BadRequestException('Cannot create debt for yourself');
       }
       throw new InternalServerErrorException('An unexpected error occurred');
     }
