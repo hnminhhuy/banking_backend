@@ -1,12 +1,12 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { BaseModel, BaseModelParams } from 'src/common/models';
-import { Status } from '../enum/status';
+import { DebtStatus } from '../enum/debt_status';
 
 export interface DebtModelParams extends BaseModelParams {
   reminderId?: string;
   debtorId: string;
   amount: number;
-  status?: Status;
+  status?: DebtStatus;
   message: string | undefined;
 }
 
@@ -21,7 +21,7 @@ export class DebtModel extends BaseModel {
   public readonly amount: number;
 
   @ApiProperty()
-  public readonly status: Status;
+  public readonly status: DebtStatus;
 
   @ApiPropertyOptional()
   message: string | undefined;

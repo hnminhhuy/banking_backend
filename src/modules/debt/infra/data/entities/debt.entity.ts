@@ -1,5 +1,5 @@
 import { BaseEntity } from 'src/common/entitites/base.entity';
-import { Status } from 'src/modules/debt/core/enum/status';
+import { DebtStatus } from 'src/modules/debt/core/enum/debt_status';
 import { DebtModel } from 'src/modules/debt/core/models/debt.model';
 import { Column, Entity } from 'typeorm';
 
@@ -15,7 +15,7 @@ export class DebtEntity extends BaseEntity {
   amount: number;
 
   @Column()
-  status: Status;
+  status: DebtStatus;
 
   @Column()
   message: string;

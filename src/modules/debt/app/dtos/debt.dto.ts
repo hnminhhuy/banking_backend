@@ -1,6 +1,6 @@
 import { ApiProperty, PickType } from '@nestjs/swagger';
 import { BaseDto } from 'src/common/dtos';
-import { Status } from '../../core/enum/status';
+import { DebtStatus } from '../../core/enum/debt_status';
 import { Min } from 'class-validator';
 
 export class DebtDto extends BaseDto {
@@ -15,7 +15,7 @@ export class DebtDto extends BaseDto {
   public amount!: number;
 
   @ApiProperty()
-  public status!: Status;
+  public status!: DebtStatus;
 
   @ApiProperty()
   public message?: string;
@@ -26,3 +26,5 @@ export class CreateDebtDto extends PickType(DebtDto, [
   'amount',
   'message',
 ]) {}
+
+export class GetDebtDto extends PickType(DebtDto, ['id']) {}

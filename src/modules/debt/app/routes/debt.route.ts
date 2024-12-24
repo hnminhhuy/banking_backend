@@ -13,25 +13,52 @@ export const DebtRoute = {
         {
           status: HttpStatus.CREATED,
           type: DebtModel,
+          description: 'Debt successfully created',
         },
         {
           status: HttpStatus.BAD_REQUEST,
           type: BaseException,
+          description: 'Validation failed',
         },
         {
           status: HttpStatus.NOT_FOUND,
           type: BaseException,
+          description: 'Reminder or debtor account not found',
         },
         {
           status: HttpStatus.INTERNAL_SERVER_ERROR,
           type: BaseException,
+          description:
+            'Unexpected server error or attempting to create debt for oneself',
         },
         {
           status: HttpStatus.UNAUTHORIZED,
           type: BaseException,
+          description: 'Authentication required',
         },
         {
           status: HttpStatus.FORBIDDEN,
+          type: BaseException,
+          description: 'Access denied',
+        },
+      ],
+    },
+  },
+  getDebt: <IRouteParams>{
+    path: '/:id',
+    method: RequestMethod.GET,
+    secure: true,
+    swaggerParams: {
+      responses: [
+        { status: HttpStatus.OK, type: DebtModel },
+        {
+          status: HttpStatus.BAD_REQUEST,
+          description: 'Bad request',
+          type: BaseException,
+        },
+        {
+          status: HttpStatus.NOT_FOUND,
+          description: 'Debt not found',
           type: BaseException,
         },
       ],

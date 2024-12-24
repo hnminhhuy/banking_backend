@@ -7,6 +7,7 @@ import { IDebtRepo } from './core/repositories/debt.irepo';
 import { DebtRepo } from './infra/data/repositories/debt.repo';
 import { CreateDebtUsecase } from './core/usecases';
 import { DebtDatasource } from './infra/debt.datasource';
+import { GetDebtUsecase } from './core/usecases/get_debt.usecase';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { DebtDatasource } from './infra/debt.datasource';
     },
     DebtDatasource,
     CreateDebtUsecase,
+    GetDebtUsecase,
   ],
   exports: [],
 })

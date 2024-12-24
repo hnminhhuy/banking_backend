@@ -6,7 +6,15 @@ import { DebtDatasource } from '../../debt.datasource';
 @Injectable()
 export class DebtRepo implements IDebtRepo {
   constructor(private readonly debtDatasource: DebtDatasource) {}
+
   public async create(debt: DebtModel): Promise<void> {
     await this.debtDatasource.create(debt);
+  }
+  public getDebt(
+    key: string,
+    value: unknown,
+    relations: string[] | undefined,
+  ): Promise<DebtModel | undefined> {
+    return this.debtDatasource.getDebt(key, value, relations);
   }
 }

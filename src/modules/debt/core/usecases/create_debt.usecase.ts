@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DebtModel, DebtModelParams } from '../models/debt.model';
 import { IDebtRepo } from '../repositories/debt.irepo';
 import { GetBankAccountUsecase } from 'src/modules/bank_account/core/usecases';
-import { Status } from '../enum/status';
+import { DebtStatus } from '../enum/debt_status';
 
 @Injectable()
 export class CreateDebtUsecase {
@@ -37,7 +37,7 @@ export class CreateDebtUsecase {
       throw new Error('CannotCreateDebtForSelfError');
     }
 
-    params['status'] = Status.Indebted;
+    params['status'] = DebtStatus.Indebted;
     params['reminderId'] = bankAccountUser.id;
 
     const newDebt = new DebtModel(params as CreateDebtParams);
