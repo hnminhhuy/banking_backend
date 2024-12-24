@@ -7,9 +7,9 @@ async function bootstrap() {
   const app = await initApplication();
 
   app.enableCors({
-    origin: '*', // Allow all origins (you can restrict it to specific domains)
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allowed HTTP methods
-    credentials: true, // Allow credentials
+    origin: ['http://localhost:5173', 'http://10.66.53.204:5173'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
   });
 
   const port = app.get(ConfigService).get<number>('app.port') || 3000;

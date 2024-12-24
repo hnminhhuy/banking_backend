@@ -21,6 +21,26 @@ services:
       - postgres
       - another-main
 
+  frontend:
+    image: frontend:20-alpine
+    container_name: frontend
+    build:
+      context: ../banking_frontend
+      dockerfile: Dockerfile
+    command: >
+      sh -c "npm install &&
+             npm run dev"
+    working_dir: /frontend
+    volumes:
+      - ../banking_frontend:/frontend
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+    ports:
+      - '${FRONTEND_PORT}:5173'
+    env_file:
+      - ../banking_frontend/.env
+    restart: on-failure
+
   another-main:
     image: another-bank/main:18-alpine
     build:
