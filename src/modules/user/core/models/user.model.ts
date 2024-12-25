@@ -37,12 +37,9 @@ export class UserModel extends BaseModel {
   @ApiProperty()
   public readonly role: UserRole;
   //** Relation */
+
   @ApiPropertyOptional()
   public readonly bankAccount: BankAccountModel | undefined | BankAccountEntity;
-
-  public verifyPassword(password: string): boolean {
-    return bcrypt.compareSync(password, this.password);
-  }
 
   public static async hashPassword(newPassword: string): Promise<string> {
     const salt = await bcrypt.genSaltSync(10);
