@@ -44,4 +44,8 @@ export class ContactRepo implements IContactRepo {
   ): Promise<boolean> {
     return await this.contactDatasource.update(id, updatedFields);
   }
+
+  public async delete(id: string): Promise<boolean> {
+    return await this.contactDatasource.delete(id);
+  }
 }

@@ -69,4 +69,8 @@ export class ContactDatasource {
       (await this.contactRepository.update(id, updatedFields)).affected > 0
     );
   }
+
+  async delete(id: string): Promise<boolean> {
+    return (await this.contactRepository.delete(id)).affected > 0;
+  }
 }

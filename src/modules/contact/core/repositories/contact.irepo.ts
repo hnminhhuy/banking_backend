@@ -21,4 +21,6 @@ export abstract class IContactRepo {
     id: string,
     updatedFields: Partial<ContactModelParams>,
   ): Promise<boolean>;
+
+  public abstract delete(id: string): Promise<boolean>;
 }

@@ -8,6 +8,7 @@ import { ContactRepo } from './infra/data/repositories/contact.repo';
 import { ContactDatasource } from './infra/contact.datasource';
 import {
   CreateContactUsecase,
+  DeleteContactUsecase,
   GetContactUsecase,
   ListContactUsecase,
   UpdateContactUsecase,
@@ -33,6 +34,7 @@ import { ContactController } from './app/controller/contact.controller';
     GetContactUsecase,
     ListContactUsecase,
     UpdateContactUsecase,
+    DeleteContactUsecase,
   ],
 })
 export class ContactModule {}

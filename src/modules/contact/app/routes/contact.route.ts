@@ -108,4 +108,34 @@ export const ContactRoute = {
       ],
     },
   },
+  deleteContact: <IRouteParams>{
+    path: '/:id',
+    method: RequestMethod.DELETE,
+    secure: true,
+    roles: [UserRole.Customer],
+    swaggerParams: {
+      responses: [
+        {
+          status: HttpStatus.OK,
+          description: 'Contact deleted successfully',
+        },
+
+        {
+          status: HttpStatus.NOT_FOUND,
+          description: 'Contact not found',
+          type: BaseException,
+        },
+        {
+          status: HttpStatus.FORBIDDEN,
+          description: 'Unauthorized to delete this contact',
+          type: BaseException,
+        },
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          description: 'An unexpected error occurred',
+          type: BaseException,
+        },
+      ],
+    },
+  },
 };

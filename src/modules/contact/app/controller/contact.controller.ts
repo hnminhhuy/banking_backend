@@ -15,6 +15,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import {
   CreateContactUsecase,
+  DeleteContactUsecase,
   GetContactUsecase,
   ListContactUsecase,
   UpdateContactUsecase,
@@ -39,6 +40,7 @@ export class ContactController {
     private readonly getContactUsecase: GetContactUsecase,
     private readonly listContactUsecase: ListContactUsecase,
     private readonly updateContactUsecase: UpdateContactUsecase,
+    private readonly deleteContactUsecase: DeleteContactUsecase,
   ) {}
 
   @Route(ContactRoute.createContact)
@@ -124,7 +126,7 @@ export class ContactController {
   }
 
   @Route(ContactRoute.updateContact)
-  async updateUser(
+  async updateContact(
     @Req() req,
     @Param() params: GetContactDto,
     @Body() body: UpdateContactDto,
@@ -156,6 +158,38 @@ export class ContactController {
           throw new NotFoundException('Bank account not found for beneficiary');
         case 'InvalidFirldError':
           throw new BadRequestException('No valid fields provided for update');
+        default:
+          throw new InternalServerErrorException(
+            'An unexpected error occurred',
+          );
+      }
+    }
+  }
+
+  @Route(ContactRoute.deleteContact)
+  async deleteContact(@Req() req, @Param() params: GetContactDto) {
+    try {
+      const result = await this.deleteContactUsecase.execute(
+        req.user.authId,
+        params.id,
+      );
+
+      if (!result) {
+        throw new InternalServerErrorException('Failed to delete contact');
+      }
+
+      return {
+        message: 'Contact deleted successfully',
+        statusCode: HttpStatus.OK,
+      };
+    } catch (error) {
+      switch (error.message) {
+        case 'NotFoundContactError':
+          throw new NotFoundException('Contact not found');
+        case 'ContactNotBelongToUser':
+          throw new ForbiddenException(
+            'You are not authorized to delete this contact',
+          );
         default:
           throw new InternalServerErrorException(
             'An unexpected error occurred',
