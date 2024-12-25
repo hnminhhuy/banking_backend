@@ -23,6 +23,7 @@ import { AuthModule } from 'src/modules/auth/auth.module';
 import { SetCacheBlockedUserUsecase } from 'src/modules/redis_cache/core/usecases';
 import { RedisCacheModule } from 'src/modules/redis_cache/redis_cache.module';
 import { OtpModule } from 'src/modules/otp/otp.module';
+import { DebtModule } from 'src/modules/debt/debt.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { OtpModule } from 'src/modules/otp/otp.module';
     forwardRef(() => MailModule),
     forwardRef(() => BankConfigModule),
     forwardRef(() => OtpModule),
+    forwardRef(() => DebtModule),
   ],
   controllers: [AppController],
   providers: [],
