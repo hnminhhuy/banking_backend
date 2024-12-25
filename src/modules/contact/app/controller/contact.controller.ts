@@ -1,5 +1,6 @@
 import {
   BadGatewayException,
+  BadRequestException,
   Body,
   ConflictException,
   Controller,
@@ -16,10 +17,15 @@ import {
   CreateContactUsecase,
   GetContactUsecase,
   ListContactUsecase,
+  UpdateContactUsecase,
 } from '../../core/usecases';
 import { Route } from 'src/decorators';
 import { ContactRoute } from '../routes/contact.route';
-import { CreateContactDto, GetContactDto } from '../dtos/contact.dto';
+import {
+  CreateContactDto,
+  GetContactDto,
+  UpdateContactDto,
+} from '../dtos/contact.dto';
 import { ContactModelParams } from '../../core/models/contact.model';
 import { ListContactDto } from '../dtos/list_contact';
 import { PageParams, SortParams } from 'src/common/models';
@@ -32,6 +38,7 @@ export class ContactController {
     private readonly createContactUsecase: CreateContactUsecase,
     private readonly getContactUsecase: GetContactUsecase,
     private readonly listContactUsecase: ListContactUsecase,
+    private readonly updateContactUsecase: UpdateContactUsecase,
   ) {}
 
   @Route(ContactRoute.createContact)
@@ -114,5 +121,46 @@ export class ContactController {
         totalCount: pageResult.totalCount,
       },
     };
+  }
+
+  @Route(ContactRoute.updateContact)
+  async updateUser(
+    @Req() req,
+    @Param() params: GetContactDto,
+    @Body() body: UpdateContactDto,
+  ) {
+    try {
+      const result = await this.updateContactUsecase.execute(
+        req.user.authId,
+        params.id,
+        body,
+      );
+
+      if (!result) {
+        throw new InternalServerErrorException('Failed to update contact');
+      }
+
+      return {
+        message: 'Contact updated successfully',
+        statusCode: HttpStatus.OK,
+      };
+    } catch (error) {
+      switch (error.message) {
+        case 'NotFoundContactError':
+          throw new NotFoundException('Contact not found');
+        case 'ContactNotBelongToUser':
+          throw new ForbiddenException(
+            'You are not authorized to update this contact',
+          );
+        case 'BankAccountNotFoundError':
+          throw new NotFoundException('Bank account not found for beneficiary');
+        case 'InvalidFirldError':
+          throw new BadRequestException('No valid fields provided for update');
+        default:
+          throw new InternalServerErrorException(
+            'An unexpected error occurred',
+          );
+      }
+    }
   }
 }

@@ -10,6 +10,7 @@ import {
   CreateContactUsecase,
   GetContactUsecase,
   ListContactUsecase,
+  UpdateContactUsecase,
 } from './core/usecases';
 import { ContactEntity } from './infra/data/entities/contact.entity';
 import { ContactController } from './app/controller/contact.controller';
@@ -31,6 +32,7 @@ import { ContactController } from './app/controller/contact.controller';
     CreateContactUsecase,
     GetContactUsecase,
     ListContactUsecase,
+    UpdateContactUsecase,
   ],
 })
 export class ContactModule {}

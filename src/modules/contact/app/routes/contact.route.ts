@@ -74,4 +74,38 @@ export const ContactRoute = {
       ],
     },
   },
+  updateContact: <IRouteParams>{
+    path: '/:id',
+    method: RequestMethod.PATCH,
+    secure: true,
+    roles: [UserRole.Customer],
+    swaggerParams: {
+      responses: [
+        {
+          status: HttpStatus.OK,
+          description: 'Contact updated successfully',
+        },
+        {
+          status: HttpStatus.BAD_REQUEST,
+          description: 'Invalid input data or no valid fields to update',
+          type: BaseException,
+        },
+        {
+          status: HttpStatus.NOT_FOUND,
+          description: 'Contact or bank account not found',
+          type: BaseException,
+        },
+        {
+          status: HttpStatus.FORBIDDEN,
+          description: 'Unauthorized to update this contact',
+          type: BaseException,
+        },
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          description: 'An unexpected error occurred',
+          type: BaseException,
+        },
+      ],
+    },
+  },
 };

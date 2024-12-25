@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ContactEntity } from './data/entities/contact.entity';
 import { FindOptionsWhere, Repository } from 'typeorm';
-import { ContactModel } from '../core/models/contact.model';
+import { ContactModel, ContactModelParams } from '../core/models/contact.model';
 import { Page, PageParams, SortParams } from 'src/common/models';
 import { ContactSort } from '../core/enums/contact_sort';
 import { paginate } from 'src/common/helpers/pagination.helper';
@@ -60,5 +60,13 @@ export class ContactDatasource {
     const items = rawItems.map((item) => new ContactModel(item));
 
     return new Page(page, totalCount, items);
+  }
+  async update(
+    id: string,
+    updatedFields: Partial<ContactModelParams>,
+  ): Promise<boolean> {
+    return (
+      (await this.contactRepository.update(id, updatedFields)).affected > 0
+    );
   }
 }

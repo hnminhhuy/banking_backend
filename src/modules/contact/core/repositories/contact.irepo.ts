@@ -1,5 +1,5 @@
 import { Page, PageParams, SortParams } from 'src/common/models';
-import { ContactModel } from '../models/contact.model';
+import { ContactModel, ContactModelParams } from '../models/contact.model';
 import { ContactSort } from '../enums/contact_sort';
 
 export abstract class IContactRepo {
@@ -16,4 +16,9 @@ export abstract class IContactRepo {
     sortParams: SortParams<ContactSort>,
     relations: string[] | undefined,
   ): Promise<Page<ContactModel>>;
+
+  public abstract update(
+    id: string,
+    updatedFields: Partial<ContactModelParams>,
+  ): Promise<boolean>;
 }
