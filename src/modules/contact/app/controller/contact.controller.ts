@@ -81,11 +81,15 @@ export class ContactController {
     }
   }
   @Route(ContactRoute.getContact)
-  async getDebt(@Param() param: GetContactDto) {
+  async getDebt(@Req() req, @Param() param: GetContactDto) {
     const contact = await this.getContactUsecase.execute('id', param.id);
     if (!contact) {
       throw new NotFoundException('Contact not found');
     }
+    if (req.user.authId !== contact.userId)
+      throw new ForbiddenException(
+        'You are not authorized to get this contact',
+      );
     return {
       contact,
       statusCode: 200,

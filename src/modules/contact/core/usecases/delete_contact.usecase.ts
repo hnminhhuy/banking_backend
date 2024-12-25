@@ -16,7 +16,6 @@ export class DeleteContactUsecase {
       id,
       undefined,
     );
-    console.log('id: ', id);
     if (!existingContact) {
       throw new Error('NotFoundContactError');
     }
