@@ -33,7 +33,6 @@ export class UpdateContactUsecase {
       throw new Error('ContactNotBelongToUser');
 
     if (updatedFields.beneficiaryId) {
-      console.log('update', updatedFields.beneficiaryId);
       const contactUser = await this.getBankAccountUsecase.execute(
         'id',
         updatedFields.beneficiaryId,

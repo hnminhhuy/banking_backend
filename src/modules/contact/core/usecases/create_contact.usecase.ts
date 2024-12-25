@@ -36,7 +36,7 @@ export class CreateContactUsecase {
 
     if (!contactUser) throw new Error('BankAccountNotFoundError');
     if (contactUser.userId === userId)
-      throw new Error('BankAccountNotFoundError');
+      throw new Error('CannotCreateContactForSelfError');
 
     params['userId'] = userId;
     params['beneficiaryName'] = contactUser.user.fullName;
