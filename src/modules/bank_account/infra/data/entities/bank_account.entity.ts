@@ -7,12 +7,8 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import {
-  BankAccountModel,
-  BankAccountParams,
-} from '../../../core/models/bank_account.model';
-import { UserEntity } from '../../../../user/infra/data/entities/user.entity';
-import { UserModel } from '../../../../user/core/models/user.model';
+import { BankAccountModel } from '../../../core/models/bank_account.model';
+import { UserEntity } from 'src/modules/user/infra/data/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('bank_accounts')

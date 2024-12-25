@@ -32,6 +32,7 @@ import { AnotherBankModule } from '../modules/another-bank/another_bank.module';
 import { OtpModule } from 'src/modules/otp/otp.module';
 import bankConfig from '../config/bank.config';
 import { DebtModule } from 'src/modules/debt/debt.module';
+import { ContactModule } from 'src/modules/contact/contact.module';
 
 @Module({
   imports: [
@@ -87,7 +88,6 @@ import { DebtModule } from 'src/modules/debt/debt.module';
     forwardRef(() => BankConfigModule),
     forwardRef(() => AnotherBankModule),
     forwardRef(() => OtpModule),
-    forwardRef(() => DebtModule),
   ],
   controllers: [AppController],
   providers: [],

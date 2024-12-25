@@ -1,12 +1,9 @@
-import { BaseEntity } from 'src/common/entitites/base.entity';
-import { UserRole } from 'src/modules/user/core/enums/user_role';
-import {
-  UserModel,
-  UserModelParams,
-} from 'src/modules/user/core/models/user.model';
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
-import { BankAccountEntity } from '../../../../bank_account/infra/data/entities/bank_account.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { BaseEntity } from 'src/common/entitites/base.entity';
+import { BankAccountEntity } from 'src/modules/bank_account/infra/data/entities/bank_account.entity';
+import { UserRole } from 'src/modules/user/core/enums/user_role';
+import { UserModel } from 'src/modules/user/core/models/user.model';
+import { Column, Entity, OneToOne } from 'typeorm';
 
 @Entity('users')
 export class UserEntity extends BaseEntity {
