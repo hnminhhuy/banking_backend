@@ -9,23 +9,23 @@ import {
   Param,
   Query,
   Req,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateDebtUsecase } from '../../core/usecases';
 import { Route } from 'src/decorators';
 import { DebtRoute } from '../routes/debt.route';
 import { CreateDebtDto, GetDebtDto } from '../dtos/debt.dto';
 import { DebtModelParams } from '../../core/models/debt.model';
-import { AuthGuard } from '@nestjs/passport';
-import { GetDebtUsecase } from '../../core/usecases/get_debt.usecase';
 import { PageParams, SortParams } from 'src/common/models';
 import { DebtSort } from '../../core/enum/debt_sort';
-import { ListDebtUsecase } from '../../core/usecases/list_user.usecase';
 import { ListDebtDto } from '../dtos/list_debt.dto';
 import { GetBankAccountUsecase } from 'src/modules/bank_account/core/usecases';
 import { DebtCategory } from '../../core/enum/debt_category';
-import { CancelDebtUsecase } from '../../core/usecases/cancel_debt.usecase';
+import {
+  CancelDebtUsecase,
+  CreateDebtUsecase,
+  GetDebtUsecase,
+  ListDebtUsecase,
+} from '../../core/usecases';
 
 @ApiTags('Debt by Customer')
 @Controller({ path: 'api/customer/v1/debt' })

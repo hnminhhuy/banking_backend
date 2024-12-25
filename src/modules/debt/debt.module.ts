@@ -5,11 +5,13 @@ import { BankAccountModule } from '../bank_account/bank_account.module';
 import { DebtController } from './app/controller/debt.controller';
 import { IDebtRepo } from './core/repositories/debt.irepo';
 import { DebtRepo } from './infra/data/repositories/debt.repo';
-import { CreateDebtUsecase } from './core/usecases';
 import { DebtDatasource } from './infra/debt.datasource';
-import { GetDebtUsecase } from './core/usecases/get_debt.usecase';
-import { ListDebtUsecase } from './core/usecases/list_user.usecase';
-import { CancelDebtUsecase } from './core/usecases/cancel_debt.usecase';
+import {
+  CancelDebtUsecase,
+  CreateDebtUsecase,
+  GetDebtUsecase,
+  ListDebtUsecase,
+} from './core/usecases';
 
 @Module({
   imports: [
