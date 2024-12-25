@@ -64,4 +64,25 @@ export const DebtRoute = {
       ],
     },
   },
+
+  listDebt: <IRouteParams>{
+    path: '/list',
+    method: RequestMethod.GET,
+    secure: true,
+    swaggerParams: {
+      responses: [
+        { status: HttpStatus.OK, type: DebtModel },
+        {
+          status: HttpStatus.BAD_REQUEST,
+          description: 'Bad request',
+          type: BaseException,
+        },
+        {
+          status: HttpStatus.NOT_FOUND,
+          description: 'Debt not found',
+          type: BaseException,
+        },
+      ],
+    },
+  },
 };

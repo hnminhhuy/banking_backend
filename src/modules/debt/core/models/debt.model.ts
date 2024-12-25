@@ -3,6 +3,7 @@ import { BaseModel, BaseModelParams } from 'src/common/models';
 import { DebtStatus } from '../enum/debt_status';
 
 export interface DebtModelParams extends BaseModelParams {
+  id?: string;
   reminderId?: string;
   debtorId: string;
   amount: number;

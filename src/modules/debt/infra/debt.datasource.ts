@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DebtEntity } from './data/entities/debt.entity';
-import { Repository } from 'typeorm';
-import { DebtModel } from '../core/models/debt.model';
+import { FindOptionsWhere, Repository } from 'typeorm';
+import { DebtModel, DebtModelParams } from '../core/models/debt.model';
+import { Page, PageParams, SortParams } from 'src/common/models';
+import { DebtSort } from '../core/enum/debt_sort';
+import { paginate } from 'src/common/helpers/pagination.helper';
 
 @Injectable()
 export class DebtDatasource {
@@ -34,5 +37,31 @@ export class DebtDatasource {
       return new DebtModel(entity);
     }
     return undefined;
+  }
+
+  async list(
+    conditions: Partial<DebtModelParams>,
+    pageParams: PageParams,
+    sortParams: SortParams<DebtSort>,
+    relations: string[] | undefined = undefined,
+  ): Promise<Page<DebtModel>> {
+    const queryConditions: FindOptionsWhere<DebtEntity> = {};
+
+    for (const [key, value] of Object.entries(conditions)) {
+      if (value !== undefined) {
+        queryConditions[key as keyof DebtEntity] = value as any;
+      }
+    }
+
+    const { page, totalCount, rawItems } = await paginate<DebtEntity>(
+      this.debtRepository,
+      pageParams,
+      sortParams,
+      relations,
+      queryConditions,
+    );
+    const items = rawItems.map((item) => new DebtModel(item));
+
+    return new Page(page, totalCount, items);
   }
 }
