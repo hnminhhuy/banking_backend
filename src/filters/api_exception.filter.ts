@@ -19,7 +19,7 @@ export class ApiExceptionFilter implements ExceptionFilter {
     }
 
     if (isDevelopmentEnv) {
-      console.log(exception);
+      console.error(exception);
     }
 
     let data = <IBaseExceptionResponse>{
@@ -83,8 +83,11 @@ export class ApiExceptionFilter implements ExceptionFilter {
             break;
           }
           default: {
-            console.log(exception);
-
+            data = {
+              code: ERROR_CODES.UNCATEGORIED,
+              status,
+              message,
+            };
             break;
           }
         }

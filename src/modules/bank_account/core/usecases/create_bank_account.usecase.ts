@@ -39,7 +39,6 @@ export class CreateBankAccountUsecase {
 
   private async generateBankAccount(length: number = 8): Promise<string> {
     const cacheMaxBankAccount = await this.cacheManager.get('maxBankAccount');
-
     let maxBankAccount: number;
     if (cacheMaxBankAccount) {
       maxBankAccount = parseInt(cacheMaxBankAccount as string, 10);
