@@ -19,6 +19,7 @@ export abstract class IContactRepo {
 
   public abstract update(
     id: string,
+    beneficiaryName: string | undefined,
     updatedFields: Partial<ContactModelParams>,
   ): Promise<boolean>;
 

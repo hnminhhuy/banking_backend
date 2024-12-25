@@ -32,7 +32,8 @@ export class CreateContactDto extends PickType(ContactDto, [
 
 export class GetContactDto extends PickType(ContactDto, ['id']) {}
 
-export class UpdateContactDto extends PickType(ContactDto, [
-  'beneficiaryId',
-  'nickname',
-]) {}
+export class UpdateContactDto extends PickType(ContactDto, ['nickname']) {
+  @ApiPropertyOptional()
+  @IsString()
+  beneficiaryId: string;
+}

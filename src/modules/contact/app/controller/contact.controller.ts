@@ -143,8 +143,7 @@ export class ContactController {
       }
 
       return {
-        message: 'Contact updated successfully',
-        statusCode: HttpStatus.OK,
+        result,
       };
     } catch (error) {
       switch (error.message) {
@@ -179,8 +178,7 @@ export class ContactController {
       }
 
       return {
-        message: 'Contact deleted successfully',
-        statusCode: HttpStatus.OK,
+        result,
       };
     } catch (error) {
       switch (error.message) {

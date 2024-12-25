@@ -40,9 +40,14 @@ export class ContactRepo implements IContactRepo {
 
   public async update(
     id: string,
+    beneficiaryName: string | undefined,
     updatedFields: Partial<ContactModelParams>,
   ): Promise<boolean> {
-    return await this.contactDatasource.update(id, updatedFields);
+    return await this.contactDatasource.update(
+      id,
+      beneficiaryName,
+      updatedFields,
+    );
   }
 
   public async delete(id: string): Promise<boolean> {

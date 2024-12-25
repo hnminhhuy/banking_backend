@@ -7,11 +7,7 @@ import { GetBankAccountUsecase } from 'src/modules/bank_account/core/usecases';
 
 @Injectable()
 export class UpdateContactUsecase {
-  private readonly allowedFieldsToUpdate = [
-    'beneficiaryId',
-    'beneficiaryName',
-    'nickname',
-  ];
+  private readonly allowedFieldsToUpdate = ['beneficiaryId', 'nickname'];
   constructor(
     private readonly iContactRepo: IContactRepo,
     private readonly getContactUsecase: GetContactUsecase,
@@ -23,6 +19,7 @@ export class UpdateContactUsecase {
     id: string,
     updatedFields: Partial<ContactModelParams>,
   ): Promise<boolean> {
+    let beneficiaryName;
     const existingContact = await this.getContactUsecase.execute(
       'id',
       id,
@@ -43,8 +40,12 @@ export class UpdateContactUsecase {
         ['user'],
       );
       if (!contactUser) throw new Error('BankAccountNotFoundError');
-      updatedFields.beneficiaryName = contactUser.user.fullName;
+      beneficiaryName = contactUser.user.fullName;
+    } else {
+      delete updatedFields.beneficiaryId;
     }
+
+    if (!updatedFields.nickname) delete updatedFields.nickname;
 
     const filteredFields = filterAllowedFields(
       updatedFields,
@@ -55,6 +56,6 @@ export class UpdateContactUsecase {
       // throw new BadRequestException('No valid field to update');
       throw new Error('InvalidFirldError');
     }
-    return this.iContactRepo.update(id, filteredFields);
+    return this.iContactRepo.update(id, beneficiaryName, filteredFields);
   }
 }

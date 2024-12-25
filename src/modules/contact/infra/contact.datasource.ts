@@ -63,11 +63,16 @@ export class ContactDatasource {
   }
   async update(
     id: string,
+    beneficiaryName: string | undefined,
     updatedFields: Partial<ContactModelParams>,
   ): Promise<boolean> {
-    return (
-      (await this.contactRepository.update(id, updatedFields)).affected > 0
-    );
+    const updateData: Partial<ContactModelParams> = {
+      ...updatedFields,
+    };
+    if (beneficiaryName) {
+      updateData.beneficiaryName = beneficiaryName;
+    }
+    return (await this.contactRepository.update(id, updateData)).affected > 0;
   }
 
   async delete(id: string): Promise<boolean> {
