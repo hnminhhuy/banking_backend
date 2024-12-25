@@ -1,7 +1,9 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { BaseEntity } from 'src/common/entitites/base.entity';
+import { BankAccountEntity } from 'src/modules/bank_account/infra/data/entities/bank_account.entity';
 import { UserRole } from 'src/modules/user/core/enums/user_role';
 import { UserModel } from 'src/modules/user/core/models/user.model';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToOne } from 'typeorm';
 
 @Entity('users')
 export class UserEntity extends BaseEntity {
@@ -25,6 +27,11 @@ export class UserEntity extends BaseEntity {
 
   @Column()
   role: UserRole;
+
+  /** Relations */
+  @OneToOne(() => BankAccountEntity, (bankAccount) => bankAccount.user)
+  @ApiProperty({ type: () => BankAccountEntity })
+  bankAccount?: BankAccountEntity;
 
   constructor(model: Partial<UserModel>) {
     super();
