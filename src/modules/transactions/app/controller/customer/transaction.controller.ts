@@ -296,18 +296,13 @@ export class TransactionController {
         ? calculateAmountForRemitter(transaction)
         : calculateAmountForBeneficiary(transaction);
 
-      const transactionMessage =
-        transaction.status === TransactionStatus.SUCCESS
-          ? `Account ${userBankAccountId} ${transactionAmount} at ${transaction.updatedAt}. Balance: ${user.bankAccount.balance}. Transaction: ${transaction.id.toUpperCase()} - ${transaction.message}`
-          : transaction.message;
-
       return {
         id: transaction.id,
         date: transaction.updatedAt,
         status: transaction.status,
         category: transactionCategory,
         amount: transactionAmount,
-        message: transactionMessage,
+        message: transaction.message,
       };
     });
 

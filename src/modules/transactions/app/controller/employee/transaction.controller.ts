@@ -72,35 +72,8 @@ export class TransactionController {
       undefined,
     );
 
-    let data = transactions.data.map((transaction) => {
-      const isRemitter = transaction.remitterId === user?.bankAccount.id;
-
-      const transactionCategory = isRemitter
-        ? TransactionCategory.OUTCOMING
-        : TransactionCategory.INCOMING;
-
-      const transactionAmount = isRemitter
-        ? calculateAmountForRemitter(transaction)
-        : calculateAmountForBeneficiary(transaction);
-
-      const transactionMessage =
-        transaction.status === TransactionStatus.SUCCESS
-          ? `Account ${user.bankAccount.id} ${transactionAmount} at ${transaction.updatedAt}. Balance: ${user.bankAccount.balance}. Transaction: ${transaction.id.toUpperCase()} - ${transaction.message}`
-          : transaction.message;
-
-      return {
-        id: transaction.id,
-        date: transaction.updatedAt,
-        status: transaction.status,
-        category: transactionCategory,
-        type: transaction.type,
-        amount: transactionAmount,
-        message: transactionMessage,
-      };
-    });
-
     return {
-      data: data,
+      data: transactions.data,
       metadata: {
         page: transactions.page,
         totalCount: transactions.totalCount,
