@@ -36,4 +36,8 @@ export class DebtRepo implements IDebtRepo {
       relations,
     );
   }
+
+  public async cancelDebt(debtId: string): Promise<boolean> {
+    return await this.debtDatasource.cancelDebt(debtId);
+  }
 }

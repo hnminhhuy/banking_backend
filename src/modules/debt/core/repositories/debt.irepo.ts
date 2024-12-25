@@ -16,4 +16,6 @@ export abstract class IDebtRepo {
     sortParams: SortParams<DebtSort>,
     relations: string[] | undefined,
   ): Promise<Page<DebtModel>>;
+
+  public abstract cancelDebt(debtId: string): Promise<boolean>;
 }

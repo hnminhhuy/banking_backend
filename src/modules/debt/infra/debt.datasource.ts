@@ -6,6 +6,7 @@ import { DebtModel, DebtModelParams } from '../core/models/debt.model';
 import { Page, PageParams, SortParams } from 'src/common/models';
 import { DebtSort } from '../core/enum/debt_sort';
 import { paginate } from 'src/common/helpers/pagination.helper';
+import { DebtStatus } from '../core/enum/debt_status';
 
 @Injectable()
 export class DebtDatasource {
@@ -63,5 +64,13 @@ export class DebtDatasource {
     const items = rawItems.map((item) => new DebtModel(item));
 
     return new Page(page, totalCount, items);
+  }
+
+  async cancelDebt(debtId: string): Promise<boolean> {
+    const result = await this.debtRepository.update(debtId, {
+      status: DebtStatus.Canceled,
+    });
+
+    return result.affected > 0;
   }
 }

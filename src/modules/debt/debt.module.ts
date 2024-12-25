@@ -9,6 +9,7 @@ import { CreateDebtUsecase } from './core/usecases';
 import { DebtDatasource } from './infra/debt.datasource';
 import { GetDebtUsecase } from './core/usecases/get_debt.usecase';
 import { ListDebtUsecase } from './core/usecases/list_user.usecase';
+import { CancelDebtUsecase } from './core/usecases/cancel_debt.usecase';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ListDebtUsecase } from './core/usecases/list_user.usecase';
     CreateDebtUsecase,
     GetDebtUsecase,
     ListDebtUsecase,
+    CancelDebtUsecase,
   ],
   exports: [],
 })

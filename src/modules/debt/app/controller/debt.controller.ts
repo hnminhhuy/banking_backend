@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Body,
+  ConflictException,
   Controller,
   HttpStatus,
   InternalServerErrorException,
@@ -24,6 +25,7 @@ import { ListDebtUsecase } from '../../core/usecases/list_user.usecase';
 import { ListDebtDto } from '../dtos/list_debt.dto';
 import { GetBankAccountUsecase } from 'src/modules/bank_account/core/usecases';
 import { DebtCategory } from '../../core/enum/debt_category';
+import { CancelDebtUsecase } from '../../core/usecases/cancel_debt.usecase';
 
 @ApiTags('Debt by Customer')
 @Controller({ path: 'api/customer/v1/debt' })
@@ -33,6 +35,7 @@ export class DebtController {
     private readonly getDebtUsecase: GetDebtUsecase,
     private readonly listDebtUsecase: ListDebtUsecase,
     private readonly getBankAccountUsecase: GetBankAccountUsecase,
+    private readonly cancelDebtUsecase: CancelDebtUsecase,
   ) {}
   @Route(DebtRoute.createDebt)
   async createDebt(@Req() req, @Body() body: CreateDebtDto) {
@@ -101,9 +104,6 @@ export class DebtController {
     );
     if (!bankAccount) throw new NotFoundException('Bank account not found');
 
-    // if (query.id !== undefined && query.id !== null) {
-    //   conditions.id = query.id;
-    // }
     const conditions: Partial<DebtModelParams> = {
       reminderId: undefined,
       debtorId: undefined,
@@ -130,5 +130,46 @@ export class DebtController {
         totalCount: pageResult.totalCount,
       },
     };
+  }
+
+  @Route(DebtRoute.cancelDebt)
+  async cancelDebt(@Req() req, @Param() param: GetDebtDto) {
+    try {
+      // Execute use case to cancel debt
+      const result = await this.cancelDebtUsecase.execute(
+        req.user.authId,
+        param.id,
+      );
+
+      // Return success response
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Debt successfully canceled',
+        data: result,
+      };
+    } catch (error) {
+      // Handle specific errors
+      switch (error.message) {
+        case 'AccountNotFoundError':
+          throw new NotFoundException('User bank account not found');
+        case 'DebtNotFoundError':
+          throw new NotFoundException('Debt not found');
+        case 'DebtNotBelongToUserError':
+          throw new BadRequestException('Debt does not belong to the user');
+        case 'DebtAlreadyCanceledError':
+          throw new ConflictException('Debt is already canceled');
+        case 'DebtCannotBeCancelledError':
+          throw new ConflictException(
+            'Debt cannot be canceled due to its current status',
+          );
+        case 'DebtCancelFailedError':
+          throw new InternalServerErrorException('Failed to cancel the debt');
+        default:
+          // Generic error fallback
+          throw new InternalServerErrorException(
+            'An unexpected error occurred',
+          );
+      }
+    }
   }
 }

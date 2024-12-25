@@ -85,4 +85,39 @@ export const DebtRoute = {
       ],
     },
   },
+
+  cancelDebt: <IRouteParams>{
+    path: '/:id',
+    method: RequestMethod.PATCH,
+    secure: true,
+    swaggerParams: {
+      responses: [
+        {
+          status: HttpStatus.OK,
+          description: 'Debt successfully canceled',
+          type: DebtModel,
+        },
+        {
+          status: HttpStatus.BAD_REQUEST,
+          description: 'Bad request',
+          type: BaseException,
+        },
+        {
+          status: HttpStatus.NOT_FOUND,
+          description: 'Debt or account not found',
+          type: BaseException,
+        },
+        {
+          status: HttpStatus.CONFLICT,
+          description: 'Debt cannot be canceled or already canceled',
+          type: BaseException,
+        },
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          description: 'Failed to cancel debt',
+          type: BaseException,
+        },
+      ],
+    },
+  },
 };
