@@ -66,7 +66,7 @@ export const DebtRoute = {
   },
 
   listDebt: <IRouteParams>{
-    path: '/list',
+    path: '/',
     method: RequestMethod.GET,
     secure: true,
     swaggerParams: {

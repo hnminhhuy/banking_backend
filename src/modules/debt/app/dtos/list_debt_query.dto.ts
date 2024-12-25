@@ -1,25 +1,17 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsDateString, IsOptional, IsUUID } from 'class-validator';
 import { DebtStatus } from '../../core/enum/debt_status';
+import { DebtCategory } from '../../core/enum/debt_category';
 
 export class ListDebtQueryDto {
   @ApiPropertyOptional()
-  id?: string;
-
-  @ApiPropertyOptional()
-  reminderId?: string;
-
-  @ApiPropertyOptional()
-  debtorId?: string;
+  category?: DebtCategory;
 
   @ApiPropertyOptional()
   amount?: number;
 
   @ApiPropertyOptional()
   status?: DebtStatus;
-
-  @ApiPropertyOptional()
-  message?: string;
 
   @ApiProperty()
   @IsDateString()

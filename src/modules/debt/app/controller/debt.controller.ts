@@ -22,6 +22,8 @@ import { PageParams, SortParams } from 'src/common/models';
 import { DebtSort } from '../../core/enum/debt_sort';
 import { ListDebtUsecase } from '../../core/usecases/list_user.usecase';
 import { ListDebtDto } from '../dtos/list_debt.dto';
+import { GetBankAccountUsecase } from 'src/modules/bank_account/core/usecases';
+import { DebtCategory } from '../../core/enum/debt_category';
 
 @ApiTags('Debt by Customer')
 @Controller({ path: 'api/customer/v1/debt' })
@@ -30,6 +32,7 @@ export class DebtController {
     private readonly createDebtUsecase: CreateDebtUsecase,
     private readonly getDebtUsecase: GetDebtUsecase,
     private readonly listDebtUsecase: ListDebtUsecase,
+    private readonly getBankAccountUsecase: GetBankAccountUsecase,
   ) {}
   @Route(DebtRoute.createDebt)
   async createDebt(@Req() req, @Body() body: CreateDebtDto) {
@@ -80,8 +83,7 @@ export class DebtController {
   }
 
   @Route(DebtRoute.listDebt)
-  async listDebt(@Query() query: ListDebtDto) {
-    console.log('query');
+  async listDebt(@Req() req, @Query() query: ListDebtDto) {
     const pageParams = new PageParams(
       query.page,
       query.limit,
@@ -93,12 +95,27 @@ export class DebtController {
       query.direction,
     );
 
+    const bankAccount = await this.getBankAccountUsecase.execute(
+      'user_id',
+      req.user.authId,
+    );
+    if (!bankAccount) throw new NotFoundException('Bank account not found');
+
     // if (query.id !== undefined && query.id !== null) {
     //   conditions.id = query.id;
     // }
     const conditions: Partial<DebtModelParams> = {
-      reminderId: query.reminderId,
+      reminderId: undefined,
+      debtorId: undefined,
+      amount: query.amount,
+      status: query.status,
     };
+
+    if (query.category === DebtCategory.CREATED_BY_ME) {
+      conditions.reminderId = bankAccount.id;
+    } else if (query.category === DebtCategory.CREATED_FOR_ME) {
+      conditions.debtorId = bankAccount.id;
+    }
 
     const pageResult = await this.listDebtUsecase.execute(
       conditions,

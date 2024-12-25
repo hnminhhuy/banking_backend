@@ -3,7 +3,7 @@ import { IsDateString, IsUUID } from 'class-validator';
 
 export abstract class BaseDto {
   @ApiProperty()
-  // @IsUUID()
+  @IsUUID()
   public id: string;
 
   @ApiProperty()
