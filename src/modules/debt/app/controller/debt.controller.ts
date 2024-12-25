@@ -56,7 +56,7 @@ export class DebtController {
       }
 
       return {
-        data: data,
+        data,
         statusCode: HttpStatus.CREATED,
       };
     } catch (error) {
@@ -80,7 +80,7 @@ export class DebtController {
       throw new NotFoundException('Debt not found');
     }
     return {
-      data: debt,
+      debt,
       statusCode: 200,
     };
   }
