@@ -8,15 +8,19 @@ import { CreateAnotherBankTransactionUsecase } from '../../../another-bank/core/
 import { BankCode } from '../../../bank/core/enums/bank_code';
 import { BadRequestException } from '@nestjs/common';
 import { GetBankUsecase } from '../../../bank/core/usecases';
+import { UpdateDebtUsecase } from '../../../debt/core/usecases/update_debt.usecase';
+import { TransactionType } from '../../core/enums/transaction_type';
+import { DebtStatus } from '../../../debt/core/enum/debt_status';
 
 @Processor('transaction-queue', { concurrency: 1 })
 export class TransactionConsumer extends WorkerHost {
   constructor(
     private readonly changeBalanceUsecase: ChangeBalanceUsecase,
-    private readonly updateStatusUsecase: UpdateTransactionUsecase,
+    private readonly updateTransactionStatusUsecase: UpdateTransactionUsecase,
     private readonly createAnotherBankTransactionUsecase: CreateAnotherBankTransactionUsecase,
     private readonly bankCode: BankCode,
     private readonly getBankUsecase: GetBankUsecase,
+    private readonly updateDebtUsecase: UpdateDebtUsecase,
   ) {
     super();
   }
@@ -32,6 +36,8 @@ export class TransactionConsumer extends WorkerHost {
       beneficiaryBankId,
       amount,
       transactionFee,
+      type,
+      debtId,
       remitterPaidFee,
     } = transaction;
 
@@ -48,7 +54,13 @@ export class TransactionConsumer extends WorkerHost {
       } else {
         await this.processInterBankTransaction(transaction);
       }
+
+      if (type === TransactionType.DEBT) {
+        await this.updateDebtUsecase.execute(debtId, DebtStatus.Settled);
+      }
     } catch (error) {
+      await this.debitRemitter(remitterId, -remitterAmount);
+
       await this.handleTransactionFailure(id, error);
     }
   }
@@ -66,13 +78,15 @@ export class TransactionConsumer extends WorkerHost {
     amount: number,
   ): Promise<void> {
     try {
-      await this.changeBalanceUsecase.execute(String(beneficiaryId), amount);
-      await this.updateStatusUsecase.execute(
+      await this.changeBalanceUsecase.execute(beneficiaryId, amount);
+      await this.updateTransactionStatusUsecase.execute(
         transactionId,
         TransactionStatus.SUCCESS,
       );
     } catch (error) {
       // Rollback remitter balance on failure
+      await this.changeBalanceUsecase.execute(beneficiaryId, -amount);
+
       throw new Error(`Failed to credit beneficiary: ${error.message}`);
     }
   }
@@ -95,7 +109,10 @@ export class TransactionConsumer extends WorkerHost {
         const res =
           await this.createAnotherBankTransactionUsecase.execute(transaction);
         if (res.data) {
-          await this.updateStatusUsecase.execute(id, TransactionStatus.SUCCESS);
+          await this.updateTransactionStatusUsecase.execute(
+            id,
+            TransactionStatus.SUCCESS,
+          );
         } else {
           throw new Error('Failed to complete interbank transaction');
         }
@@ -111,7 +128,7 @@ export class TransactionConsumer extends WorkerHost {
     transactionId: string,
     error: Error,
   ): Promise<void> {
-    await this.updateStatusUsecase.execute(
+    await this.updateTransactionStatusUsecase.execute(
       transactionId,
       TransactionStatus.FAILED,
     );

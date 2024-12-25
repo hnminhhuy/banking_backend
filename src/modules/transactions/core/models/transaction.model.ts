@@ -15,6 +15,7 @@ export interface TransactionModelParams extends BaseModelParams {
   type: TransactionType;
   status?: TransactionStatus;
   transactionFee: number;
+  debtId?: string;
   remitterPaidFee: boolean;
 }
 
@@ -42,6 +43,9 @@ export class TransactionModel extends BaseModel {
 
   @ApiProperty()
   public readonly message: string;
+
+  @ApiPropertyOptional()
+  public readonly debtId: string | undefined;
 
   @ApiProperty()
   public readonly type: TransactionType;

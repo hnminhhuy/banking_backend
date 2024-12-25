@@ -33,6 +33,9 @@ export class TransactionEntity extends BaseEntity {
   @Column()
   type!: TransactionType;
 
+  @Column({ name: 'debt_id', type: 'uuid' })
+  debtId!: string;
+
   @Column()
   status!: TransactionStatus;
 

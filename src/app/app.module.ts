@@ -102,4 +102,3 @@ export class AppModule implements OnModuleInit {
     await this.setCacheBlockedUserUsecase.execute();
   }
 }
-// export class AppModule {}

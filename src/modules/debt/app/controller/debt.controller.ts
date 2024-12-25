@@ -26,6 +26,13 @@ import {
   GetDebtUsecase,
   ListDebtUsecase,
 } from '../../core/usecases';
+import { CreateTransactionUsecase } from '../../../transactions/core/usecases';
+import { GetConfigUsecase } from '../../../bank_config/core/usecase';
+import { ConfigKey } from '../../../bank_config/core/enum/config_key';
+import { TransactionModelParams } from '../../../transactions/core/models/transaction.model';
+import { TransactionType } from '../../../transactions/core/enums/transaction_type';
+import { CreateOtpUsecase } from '../../../otp/core/usecases';
+import { OtpType } from '../../../otp/core/enums/otpType.enum';
 
 @ApiTags('Debt by Customer')
 @Controller({ path: 'api/customer/v1/debt' })
@@ -36,6 +43,9 @@ export class DebtController {
     private readonly listDebtUsecase: ListDebtUsecase,
     private readonly getBankAccountUsecase: GetBankAccountUsecase,
     private readonly cancelDebtUsecase: CancelDebtUsecase,
+    private readonly createTransactionUsecase: CreateTransactionUsecase,
+    private readonly getConfigUsecase: GetConfigUsecase,
+    private readonly createOtpUsecase: CreateOtpUsecase,
   ) {}
   @Route(DebtRoute.createDebt)
   async createDebt(@Req() req, @Body() body: CreateDebtDto) {
@@ -74,10 +84,19 @@ export class DebtController {
   }
 
   @Route(DebtRoute.getDebt)
-  async getDebt(@Param() param: GetDebtDto) {
+  async getDebt(@Req() req: any, @Param() param: GetDebtDto) {
     const debt = await this.getDebtUsecase.execute('id', param.id);
     if (!debt) {
       throw new NotFoundException('Debt not found');
+    }
+    const bankAccount = await this.getBankAccountUsecase.execute(
+      'id',
+      debt.reminderId,
+      ['user'],
+    );
+
+    if (bankAccount.user.id !== req.user.authId) {
+      throw new BadRequestException('Debt does not belong to the user');
     }
     return {
       debt,
@@ -171,5 +190,71 @@ export class DebtController {
           );
       }
     }
+  }
+
+  @Route(DebtRoute.settleDebt)
+  async settleDebt(@Req() req, @Param() param: GetDebtDto) {
+    const debt = await this.getDebtUsecase.execute('id', param.id);
+    if (!debt) {
+      throw new NotFoundException('Debt not found');
+    }
+
+    if (debt.reminderId === req.user.authId) {
+      throw new BadRequestException('Debt cannot be settled by the reminder');
+    }
+
+    const debtorAccount = await this.getBankAccountUsecase.execute(
+      'id',
+      debt.debtorId,
+      ['user'],
+    );
+
+    if (debtorAccount.user.id !== req.user.authId) {
+      throw new BadRequestException('Debt does not belong to the user');
+    }
+
+    const fee = (
+      await this.getConfigUsecase.execute(ConfigKey.INTERNAL_TRANSACTION_FEE)
+    ).getValue();
+
+    if (debtorAccount.balance + fee < debt.amount) {
+      throw new BadRequestException('Insufficient balance');
+    }
+
+    const reminderAccount = await this.getBankAccountUsecase.execute(
+      'id',
+      debt.reminderId,
+      ['user'],
+    );
+
+    const params: TransactionModelParams = {
+      amount: debt.amount,
+      remitterId: debt.debtorId,
+      type: TransactionType.DEBT,
+      transactionFee: fee,
+      beneficiaryId: debt.reminderId,
+      beneficiaryBankId: reminderAccount.bankId,
+      remitterPaidFee: true,
+      message: debt.message,
+      beneficiaryName: reminderAccount.user?.fullName,
+      remitterBankId: debtorAccount.bankId,
+      remitterName: debtorAccount.user.fullName,
+      debtId: debt.id,
+    };
+
+    const transaction = await this.createTransactionUsecase.execute(params);
+
+    await this.createOtpUsecase.execute(
+      OtpType.TRANSACTION,
+      debtorAccount.user.id,
+      {
+        transactionId: transaction.id,
+      },
+    );
+
+    return {
+      data: transaction,
+      statusCode: HttpStatus.CREATED,
+    };
   }
 }

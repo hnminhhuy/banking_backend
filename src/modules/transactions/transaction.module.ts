@@ -22,6 +22,7 @@ import { TransactionController as TransactionControllerByEmployee } from './app/
 import { AnotherBankModule } from '../another-bank/another_bank.module';
 import { BankModule } from '../bank/bank.module';
 import { TransactionController as TransactionControllerByAdmin } from './app/controller/admin/transaction.controller';
+import { DebtModule } from '../debt/debt.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { TransactionController as TransactionControllerByAdmin } from './app/con
     forwardRef(() => OtpModule),
     forwardRef(() => AnotherBankModule),
     forwardRef(() => BankModule),
+    forwardRef(() => DebtModule),
   ],
   controllers: [
     TransactionControllerByCustomer,
