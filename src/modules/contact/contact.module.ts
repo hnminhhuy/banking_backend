@@ -6,7 +6,11 @@ import { UserModule } from '../user/user.module';
 import { IContactRepo } from './core/repositories/contact.irepo';
 import { ContactRepo } from './infra/data/repositories/contact.repo';
 import { ContactDatasource } from './infra/contact.datasource';
-import { CreateContactUsecase } from './core/usecases';
+import {
+  CreateContactUsecase,
+  GetContactUsecase,
+  ListContactUsecase,
+} from './core/usecases';
 import { ContactEntity } from './infra/data/entities/contact.entity';
 import { ContactController } from './app/controller/contact.controller';
 
@@ -25,6 +29,8 @@ import { ContactController } from './app/controller/contact.controller';
     },
     ContactDatasource,
     CreateContactUsecase,
+    GetContactUsecase,
+    ListContactUsecase,
   ],
 })
 export class ContactModule {}

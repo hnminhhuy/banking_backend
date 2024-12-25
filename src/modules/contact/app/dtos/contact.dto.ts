@@ -29,3 +29,5 @@ export class CreateContactDto extends PickType(ContactDto, [
   'beneficiaryId',
   'nickname',
 ]) {}
+
+export class GetContactDto extends PickType(ContactDto, ['id']) {}
