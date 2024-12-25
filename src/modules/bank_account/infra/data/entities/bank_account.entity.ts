@@ -2,10 +2,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToOne,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { BankAccountModel } from '../../../core/models/bank_account.model';
+import { UserEntity } from 'src/modules/user/infra/data/entities/user.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('bank_accounts')
 export class BankAccountEntity {
@@ -26,6 +30,12 @@ export class BankAccountEntity {
 
   @UpdateDateColumn({ name: 'updated_at' })
   public updatedAt: Date;
+
+  /** Relations */
+  @OneToOne(() => UserEntity, (user) => user.bankAccount)
+  @ApiProperty({ type: () => UserEntity })
+  @JoinColumn({ name: 'user_id' })
+  user: UserEntity;
 
   constructor(model: Partial<BankAccountModel>) {
     Object.assign(this, model);

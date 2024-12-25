@@ -1,5 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { BaseModel, BaseModelParams } from '../../../../common/models';
+import { UserModel } from 'src/modules/user/core/models/user.model';
+import { UserEntity } from 'src/modules/user/infra/data/entities/user.entity';
 
 export interface BankAccountParams extends BaseModelParams {
   id?: string;
@@ -17,6 +19,9 @@ export class BankAccountModel extends BaseModel {
 
   @ApiProperty()
   balance!: number;
+
+  @ApiPropertyOptional()
+  public readonly user?: UserModel | undefined | UserEntity;
 
   constructor(partial: Partial<BankAccountModel>) {
     super(partial);

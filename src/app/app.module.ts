@@ -24,6 +24,7 @@ import { SetCacheBlockedUserUsecase } from 'src/modules/redis_cache/core/usecase
 import { RedisCacheModule } from 'src/modules/redis_cache/redis_cache.module';
 import { OtpModule } from 'src/modules/otp/otp.module';
 import { DebtModule } from 'src/modules/debt/debt.module';
+import { ContactModule } from 'src/modules/contact/contact.module';
 
 @Module({
   imports: [
@@ -60,7 +61,6 @@ import { DebtModule } from 'src/modules/debt/debt.module';
     forwardRef(() => MailModule),
     forwardRef(() => BankConfigModule),
     forwardRef(() => OtpModule),
-    forwardRef(() => DebtModule),
   ],
   controllers: [AppController],
   providers: [],
