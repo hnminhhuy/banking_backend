@@ -1,8 +1,9 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { TransactionType } from '../../../core/enums/transaction_type';
 import { TransactionStatus } from '../../../core/enums/transaction_status';
 import { TransactionModel } from '../../../core/models/transaction.model';
 import { BaseEntity } from '../../../../../common/entitites';
+import { BankEntity } from '../../../../bank/infra/data/entities/bank.entity';
 
 @Entity('transactions')
 export class TransactionEntity extends BaseEntity {
@@ -47,6 +48,15 @@ export class TransactionEntity extends BaseEntity {
 
   @Column({ name: 'completed_at', type: 'timestamp' })
   completedAt?: Date;
+
+  /** Relations */
+  @ManyToOne(() => BankEntity)
+  @JoinColumn({ name: 'remitter_bank_id' })
+  remitterBank?: BankEntity;
+
+  @ManyToOne(() => BankEntity)
+  @JoinColumn({ name: 'beneficiary_bank_id' })
+  beneficiaryBank?: BankEntity;
 
   constructor(partial: Partial<TransactionModel>) {
     super();

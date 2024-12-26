@@ -1,4 +1,10 @@
-import { BadRequestException, Controller, Param, Query } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Param,
+  Query,
+  Req,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import {
   GetTransactionUsecase,
@@ -17,18 +23,18 @@ import {
   calculateAmountForRemitter,
 } from '../../../core/helpers/calculate_amount';
 import { TransactionStatus } from '../../../core/enums/transaction_status';
+import { TransactionType } from '../../../core/enums/transaction_type';
 
 @ApiTags(`Employee \\ Transactions`)
 @ApiBearerAuth()
 @Controller({ path: 'api/employee/v1/transactions' })
 export class TransactionController {
   constructor(
-    private readonly getTransactionUsecase: GetTransactionUsecase,
     private readonly listTransactionUsecase: ListTransactionUsecase,
     private readonly getUserUsecase: GetUserUsecase,
   ) {}
 
-  @Route(TransactionRouteByEmployee.listTransaction)
+  @Route(TransactionRouteByEmployee.listTransactionByCustomer)
   async getList(
     @Query() query: ListTransactionDto,
     @Param() param: GetUserTransactionDto,
@@ -61,19 +67,106 @@ export class TransactionController {
       pageParams,
       sortParams,
       undefined,
-      query.category === TransactionCategory.OUTCOMING
-        ? user?.bankAccount.id
-        : undefined,
       query.category === TransactionCategory.INCOMING
-        ? user?.bankAccount.id
-        : undefined,
+        ? undefined
+        : user.bankAccount.id,
+      query.category === TransactionCategory.OUTCOMING
+        ? undefined
+        : user.bankAccount.id,
       undefined,
       query.status,
+      query.category === TransactionCategory.DEBT
+        ? TransactionType.DEBT
+        : undefined,
       undefined,
     );
 
+    const data = transactions.data.map((transaction) => {
+      const isRemitter = transaction.remitterId === user.bankAccount.id;
+
+      let transactionCategory = isRemitter
+        ? TransactionCategory.OUTCOMING
+        : TransactionCategory.INCOMING;
+
+      if (transaction.type === TransactionType.DEBT) {
+        transactionCategory = TransactionCategory.DEBT;
+      }
+
+      const transactionAmount = isRemitter
+        ? calculateAmountForRemitter(transaction)
+        : calculateAmountForBeneficiary(transaction);
+
+      return {
+        id: transaction.id,
+        date: transaction.updatedAt,
+        status: transaction.status,
+        category: transactionCategory,
+        amount: transactionAmount,
+        message: transaction.message,
+      };
+    });
+
     return {
-      data: transactions.data,
+      data: data,
+      metadata: {
+        page: transactions.page,
+        totalCount: transactions.totalCount,
+      },
+    };
+  }
+
+  @Route(TransactionRouteByEmployee.listTransaction)
+  async list(@Req() req: any, @Query() query: ListTransactionDto) {
+    const pageParams = new PageParams(
+      query.page,
+      query.limit,
+      query.needTotalCount,
+      query.onlyCount,
+    );
+
+    const sortParams: SortParams<TransactionSort> = new SortParams(
+      query.sort as TransactionSort,
+      query.direction,
+    );
+
+    const transactions = await this.listTransactionUsecase.execute(
+      pageParams,
+      sortParams,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      query.status,
+      undefined,
+      ['remitterBank', 'beneficiaryBank'],
+    );
+
+    let data = transactions.data.map((transaction) => {
+      return {
+        id: transaction.id,
+        createdAt: transaction.createdAt,
+        updatedAt: transaction.updatedAt,
+        remitter: {
+          id: transaction.remitterId,
+          name: transaction.remitterName,
+          bankName: transaction?.remitterBank?.name,
+        },
+        beneficiary: {
+          id: transaction.beneficiaryId,
+          name: transaction.beneficiaryName,
+          bankName: transaction?.beneficiaryBank?.name,
+        },
+        type: transaction.type,
+        status: transaction.status,
+        amount: transaction.amount,
+        transactionFee: transaction.transactionFee,
+        remitterPaidFee: transaction.remitterPaidFee,
+        completedAt: transaction.completedAt,
+      };
+    });
+
+    return {
+      data: data,
       metadata: {
         page: transactions.page,
         totalCount: transactions.totalCount,

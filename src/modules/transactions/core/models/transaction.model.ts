@@ -2,6 +2,8 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { BaseModel, BaseModelParams } from '../../../../common/models';
 import { TransactionType } from '../enums/transaction_type';
 import { TransactionStatus } from '../enums/transaction_status';
+import { BankModel } from '../../../bank/core/models/bank.model';
+import { BankEntity } from '../../../bank/infra/data/entities/bank.entity';
 
 export interface TransactionModelParams extends BaseModelParams {
   remitterId: string;
@@ -61,6 +63,12 @@ export class TransactionModel extends BaseModel {
 
   @ApiPropertyOptional()
   public readonly completedAt: Date | undefined;
+
+  @ApiPropertyOptional()
+  public readonly remitterBank: BankModel | BankEntity | undefined;
+
+  @ApiPropertyOptional()
+  public readonly beneficiaryBank: BankModel | BankEntity | undefined;
 
   constructor(partial: Partial<TransactionModel>) {
     super(partial);

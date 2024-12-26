@@ -16,8 +16,17 @@ export const TransactionRouteByEmployee = {
       responses: [{ status: HttpStatus.OK, type: TransactionModel }],
     },
   },
-  listTransaction: <IRouteParams>{
+  listTransactionByCustomer: <IRouteParams>{
     path: 'customers/:userId',
+    method: RequestMethod.GET,
+    secure: true,
+    roles: [UserRole.Employee],
+    swaggerParams: {
+      query: ListTransactionDto,
+    },
+  },
+  listTransaction: <IRouteParams>{
+    path: '/',
     method: RequestMethod.GET,
     secure: true,
     roles: [UserRole.Employee],
