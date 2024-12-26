@@ -9,7 +9,6 @@ import {
   Req,
 } from '@nestjs/common';
 import {
-  CreateTransactionUsecase,
   GetTransactionUsecase,
   ListTransactionUsecase,
 } from '../../../core/usecases';
@@ -22,10 +21,7 @@ import {
 } from '../../dtos';
 import { GetBankAccountUsecase } from '../../../../bank_account/core/usecases';
 import { TransactionType } from '../../../core/enums/transaction_type';
-import { TransactionModelParams } from '../../../core/models/transaction.model';
 import { Transactional } from 'typeorm-transactional';
-import { InjectQueue } from '@nestjs/bullmq';
-import { Queue } from 'bullmq';
 import { GetTransactionDto } from '../../dtos/get_transaction.dto';
 import { GetUserUsecase } from '../../../../user/core/usecases';
 import { TransactionCategory } from '../../../core/enums/transaction_category';
@@ -35,39 +31,21 @@ import {
 } from '../../../core/helpers/calculate_amount';
 import { PageParams, SortParams } from '../../../../../common/models';
 import { TransactionSort } from '../../../core/enums/transaction_sort';
-import { GetConfigUsecase } from '../../../../bank_config/core/usecase';
-import { ConfigKey } from '../../../../bank_config/core/enum/config_key';
-import {
-  CreateOtpUsecase,
-  VerifyOtpUsecase,
-} from '../../../../otp/core/usecases';
-import { OtpType } from '../../../../otp/core/enums/otpType.enum';
-import { UpdateTransactionUsecase } from '../../../core/usecases/update_transaction.usecase';
-import { TransactionStatus } from '../../../core/enums/transaction_status';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { GetAnotherBankAccountInfoUsecase } from '../../../../another-bank/core/usecases/bank_account/get_another_bank_user.usecase';
-import { GetBankUsecase } from '../../../../bank/core/usecases';
-import { BankCode } from '../../../../bank/core/enums/bank_code';
+import { CreateNormalTransactionUsecase } from '../../../core/usecases/create_normal_transaction.usecase';
+import { VerifyTransactionOtpUsecase } from '../../../core/usecases/verify_transaction_otp.usecase';
 
 @ApiTags(`Customer \\ Transactions`)
 @ApiBearerAuth()
 @Controller({ path: 'api/customer/v1/transactions' })
 export class TransactionController {
   constructor(
-    private readonly createTransactionUsecase: CreateTransactionUsecase,
     private readonly getBankAccountUsecase: GetBankAccountUsecase,
     private readonly getUserUsecase: GetUserUsecase,
     private readonly getTransactionUsecase: GetTransactionUsecase,
     private readonly listTransactionUsecase: ListTransactionUsecase,
-    private readonly getConfigUsecase: GetConfigUsecase,
-    private readonly createOtpUsecase: CreateOtpUsecase,
-    private readonly verifyOtpUsecase: VerifyOtpUsecase,
-    private readonly updateTransactionStatusUsecase: UpdateTransactionUsecase,
-    private readonly getAnotherBankAccountInfoUsecase: GetAnotherBankAccountInfoUsecase,
-    private readonly getBankUsecase: GetBankUsecase,
-    private readonly bankCode: BankCode,
-    @InjectQueue('transaction-queue')
-    private readonly queue: Queue,
+    private readonly createNormalTransactionUsecase: CreateNormalTransactionUsecase,
+    private readonly verifyTransactionOtpUsecase: VerifyTransactionOtpUsecase,
   ) {}
 
   @Route(TransactionRouteByCustomer.createTransaction)
@@ -83,70 +61,10 @@ export class TransactionController {
       throw new BadRequestException('This account does not belong to you');
     }
 
-    if (remitter.balance < body.amount) {
-      throw new BadRequestException('Insufficient balance');
-    }
-
-    let beneficiary: any = undefined;
-
-    const beneficiaryBank = await this.getBankUsecase.execute(
-      'id',
-      body.beneficiaryBankId,
+    const transaction = await this.createNormalTransactionUsecase.execute(
+      remitter,
+      body,
     );
-    if (!beneficiaryBank) {
-      throw new BadRequestException(
-        `Bank with ${body.beneficiaryBankId} not found`,
-      );
-    }
-
-    let fee = undefined;
-
-    switch (beneficiaryBank.code) {
-      case this.bankCode.ANOTHER_BANK:
-        beneficiary = await this.getAnotherBankAccountInfoUsecase.execute(
-          body.beneficiaryId,
-        );
-        fee = (
-          await this.getConfigUsecase.execute(
-            ConfigKey.EXTERNAL_TRANSACTION_FEE,
-          )
-        ).getValue();
-        break;
-      case this.bankCode.DEFAULT:
-        beneficiary = await this.getBankAccountUsecase.execute(
-          'id',
-          body.beneficiaryId,
-          ['user'],
-        );
-        fee = (
-          await this.getConfigUsecase.execute(
-            ConfigKey.INTERNAL_TRANSACTION_FEE,
-          )
-        ).getValue();
-        break;
-      default:
-        throw new BadRequestException('Invalid beneficiary bank id');
-    }
-
-    const params: TransactionModelParams = {
-      amount: body.amount,
-      remitterId: body.remitterId,
-      type: TransactionType.NORMAL,
-      transactionFee: fee,
-      beneficiaryId: body.beneficiaryId,
-      beneficiaryBankId: body.beneficiaryBankId,
-      remitterPaidFee: body.remitterPaidFee,
-      message: body.message,
-      beneficiaryName: beneficiary.user?.fullName ?? beneficiary?.data.fullName,
-      remitterBankId: remitter.bankId,
-      remitterName: remitter.user.fullName,
-    };
-
-    const transaction = await this.createTransactionUsecase.execute(params);
-
-    await this.createOtpUsecase.execute(OtpType.TRANSACTION, remitter.userId, {
-      transactionId: transaction.id,
-    });
 
     return {
       data: transaction,
@@ -165,43 +83,7 @@ export class TransactionController {
       throw new BadRequestException(`User ${req.user.authId} not found`);
     }
 
-    const transaction = await this.getTransactionUsecase.execute(
-      'id',
-      body.id,
-      undefined,
-    );
-
-    if (!transaction) {
-      throw new BadRequestException(`Transaction ${body.id} not found`);
-    }
-
-    if (transaction.status !== TransactionStatus.CREATED) {
-      throw new BadRequestException(`Transaction ${body.id} cannot verify OTP`);
-    }
-
-    if (transaction.remitterId !== user.bankAccount.id) {
-      throw new BadRequestException(
-        `Transaction ${body.id} is not belong to you`,
-      );
-    }
-
-    const res = await this.verifyOtpUsecase.execute(
-      OtpType.TRANSACTION,
-      user.id,
-      body.otp,
-      {
-        transactionId: transaction.id,
-      },
-    );
-
-    await this.updateTransactionStatusUsecase.execute(
-      transaction.id,
-      TransactionStatus.PROCESSING,
-    );
-
-    await this.queue.add(transaction.id, {
-      transaction: transaction,
-    });
+    const res = await this.verifyTransactionOtpUsecase.execute(user, body);
 
     return res;
   }

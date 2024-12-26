@@ -23,6 +23,9 @@ import { AnotherBankModule } from '../another-bank/another_bank.module';
 import { BankModule } from '../bank/bank.module';
 import { TransactionController as TransactionControllerByAdmin } from './app/controller/admin/transaction.controller';
 import { DebtModule } from '../debt/debt.module';
+import { CreateNormalTransactionUsecase } from './core/usecases/create_normal_transaction.usecase';
+import { VerifyTransactionOtpUsecase } from './core/usecases/verify_transaction_otp.usecase';
+import { CreateDebtTransactionUsecase } from './core/usecases/create_debt_transaction.usecase';
 
 @Module({
   imports: [
@@ -55,11 +58,15 @@ import { DebtModule } from '../debt/debt.module';
     GetTransactionUsecase,
     UpdateTransactionUsecase,
     ListTransactionUsecase,
+    CreateNormalTransactionUsecase,
+    VerifyTransactionOtpUsecase,
+    CreateDebtTransactionUsecase,
   ],
   exports: [
     CreateTransactionUsecase,
     GetTransactionUsecase,
     UpdateTransactionUsecase,
+    CreateDebtTransactionUsecase,
   ],
 })
 export class TransactionModule {}

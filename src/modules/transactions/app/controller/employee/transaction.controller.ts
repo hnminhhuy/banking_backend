@@ -6,10 +6,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import {
-  GetTransactionUsecase,
-  ListTransactionUsecase,
-} from '../../../core/usecases';
+import { ListTransactionUsecase } from '../../../core/usecases';
 import { Route } from '../../../../../decorators';
 import { TransactionRouteByEmployee } from '../../routes/employee/transaction.route';
 import { GetUserTransactionDto, ListTransactionDto } from '../../dtos';
@@ -22,7 +19,6 @@ import {
   calculateAmountForBeneficiary,
   calculateAmountForRemitter,
 } from '../../../core/helpers/calculate_amount';
-import { TransactionStatus } from '../../../core/enums/transaction_status';
 import { TransactionType } from '../../../core/enums/transaction_type';
 
 @ApiTags(`Employee \\ Transactions`)
