@@ -274,23 +274,30 @@ export class TransactionController {
       pageParams,
       sortParams,
       undefined,
-      query.category === TransactionCategory.OUTCOMING
-        ? userBankAccountId
-        : undefined,
       query.category === TransactionCategory.INCOMING
-        ? userBankAccountId
-        : undefined,
+        ? undefined
+        : userBankAccountId,
+      query.category === TransactionCategory.OUTCOMING
+        ? undefined
+        : userBankAccountId,
       undefined,
       query.status,
+      query.category === TransactionCategory.DEBT
+        ? TransactionType.DEBT
+        : undefined,
       undefined,
     );
 
     let data = transactions.data.map((transaction) => {
       const isRemitter = transaction.remitterId === userBankAccountId;
 
-      const transactionCategory = isRemitter
+      let transactionCategory = isRemitter
         ? TransactionCategory.OUTCOMING
         : TransactionCategory.INCOMING;
+
+      if (transaction.type === TransactionType.DEBT) {
+        transactionCategory = TransactionCategory.DEBT;
+      }
 
       const transactionAmount = isRemitter
         ? calculateAmountForRemitter(transaction)

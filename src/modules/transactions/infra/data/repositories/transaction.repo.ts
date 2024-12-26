@@ -39,6 +39,7 @@ export class TransactionRepo implements ITransactionRepo {
     beneficiaryId: string | undefined,
     bankId: string | undefined,
     status: TransactionStatus | undefined,
+    type: TransactionType | undefined,
     relations: string[] | undefined = undefined,
   ): Promise<Page<TransactionModel>> {
     return await this.transactionDatasource.list(
@@ -49,6 +50,7 @@ export class TransactionRepo implements ITransactionRepo {
       beneficiaryId,
       bankId,
       status,
+      type,
       relations,
     );
   }

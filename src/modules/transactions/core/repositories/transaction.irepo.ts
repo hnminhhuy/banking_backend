@@ -6,6 +6,7 @@ import {
 } from '../../../../common/models';
 import { TransactionSort } from '../enums/transaction_sort';
 import { TransactionStatus } from '../enums/transaction_status';
+import { TransactionType } from '../enums/transaction_type';
 import { TransactionModel } from '../models/transaction.model';
 
 export abstract class ITransactionRepo {
@@ -25,6 +26,7 @@ export abstract class ITransactionRepo {
     beneficiaryId: string | undefined,
     bankId: string | undefined,
     status: TransactionStatus | undefined,
+    type: TransactionType | undefined,
     relations: string[] | undefined,
   ): Promise<Page<TransactionModel>>;
 

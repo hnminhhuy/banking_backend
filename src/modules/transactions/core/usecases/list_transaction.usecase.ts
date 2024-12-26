@@ -9,6 +9,7 @@ import {
 } from '../../../../common/models';
 import { TransactionModel } from '../models/transaction.model';
 import { TransactionStatus } from '../enums/transaction_status';
+import { TransactionType } from '../enums/transaction_type';
 
 @Injectable()
 export class ListTransactionUsecase {
@@ -22,6 +23,7 @@ export class ListTransactionUsecase {
     beneficiaryId: string | undefined,
     bankId: string | undefined,
     status: TransactionStatus | undefined,
+    type: TransactionType | undefined,
     relations: string[] | undefined = undefined,
   ): Promise<Page<TransactionModel>> {
     return await this.transactionRepo.list(
@@ -32,6 +34,7 @@ export class ListTransactionUsecase {
       beneficiaryId,
       bankId,
       status,
+      type,
       relations,
     );
   }

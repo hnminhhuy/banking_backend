@@ -19,6 +19,7 @@ import {
 } from '../../../../common/models';
 import { TransactionSort } from '../../core/enums/transaction_sort';
 import { TransactionStatus } from '../../core/enums/transaction_status';
+import { TransactionType } from '../../core/enums/transaction_type';
 
 @Injectable()
 export class TransactionDatasource {
@@ -63,6 +64,7 @@ export class TransactionDatasource {
     beneficiaryId: string | undefined,
     bankId: string | undefined,
     status: TransactionStatus | undefined,
+    type: TransactionType | undefined,
     relations: string[] | undefined = undefined,
   ): Promise<Page<TransactionModel>> {
     const conditions: FindOptionsWhere<TransactionEntity> = {};
@@ -91,7 +93,11 @@ export class TransactionDatasource {
     if (sortParams) {
       orderBy[sortParams.sort] = sortParams.direction;
     }
+
     const query = this.transactionRepository.createQueryBuilder('transaction');
+    if (type) {
+      conditions['type'] = type;
+    }
 
     if (remitterId || beneficiaryId) {
       query.andWhere(
