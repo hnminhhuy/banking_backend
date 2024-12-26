@@ -51,7 +51,7 @@ import { BankCode } from '../../../../bank/core/enums/bank_code';
 
 @ApiTags(`Customer \\ Transactions`)
 @ApiBearerAuth()
-@Controller({ path: 'api/customers/v1/transactions' })
+@Controller({ path: 'api/customer/v1/transactions' })
 export class TransactionController {
   constructor(
     private readonly createTransactionUsecase: CreateTransactionUsecase,
