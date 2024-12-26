@@ -29,6 +29,10 @@ import { DebtModule } from '../debt/debt.module';
 import { CreateNormalTransactionUsecase } from './core/usecases/create_normal_transaction.usecase';
 import { VerifyTransactionOtpUsecase } from './core/usecases/verify_transaction_otp.usecase';
 import { CreateDebtTransactionUsecase } from './core/usecases/create_debt_transaction.usecase';
+import { HandleTimeoutTransactionUsecase } from './core/usecases/handle_timeout_transaction.usecase';
+import { UpdateTransactionsUsecase } from './core/usecases/update_transactions_status.usecase';
+import { TransactionSchedule } from './app/schedules/transaction_schedule';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -36,6 +40,7 @@ import { CreateDebtTransactionUsecase } from './core/usecases/create_debt_transa
     BullModule.registerQueue({
       name: 'transaction-queue',
     }),
+    ScheduleModule.forRoot(),
     forwardRef(() => AppModule),
     forwardRef(() => BankAccountModule),
     forwardRef(() => UserModule),
@@ -51,6 +56,7 @@ import { CreateDebtTransactionUsecase } from './core/usecases/create_debt_transa
     TransactionControllerByAdmin,
   ],
   providers: [
+    TransactionSchedule,
     TransactionConsumer,
     {
       provide: ITransactionRepo,
@@ -67,6 +73,8 @@ import { CreateDebtTransactionUsecase } from './core/usecases/create_debt_transa
     CreditBeneficiaryUsecase,
     HandleTransactionFailureUsecase,
     ProcessInterBankTransactionUsecase,
+    HandleTimeoutTransactionUsecase,
+    UpdateTransactionsUsecase,
   ],
   exports: [
     CreateTransactionUsecase,

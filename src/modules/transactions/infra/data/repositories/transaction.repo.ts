@@ -38,7 +38,7 @@ export class TransactionRepo implements ITransactionRepo {
     remitterId: string | undefined,
     beneficiaryId: string | undefined,
     bankId: string | undefined,
-    status: TransactionStatus | undefined,
+    statuses: TransactionStatus[] | undefined,
     type: TransactionType | undefined,
     relations: string[] | undefined = undefined,
   ): Promise<Page<TransactionModel>> {
@@ -49,7 +49,7 @@ export class TransactionRepo implements ITransactionRepo {
       remitterId,
       beneficiaryId,
       bankId,
-      status,
+      statuses,
       type,
       relations,
     );
@@ -60,5 +60,17 @@ export class TransactionRepo implements ITransactionRepo {
     status: TransactionStatus | undefined,
   ): Promise<boolean> {
     return await this.transactionDatasource.update(id, status);
+  }
+
+  public async updateMany(
+    ids: string[],
+    status: TransactionStatus | undefined,
+    completedAt: Date,
+  ): Promise<void> {
+    return await this.transactionDatasource.updateMany(
+      ids,
+      status,
+      completedAt,
+    );
   }
 }

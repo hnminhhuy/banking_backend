@@ -42,7 +42,7 @@ export class TransactionController {
       undefined,
       undefined,
       query.bankId,
-      query.status,
+      [query.status],
       undefined,
     );
 

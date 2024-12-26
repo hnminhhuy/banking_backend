@@ -163,7 +163,7 @@ export class TransactionController {
         ? undefined
         : userBankAccountId,
       undefined,
-      query.status,
+      query.status ? [query.status] : undefined,
       query.category === TransactionCategory.DEBT
         ? TransactionType.DEBT
         : undefined,

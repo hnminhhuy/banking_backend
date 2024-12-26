@@ -22,7 +22,7 @@ export class ListTransactionUsecase {
     remitterId: string | undefined,
     beneficiaryId: string | undefined,
     bankId: string | undefined,
-    status: TransactionStatus | undefined,
+    statuses: TransactionStatus[] | undefined,
     type: TransactionType | undefined,
     relations: string[] | undefined = undefined,
   ): Promise<Page<TransactionModel>> {
@@ -33,7 +33,7 @@ export class ListTransactionUsecase {
       remitterId,
       beneficiaryId,
       bankId,
-      status,
+      statuses,
       type,
       relations,
     );

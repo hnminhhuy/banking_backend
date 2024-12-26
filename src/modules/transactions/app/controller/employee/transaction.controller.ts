@@ -70,7 +70,7 @@ export class TransactionController {
         ? undefined
         : user.bankAccount.id,
       undefined,
-      query.status,
+      query.status ? [query.status] : undefined,
       query.category === TransactionCategory.DEBT
         ? TransactionType.DEBT
         : undefined,
@@ -132,7 +132,7 @@ export class TransactionController {
       undefined,
       undefined,
       undefined,
-      query.status,
+      query.status ? [query.status] : undefined,
       undefined,
       ['remitterBank', 'beneficiaryBank'],
     );

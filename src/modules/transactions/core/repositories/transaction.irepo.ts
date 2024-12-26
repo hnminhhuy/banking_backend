@@ -25,7 +25,7 @@ export abstract class ITransactionRepo {
     remitterId: string | undefined,
     beneficiaryId: string | undefined,
     bankId: string | undefined,
-    status: TransactionStatus | undefined,
+    statuses: TransactionStatus[] | undefined,
     type: TransactionType | undefined,
     relations: string[] | undefined,
   ): Promise<Page<TransactionModel>>;
@@ -34,4 +34,10 @@ export abstract class ITransactionRepo {
     id: string,
     status: TransactionStatus | undefined,
   ): Promise<boolean>;
+
+  public abstract updateMany(
+    ids: string[],
+    status: TransactionStatus | undefined,
+    completedAt: Date,
+  ): Promise<void>;
 }

@@ -6,6 +6,7 @@ import {
   Brackets,
   FindOptionsOrder,
   FindOptionsWhere,
+  In,
   LessThanOrEqual,
   MoreThanOrEqual,
   Repository,
@@ -63,7 +64,7 @@ export class TransactionDatasource {
     remitterId: string | undefined,
     beneficiaryId: string | undefined,
     bankId: string | undefined,
-    status: TransactionStatus | undefined,
+    statuses: TransactionStatus[] | undefined,
     type: TransactionType | undefined,
     relations: string[] | undefined = undefined,
   ): Promise<Page<TransactionModel>> {
@@ -86,8 +87,8 @@ export class TransactionDatasource {
       }
     }
 
-    if (status) {
-      conditions['status'] = status;
+    if (statuses) {
+      conditions['status'] = In(statuses);
     }
 
     if (sortParams) {
@@ -161,5 +162,21 @@ export class TransactionDatasource {
       updatedAt: new Date(),
     });
     return result.affected > 0;
+  }
+
+  public async updateMany(
+    ids: string[],
+    status: TransactionStatus | undefined,
+    completedAt: Date,
+  ): Promise<void> {
+    const data = {
+      ...(status !== undefined && { status: status }),
+    };
+    if (Object.keys(data).length > 0) {
+      await this.transactionRepository.update(
+        { id: In(ids) },
+        { ...data, completedAt: completedAt },
+      );
+    }
   }
 }
