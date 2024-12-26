@@ -6,8 +6,11 @@ import { TransactionRepo } from './infra/data/repositories/transaction.repo';
 import { TransactionDatasource } from './infra/data/transaction.datasource';
 import {
   CreateTransactionUsecase,
+  CreditBeneficiaryUsecase,
   GetTransactionUsecase,
+  HandleTransactionFailureUsecase,
   ListTransactionUsecase,
+  ProcessInterBankTransactionUsecase,
 } from './core/usecases';
 import { TransactionController as TransactionControllerByCustomer } from './app/controller/customer/transaction.controller';
 import { AppModule } from '../../app/app.module';
@@ -61,6 +64,9 @@ import { CreateDebtTransactionUsecase } from './core/usecases/create_debt_transa
     CreateNormalTransactionUsecase,
     VerifyTransactionOtpUsecase,
     CreateDebtTransactionUsecase,
+    CreditBeneficiaryUsecase,
+    HandleTransactionFailureUsecase,
+    ProcessInterBankTransactionUsecase,
   ],
   exports: [
     CreateTransactionUsecase,
