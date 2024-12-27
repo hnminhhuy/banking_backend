@@ -98,6 +98,7 @@ export class UserControllerByEmployee {
       query.role,
       pageParams,
       sortParams,
+      ['bankAccount'],
     );
 
     const data = pageResult.data.map(
