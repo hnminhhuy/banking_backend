@@ -61,6 +61,8 @@ import { ContactModule } from 'src/modules/contact/contact.module';
     forwardRef(() => MailModule),
     forwardRef(() => BankConfigModule),
     forwardRef(() => OtpModule),
+    forwardRef(() => DebtModule),
+    forwardRef(() => ContactModule),
   ],
   controllers: [AppController],
   providers: [],
