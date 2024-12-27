@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryColumn,
   UpdateDateColumn,
@@ -10,6 +11,7 @@ import {
 import { BankAccountModel } from '../../../core/models/bank_account.model';
 import { UserEntity } from 'src/modules/user/infra/data/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { DebtEntity } from 'src/modules/debt/infra/data/entities/debt.entity';
 
 @Entity('bank_accounts')
 export class BankAccountEntity {
@@ -36,6 +38,12 @@ export class BankAccountEntity {
   @ApiProperty({ type: () => UserEntity })
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
+
+  @OneToMany(() => DebtEntity, (debt) => debt.reminderAccount)
+  reminderDebts: DebtEntity[];
+
+  @OneToMany(() => DebtEntity, (debt) => debt.debtorAccount)
+  debtorDebts: DebtEntity[];
 
   constructor(model: Partial<BankAccountModel>) {
     Object.assign(this, model);

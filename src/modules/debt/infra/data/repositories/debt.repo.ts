@@ -23,6 +23,10 @@ export class DebtRepo implements IDebtRepo {
     return this.debtDatasource.getDebt(key, value, relations);
   }
 
+  public getDebtWithUser(id: string): Promise<DebtModel | undefined> {
+    return this.debtDatasource.getDebtWithUser(id);
+  }
+
   public async list(
     conditions: Partial<DebtModelParams>,
     pageParams: PageParams,

@@ -33,10 +33,61 @@ export class DebtDatasource {
         query.leftJoinAndSelect(`debts.${relation}`, relation);
       });
     }
+
     const entity = await query.getOne();
     if (entity) {
       return new DebtModel(entity);
     }
+    return undefined;
+  }
+
+  async getDebtWithUser(id: string): Promise<DebtModel | undefined> {
+    const result = await this.debtRepository.query(
+      `
+    SELECT 
+      "debts"."id",
+      "debts"."created_at", 
+      "debts"."updated_at", 
+      "debts"."reminder_id", 
+      "debts"."debtor_id", 
+      "debts"."amount", 
+      "debts"."status", 
+      "debts"."message", 
+      "reminderUser"."fullname" AS "reminderFullName", 
+      "debtorUser"."fullname" AS "debtorFullName"
+    FROM "debts" "debts"
+    LEFT JOIN "bank_accounts" "reminderAccount" ON "reminderAccount"."id"="debts"."reminder_id"
+    LEFT JOIN "users" "reminderUser" ON "reminderUser"."id"="reminderAccount"."user_id"
+    LEFT JOIN "bank_accounts" "debtorAccount" ON "debtorAccount"."id"="debts"."debtor_id"
+    LEFT JOIN "users" "debtorUser" ON "debtorUser"."id"="debtorAccount"."user_id"
+    WHERE "debts"."id" = $1;
+  `,
+      [id],
+    );
+
+    const entity = result[0];
+
+    if (entity) {
+      // Log the full entity for debugging
+      console.log('Full entity:', entity);
+
+      // Manually map the aliased fields to the DebtModel
+      const debtModel = new DebtModel({
+        id: entity.id,
+        createdAt: entity.created_at,
+        updatedAt: entity.updated_at,
+        reminderId: entity.reminder_id,
+        debtorId: entity.debtor_id,
+        amount: entity.amount,
+        status: entity.status,
+        message: entity.message,
+        reminderFullName: entity.reminderFullName, // Use the alias
+        debtorFullName: entity.debtorFullName, // Use the alias
+      });
+
+      return debtModel;
+    }
+
     return undefined;
   }
 

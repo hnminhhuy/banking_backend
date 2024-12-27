@@ -3,6 +3,7 @@ import {
   Body,
   ConflictException,
   Controller,
+  ForbiddenException,
   HttpStatus,
   InternalServerErrorException,
   NotFoundException,
@@ -26,6 +27,7 @@ import {
   GetDebtUsecase,
   ListDebtUsecase,
 } from '../../core/usecases';
+import { GetDebtWithUserUsecase } from '../../core/usecases/get_debt_with_user.usecase';
 
 @ApiTags('Debt by Customer')
 @Controller({ path: 'api/customer/v1/debt' })
@@ -33,6 +35,7 @@ export class DebtController {
   constructor(
     private readonly createDebtUsecase: CreateDebtUsecase,
     private readonly getDebtUsecase: GetDebtUsecase,
+    private readonly getDebtWithUserUsecase: GetDebtWithUserUsecase,
     private readonly listDebtUsecase: ListDebtUsecase,
     private readonly getBankAccountUsecase: GetBankAccountUsecase,
     private readonly cancelDebtUsecase: CancelDebtUsecase,
@@ -74,11 +77,29 @@ export class DebtController {
   }
 
   @Route(DebtRoute.getDebt)
-  async getDebt(@Param() param: GetDebtDto) {
-    const debt = await this.getDebtUsecase.execute('id', param.id);
+  async getDebt(
+    @Req() req,
+    @Param() param: GetDebtDto,
+    @Query('includeUser') includeUser: boolean = false,
+  ) {
+    const debt = includeUser
+      ? await this.getDebtWithUserUsecase.execute(param.id)
+      : await this.getDebtUsecase.execute('id', param.id);
+
+    console.log('debt', debt);
     if (!debt) {
       throw new NotFoundException('Debt not found');
     }
+    const bankAccount = await this.getBankAccountUsecase.execute(
+      'id',
+      debt.reminderId,
+    );
+    if (!bankAccount) {
+      throw new NotFoundException('Bank Account not found');
+    }
+
+    if (req.user.authId !== bankAccount.userId)
+      throw new ForbiddenException('You are not authorized to get this debt');
     return {
       debt,
       statusCode: 200,

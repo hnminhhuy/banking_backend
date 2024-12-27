@@ -10,6 +10,8 @@ export abstract class IDebtRepo {
     relations: string[] | undefined,
   ): Promise<DebtModel | undefined>;
 
+  public abstract getDebtWithUser(id: string): Promise<DebtModel | undefined>;
+
   public abstract list(
     conditions: Partial<DebtModelParams>,
     pageParams: PageParams,
