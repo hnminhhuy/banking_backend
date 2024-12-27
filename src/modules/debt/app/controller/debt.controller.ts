@@ -28,6 +28,7 @@ import {
   ListDebtUsecase,
 } from '../../core/usecases';
 import { GetDebtWithUserUsecase } from '../../core/usecases/get_debt_with_user.usecase';
+import { ListDebtWithUserUsecase } from '../../core/usecases/list_debt_with_user.usecase';
 
 @ApiTags('Debt by Customer')
 @Controller({ path: 'api/customer/v1/debt' })
@@ -37,6 +38,7 @@ export class DebtController {
     private readonly getDebtUsecase: GetDebtUsecase,
     private readonly getDebtWithUserUsecase: GetDebtWithUserUsecase,
     private readonly listDebtUsecase: ListDebtUsecase,
+    private readonly listDebtWithUserUsecase: ListDebtWithUserUsecase,
     private readonly getBankAccountUsecase: GetBankAccountUsecase,
     private readonly cancelDebtUsecase: CancelDebtUsecase,
   ) {}
@@ -137,12 +139,19 @@ export class DebtController {
     } else if (query.category === DebtCategory.CREATED_FOR_ME) {
       conditions.debtorId = bankAccount.id;
     }
-
-    const pageResult = await this.listDebtUsecase.execute(
-      conditions,
-      pageParams,
-      sortParams,
-    );
+    console.log('Include user:', query.includeUser);
+    const pageResult =
+      query.includeUser?.toString() === 'true'
+        ? await this.listDebtWithUserUsecase.execute(
+            conditions,
+            pageParams,
+            sortParams,
+          )
+        : await this.listDebtUsecase.execute(
+            conditions,
+            pageParams,
+            sortParams,
+          );
 
     return {
       data: pageResult.data,

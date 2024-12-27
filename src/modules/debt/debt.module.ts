@@ -13,6 +13,7 @@ import {
   ListDebtUsecase,
 } from './core/usecases';
 import { GetDebtWithUserUsecase } from './core/usecases/get_debt_with_user.usecase';
+import { ListDebtWithUserUsecase } from './core/usecases/list_debt_with_user.usecase';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { GetDebtWithUserUsecase } from './core/usecases/get_debt_with_user.useca
     GetDebtUsecase,
     GetDebtWithUserUsecase,
     ListDebtUsecase,
+    ListDebtWithUserUsecase,
     CancelDebtUsecase,
   ],
   exports: [],

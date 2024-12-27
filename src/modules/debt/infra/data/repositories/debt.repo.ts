@@ -40,6 +40,17 @@ export class DebtRepo implements IDebtRepo {
       relations,
     );
   }
+  public async listDebtWithUser(
+    conditions: Partial<DebtModelParams>,
+    pageParams: PageParams,
+    sortParams: SortParams<DebtSort>,
+  ): Promise<Page<DebtModel>> {
+    return await this.debtDatasource.listDebtWithUser(
+      conditions,
+      pageParams,
+      sortParams,
+    );
+  }
 
   public async cancelDebt(debtId: string): Promise<boolean> {
     return await this.debtDatasource.cancelDebt(debtId);

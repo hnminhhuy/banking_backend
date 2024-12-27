@@ -91,6 +91,111 @@ export class DebtDatasource {
     return undefined;
   }
 
+  async listDebtWithUser(
+    conditions: Partial<DebtModelParams>,
+    pageParams: PageParams,
+    sortParams: SortParams<DebtSort>,
+  ): Promise<Page<DebtModel>> {
+    const whereConditions = [];
+    const queryParams = [];
+
+    for (const [key, value] of Object.entries(conditions)) {
+      if (value !== undefined) {
+        const normalizedKey = key === 'reminderId' ? 'reminder_id' : key;
+        whereConditions.push(
+          `"debts"."${normalizedKey}" = $${queryParams.length + 1}`,
+        );
+        queryParams.push(value);
+      }
+    }
+
+    const whereClause =
+      whereConditions.length > 0
+        ? `WHERE ${whereConditions.join(' AND ')}`
+        : 'WHERE 1=1';
+
+    let orderByClause = `"debts"."created_at" DESC`;
+
+    if (sortParams) {
+      const sortField = sortParams.sort;
+      const sortDirection = sortParams.direction === 'ASC' ? 'ASC' : 'DESC';
+
+      // Apply sorting based on the sort field and direction
+      if (sortField === DebtSort.CREATED_AT) {
+        orderByClause = `"debts"."created_at" ${sortDirection}`;
+      } else if (sortField === DebtSort.AMOUNT) {
+        orderByClause = `"debts"."amount" ${sortDirection}`;
+      }
+    }
+
+    // Main query to fetch debts with sorting
+    const query = `
+    SELECT 
+      "debts"."id", 
+      "debts"."created_at", 
+      "debts"."updated_at", 
+      "debts"."reminder_id", 
+      "debts"."debtor_id", 
+      "debts"."amount", 
+      "debts"."status", 
+      "debts"."message", 
+      "reminderUser"."fullname" AS "reminderFullName", 
+      "debtorUser"."fullname" AS "debtorFullName"
+    FROM "debts" "debts"
+    LEFT JOIN "bank_accounts" "reminderAccount" ON "reminderAccount"."id"="debts"."reminder_id"
+    LEFT JOIN "users" "reminderUser" ON "reminderUser"."id"="reminderAccount"."user_id"
+    LEFT JOIN "bank_accounts" "debtorAccount" ON "debtorAccount"."id"="debts"."debtor_id"
+    LEFT JOIN "users" "debtorUser" ON "debtorUser"."id"="debtorAccount"."user_id"
+    ${whereClause}
+    ORDER BY ${orderByClause}
+    LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2};
+  `;
+
+    queryParams.push(
+      pageParams.limit,
+      (pageParams.page - 1) * pageParams.limit,
+    );
+
+    const result = await this.debtRepository.query(query, queryParams);
+
+    let totalCount = 0;
+    if (pageParams.needTotalCount && !pageParams.onlyCount) {
+      const countQuery = `
+      SELECT COUNT(*)
+      FROM "debts" "debts"
+      LEFT JOIN "bank_accounts" "reminderAccount" ON "reminderAccount"."id"="debts"."reminder_id"
+      LEFT JOIN "users" "reminderUser" ON "reminderUser"."id"="reminderAccount"."user_id"
+      LEFT JOIN "bank_accounts" "debtorAccount" ON "debtorAccount"."id"="debts"."debtor_id"
+      LEFT JOIN "users" "debtorUser" ON "debtorUser"."id"="debtorAccount"."user_id"
+      ${whereClause}
+    `;
+
+      const countResult = await this.debtRepository.query(
+        countQuery,
+        queryParams.slice(0, 1),
+      );
+      totalCount = parseInt(countResult[0].count, 10);
+    }
+
+    const items = result.map(
+      (item) =>
+        new DebtModel({
+          id: item.id,
+          createdAt: item.created_at,
+          updatedAt: item.updated_at,
+          reminderId: item.reminder_id,
+          debtorId: item.debtor_id,
+          amount: item.amount,
+          status: item.status,
+          message: item.message,
+          reminderFullName: item.reminderFullName,
+          debtorFullName: item.debtorFullName,
+        }),
+    );
+
+    return new Page(pageParams.page, totalCount, items);
+  }
+
   async list(
     conditions: Partial<DebtModelParams>,
     pageParams: PageParams,
