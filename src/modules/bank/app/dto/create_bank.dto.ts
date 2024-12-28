@@ -7,4 +7,5 @@ export class CreateBankDto extends PickType(BankDto, [
   'shortName',
   'logoUrl',
   'publicKey',
+  'algorithm',
 ]) {}

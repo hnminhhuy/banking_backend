@@ -45,6 +45,11 @@ export class CreateAuthClientCommand {
         required: true,
         description: 'Bank public key',
       },
+      {
+        flags: '-al --algorithm <algorithm>',
+        required: true,
+        description: 'Hash alogrithm',
+      },
     ],
   })
   async createClient(options: CreateBankDto): Promise<void> {
@@ -54,6 +59,7 @@ export class CreateAuthClientCommand {
     bankDto.name = options.name.trim();
     bankDto.publicKey = options.publicKey.trim();
     bankDto.shortName = options.shortName.trim();
+    bankDto.algorithm = options.algorithm.trim();
 
     const errors = await validate(bankDto);
     if (errors.length > 0) {
@@ -73,6 +79,7 @@ export class CreateAuthClientCommand {
       shortName: bankDto.shortName,
       publicKey: bankDto.publicKey,
       logoUrl: bankDto.logoUrl,
+      algorithm: bankDto.algorithm,
     };
 
     const bank = await this.createBankUsecase.execute(bankParams);

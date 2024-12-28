@@ -11,6 +11,7 @@ import { TransactionSort } from '../enums/transaction_sort';
 import { SORT_DIRECTION } from '../../../../common/enums';
 import { TransactionStatus } from '../enums/transaction_status';
 import { UpdateTransactionsUsecase } from './update_transactions_status.usecase';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 export class HandleTimeoutTransactionUsecase {
@@ -21,7 +22,6 @@ export class HandleTimeoutTransactionUsecase {
 
   public async execute(): Promise<void> {
     const now = new Date();
-    console.log(now);
     const transactionTimeout = new Date(now.getTime() - 10 * 60 * 1000); // 2 phut
     const dateFilterParams = new DateFilter(
       undefined,

@@ -7,6 +7,7 @@ export interface BankModelParams extends BaseModelParams {
   shortName: string;
   publicKey: string;
   logoUrl: string | undefined;
+  algorithm: string;
 }
 
 export class BankModel extends BaseModel {
@@ -21,6 +22,9 @@ export class BankModel extends BaseModel {
 
   @ApiProperty()
   public readonly publicKey: string;
+
+  @ApiProperty()
+  public readonly alogrithm: string;
 
   @ApiPropertyOptional()
   public readonly logoUrl: string | undefined;
