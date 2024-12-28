@@ -141,7 +141,6 @@ export class DebtController {
     } else if (query.category === DebtCategory.CREATED_FOR_ME) {
       conditions.debtorId = bankAccount.id;
     }
-    console.log('Include user:', query.includeUser);
     const pageResult =
       query.includeUser?.toString() === 'true'
         ? await this.listDebtWithUserUsecase.execute(

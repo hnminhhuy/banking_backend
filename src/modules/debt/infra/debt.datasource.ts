@@ -101,7 +101,16 @@ export class DebtDatasource {
 
     for (const [key, value] of Object.entries(conditions)) {
       if (value !== undefined) {
-        const normalizedKey = key === 'reminderId' ? 'reminder_id' : key;
+        let normalizedKey = key;
+
+        // Normalizing 'reminderId' to 'reminder_id'
+        if (key === 'reminderId') {
+          normalizedKey = 'reminder_id';
+        }
+        // Normalizing 'debtorId' to 'debtor_id'
+        else if (key === 'debtorId') {
+          normalizedKey = 'debtor_id';
+        }
         whereConditions.push(
           `"debts"."${normalizedKey}" = $${queryParams.length + 1}`,
         );
