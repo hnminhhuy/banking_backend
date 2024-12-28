@@ -21,6 +21,7 @@ export class HandleTimeoutTransactionUsecase {
 
   public async execute(): Promise<void> {
     const now = new Date();
+    console.log(now);
     const transactionTimeout = new Date(now.getTime() - 10 * 60 * 1000); // 2 phut
     const dateFilterParams = new DateFilter(
       undefined,
