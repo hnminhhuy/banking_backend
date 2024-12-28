@@ -39,11 +39,11 @@ export class AuthController {
   async login(@Body() body: LoginDto) {
     const { captchaToken } = body;
 
-    // const isCaptchaValid =
-    //   await this.captchaService.verifyCaptcha(captchaToken);
+    const isCaptchaValid =
+      await this.captchaService.verifyCaptcha(captchaToken);
 
-    // if (!isCaptchaValid)
-    //   throw new ForbiddenException('CAPTCHA verification failed');
+    if (!isCaptchaValid)
+      throw new ForbiddenException('CAPTCHA verification failed');
 
     const bearerToken = await this.loginUsecase.execute(
       body.username,
