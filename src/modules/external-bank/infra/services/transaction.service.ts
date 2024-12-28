@@ -1,15 +1,15 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { AnotherBankService } from './another_bank.service';
+import { ExternalBankService } from './external_bank.service';
 import { TransactionModelParams } from '../../../transactions/core/models/transaction.model';
 
 @Injectable()
-export class TransactionService extends AnotherBankService {
+export class TransactionService extends ExternalBankService {
   async createTransaction(
     params: TransactionModelParams,
   ): Promise<Record<string, any>> {
     const response = await this.safeRequest(
       'POST',
-      `${this.getBaseUrl()}/api/another-bank/v1/transactions`,
+      `${this.getBaseUrl()}/api/external-bank/v1/transactions`,
       {
         id: params.id,
         remitterId: params.remitterId,

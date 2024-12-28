@@ -15,10 +15,7 @@ import { TransactionSort } from '../../../core/enums/transaction_sort';
 import { GetUserUsecase } from '../../../../user/core/usecases';
 import { UserRole } from '../../../../user/core/enums/user_role';
 import { TransactionCategory } from '../../../core/enums/transaction_category';
-import {
-  calculateAmountForBeneficiary,
-  calculateAmountForRemitter,
-} from '../../../core/helpers/calculate_amount';
+import { calBalanceChange } from '../../../core/helpers/calculate_amount';
 import { TransactionType } from '../../../core/enums/transaction_type';
 
 @ApiTags(`Employee \\ Transactions`)
@@ -88,9 +85,10 @@ export class TransactionController {
         transactionCategory = TransactionCategory.DEBT;
       }
 
-      const transactionAmount = isRemitter
-        ? calculateAmountForRemitter(transaction)
-        : calculateAmountForBeneficiary(transaction);
+      const transactionAmount = calBalanceChange(
+        transaction,
+        user.bankAccount.id,
+      );
 
       return {
         id: transaction.id,

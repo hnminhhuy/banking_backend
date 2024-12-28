@@ -7,14 +7,14 @@ import { Route } from '../../../../../decorators';
 import { DepositDto, GetBankAccountDto } from '../../dtos';
 import { BankAccountRouteByCustomer } from '../../routes/customer/bank_account.route';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { GetAnotherBankAccountInfoUsecase } from '../../../../another-bank/core/usecases/bank_account/get_another_bank_user.usecase';
+import { GetExternalBankAccountInfoUsecase } from '../../../../external-bank/core/usecases/bank_account/get_external_bank_user.usecase';
 
 @Controller({ path: 'api/customer/v1/bank-accounts' })
 @ApiBearerAuth()
 export class BankAccountController {
   constructor(
     private readonly getBankAccountUsecase: GetBankAccountUsecase,
-    private readonly getAnotherBankAccountUsecase: GetAnotherBankAccountInfoUsecase,
+    private readonly getExternalBankAccountUsecase: GetExternalBankAccountInfoUsecase,
     private readonly changeBalanceUsecase: ChangeBalanceUsecase,
   ) {}
 
@@ -37,7 +37,7 @@ export class BankAccountController {
         fullName: bankAccount.user?.fullName,
       };
     } else {
-      result = (await this.getAnotherBankAccountUsecase.execute(body.id)).data;
+      result = (await this.getExternalBankAccountUsecase.execute(body.id)).data;
     }
 
     return {

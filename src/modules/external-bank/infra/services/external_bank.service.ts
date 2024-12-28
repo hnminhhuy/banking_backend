@@ -8,18 +8,18 @@ import { Cache } from 'cache-manager';
 import { throwError } from '../../../../common/helpers/throw_error';
 
 @Injectable()
-export class AnotherBankService {
+export class ExternalBankService {
   constructor(
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
   ) {
     const requiredConfigs = [
-      'another_bank.apiUrl',
-      'another_bank.auth.url',
-      'another_bank.auth.clientId',
-      'another_bank.auth.clientSecret',
-      'another_bank.auth.refreshUrl',
+      'external_bank.apiUrl',
+      'external_bank.auth.url',
+      'external_bank.auth.clientId',
+      'external_bank.auth.clientSecret',
+      'external_bank.auth.refreshUrl',
     ];
     for (const key of requiredConfigs) {
       if (!this.configService.get(key)) {
@@ -30,7 +30,7 @@ export class AnotherBankService {
 
   protected getBaseUrl(): string {
     return (
-      this.configService.get<string>('another_bank.apiUrl') ?? throwError()
+      this.configService.get<string>('external_bank.apiUrl') ?? throwError()
     );
   }
 
@@ -89,34 +89,34 @@ export class AnotherBankService {
   }
 
   protected async delCacheAccessToken(): Promise<void> {
-    await this.cacheManager.del('another_bank_access_token');
+    await this.cacheManager.del('external_bank_access_token');
   }
 
   protected async getCacheAccessToken(): Promise<
     Record<string, any> | undefined
   > {
     const getCache = await this.cacheManager.get<string>(
-      'another_bank_access_token',
+      'external_bank_access_token',
     );
     return getCache ? JSON.parse(getCache) : undefined;
   }
 
   protected async delCacheRefreshToken(): Promise<void> {
-    await this.cacheManager.del('another_bank_refresh_token');
+    await this.cacheManager.del('external_bank_refresh_token');
   }
 
   protected async getCacheRefreshToken(): Promise<
     Record<string, any> | undefined
   > {
     const getCache = await this.cacheManager.get<string>(
-      'another_bank_refresh_token',
+      'external_bank_refresh_token',
     );
     return getCache ? JSON.parse(getCache) : undefined;
   }
 
   protected async cacheAccessToken(token: Record<string, any>): Promise<void> {
     await this.cacheManager.set(
-      'another_bank_access_token',
+      'external_bank_access_token',
       JSON.stringify({
         accessToken: token.accessToken,
         accessTokenExpiresAt: token.accessTokenExpiresAt,
@@ -129,7 +129,7 @@ export class AnotherBankService {
 
   protected async cacheRefreshToken(token: Record<string, any>): Promise<void> {
     await this.cacheManager.set(
-      'another_bank_refresh_token',
+      'external_bank_refresh_token',
       JSON.stringify({
         refreshToken: token.refreshToken,
         refreshTokenExpiresAt: token.refreshTokenExpiresAt,
@@ -151,15 +151,15 @@ export class AnotherBankService {
     ) {
       const response = await lastValueFrom(
         this.httpService.post(
-          this.configService.get<string>('another_bank.auth.url') ??
+          this.configService.get<string>('external_bank.auth.url') ??
             throwError(),
           {
             clientId:
-              this.configService.get<string>('another_bank.auth.clientId') ??
+              this.configService.get<string>('external_bank.auth.clientId') ??
               throwError(),
             clientSecret:
               this.configService.get<string>(
-                'another_bank.auth.clientSecret',
+                'external_bank.auth.clientSecret',
               ) ?? throwError(),
           },
         ),
@@ -179,7 +179,7 @@ export class AnotherBankService {
     if (new Date(accessTokenInfo.accessTokenExpiresAt) < new Date()) {
       const response = await lastValueFrom(
         this.httpService.post(
-          this.configService.get<string>('another_bank.auth.refreshUrl') ??
+          this.configService.get<string>('external_bank.auth.refreshUrl') ??
             throwError(),
           {},
           {

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { IBankAccountRepo } from '../../repositories/bank_account.irepo';
 
 @Injectable()
-export class GetAnotherBankAccountInfoUsecase {
+export class GetExternalBankAccountInfoUsecase {
   constructor(private readonly bankAccountRepo: IBankAccountRepo) {}
 
   async execute(id: string): Promise<any> {

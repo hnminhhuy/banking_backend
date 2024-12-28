@@ -3,7 +3,7 @@ import { TransactionModelParams } from '../../../../transactions/core/models/tra
 import { ITransactionRepo } from '../../repositories/transaction.irepo';
 
 @Injectable()
-export class CreateAnotherBankTransactionUsecase {
+export class CreateExternalBankTransactionUsecase {
   constructor(private readonly transactionRepo: ITransactionRepo) {}
 
   async execute(params: TransactionModelParams): Promise<Record<string, any>> {

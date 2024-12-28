@@ -22,7 +22,7 @@ import { UserModule } from '../user/user.module';
 import { BankConfigModule } from '../bank_config/bank_config.module';
 import { OtpModule } from '../otp/otp.module';
 import { TransactionController as TransactionControllerByEmployee } from './app/controller/employee/transaction.controller';
-import { AnotherBankModule } from '../another-bank/another_bank.module';
+import { ExternalBankModule } from '../external-bank/external_bank.module';
 import { BankModule } from '../bank/bank.module';
 import { TransactionController as TransactionControllerByAdmin } from './app/controller/admin/transaction.controller';
 import { DebtModule } from '../debt/debt.module';
@@ -46,7 +46,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     forwardRef(() => UserModule),
     forwardRef(() => BankConfigModule),
     forwardRef(() => OtpModule),
-    forwardRef(() => AnotherBankModule),
+    forwardRef(() => ExternalBankModule),
     forwardRef(() => BankModule),
     forwardRef(() => DebtModule),
   ],

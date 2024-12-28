@@ -18,7 +18,7 @@ import { ListBankAccountsUsecase } from './core/usecases/list_bank_account.useca
 import { UserModule } from '../user/user.module';
 import { GetMaxBankAccountUsecase } from './core/usecases/get_max_bank_account.usecase';
 import { CacheModule } from '@nestjs/cache-manager';
-import { AnotherBankModule } from '../another-bank/another_bank.module';
+import { ExternalBankModule } from '../external-bank/external_bank.module';
 
 @Module({
   imports: [
@@ -26,7 +26,7 @@ import { AnotherBankModule } from '../another-bank/another_bank.module';
     CacheModule.register(),
     forwardRef(() => BankModule),
     forwardRef(() => UserModule),
-    forwardRef(() => AnotherBankModule),
+    forwardRef(() => ExternalBankModule),
   ],
   controllers: [
     BankAccountControllerByCustomer,

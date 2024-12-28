@@ -3,7 +3,7 @@ import { IRouteParams } from '../../../../decorators';
 import { GetBankAccountDto } from '../../../bank_account/app/dtos';
 import { BankAccountModel } from '../../../bank_account/core/models/bank_account.model';
 
-export const BankAccountByAnotherBank = {
+export const BankAccountRouteByExternalBank = {
   getBankAccount: <IRouteParams>{
     path: '/:id',
     method: RequestMethod.GET,

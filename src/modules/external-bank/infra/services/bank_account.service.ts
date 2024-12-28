@@ -1,12 +1,12 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { AnotherBankService } from './another_bank.service';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { ExternalBankService } from './external_bank.service';
 
 @Injectable()
-export class BankAccountService extends AnotherBankService {
+export class BankAccountService extends ExternalBankService {
   async getUser(id: string): Promise<Record<string, any>> {
     const response = await this.safeRequest(
       'GET',
-      `${this.getBaseUrl()}/api/another-bank/v1/bank-accounts/${id}`,
+      `${this.getBaseUrl()}/api/external-bank/v1/bank-accounts/${id}`,
       {},
       {},
     );

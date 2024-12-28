@@ -12,19 +12,19 @@ import { Transform } from 'class-transformer';
 import { parseBoolean } from '../../../../common/helpers/parse_boolean';
 import { TransactionStatus } from '../../core/enums/transaction_status';
 import { TransactionType } from '../../core/enums/transaction_type';
-import { DifferentFieldsValidator } from '../../../../decorators/different_field.decorator';
+import { ValidateFieldDifferent } from '../../../../decorators/different_field.decorator';
 
 export class TransactionDto extends BaseDto {
   @ApiProperty()
   @IsString()
-  @Validate(DifferentFieldsValidator, ['beneficiaryId'], {
+  @Validate(ValidateFieldDifferent, ['beneficiaryId'], {
     message: 'remitterId must be different from beneficiaryId',
   })
   remitterId!: string;
 
   @ApiProperty()
   @IsString()
-  @Validate(DifferentFieldsValidator, ['remitterId'], {
+  @Validate(ValidateFieldDifferent, ['remitterId'], {
     message: 'beneficiaryId must be different from remitterId',
   })
   beneficiaryId!: string;

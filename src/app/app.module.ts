@@ -27,12 +27,12 @@ import { SetCacheBlockedUserUsecase } from 'src/modules/redis_cache/core/usecase
 import { RedisCacheModule } from 'src/modules/redis_cache/redis_cache.module';
 import { ConsoleModule } from 'nestjs-console';
 import appConfig from '../config/app.config';
-import anotherBankConfig from '../config/another-bank.config';
-import { AnotherBankModule } from '../modules/another-bank/another_bank.module';
+import { ExternalBankModule } from '../modules/external-bank/external_bank.module';
 import { OtpModule } from 'src/modules/otp/otp.module';
 import bankConfig from '../config/bank.config';
 import { DebtModule } from 'src/modules/debt/debt.module';
 import { ContactModule } from 'src/modules/contact/contact.module';
+import externalBankConfig from '../config/external-bank.config';
 
 @Module({
   imports: [
@@ -48,7 +48,7 @@ import { ContactModule } from 'src/modules/contact/contact.module';
         redisConfig,
         bullmqConfig,
         appConfig,
-        anotherBankConfig,
+        externalBankConfig,
         bankConfig,
       ],
     }),
@@ -86,8 +86,10 @@ import { ContactModule } from 'src/modules/contact/contact.module';
     forwardRef(() => AuthModule),
     forwardRef(() => TransactionModule),
     forwardRef(() => BankConfigModule),
-    forwardRef(() => AnotherBankModule),
+    forwardRef(() => ExternalBankModule),
     forwardRef(() => OtpModule),
+    forwardRef(() => DebtModule),
+    forwardRef(() => ContactModule),
   ],
   controllers: [AppController],
   providers: [],

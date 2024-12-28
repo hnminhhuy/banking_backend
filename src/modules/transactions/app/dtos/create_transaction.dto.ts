@@ -10,7 +10,7 @@ export class CreateTransactionDto extends PickType(TransactionDto, [
   'remitterPaidFee',
 ]) {}
 
-export class CreateTransactionForAnotherBankDto extends PickType(
+export class CreateTransactionForExternalBankDto extends PickType(
   TransactionDto,
   [
     'id',

@@ -25,10 +25,7 @@ import { Transactional } from 'typeorm-transactional';
 import { GetTransactionDto } from '../../dtos/get_transaction.dto';
 import { GetUserUsecase } from '../../../../user/core/usecases';
 import { TransactionCategory } from '../../../core/enums/transaction_category';
-import {
-  calculateAmountForBeneficiary,
-  calculateAmountForRemitter,
-} from '../../../core/helpers/calculate_amount';
+import { calBalanceChange } from '../../../core/helpers/calculate_amount';
 import { PageParams, SortParams } from '../../../../../common/models';
 import { TransactionSort } from '../../../core/enums/transaction_sort';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -120,9 +117,7 @@ export class TransactionController {
       ? TransactionCategory.OUTCOMING
       : TransactionCategory.INCOMING;
 
-    const transactionAmount = isRemitter
-      ? calculateAmountForRemitter(transaction)
-      : calculateAmountForBeneficiary(transaction);
+    const transactionAmount = calBalanceChange(transaction, userBankAccountId);
 
     return {
       id: transaction.id,
@@ -181,9 +176,10 @@ export class TransactionController {
         transactionCategory = TransactionCategory.DEBT;
       }
 
-      const transactionAmount = isRemitter
-        ? calculateAmountForRemitter(transaction)
-        : calculateAmountForBeneficiary(transaction);
+      const transactionAmount = calBalanceChange(
+        transaction,
+        userBankAccountId,
+      );
 
       return {
         id: transaction.id,

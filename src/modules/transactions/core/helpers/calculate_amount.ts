@@ -1,15 +1,25 @@
 import { TransactionModel } from '../models/transaction.model';
 
-export function calculateAmountForRemitter(transaction: TransactionModel) {
-  if (transaction.remitterPaidFee) {
-    return (transaction.amount + transaction.transactionFee) * -1;
-  }
-  return transaction.amount * -1;
-}
+export function calBalanceChange(
+  transaction: TransactionModel,
+  affectedUserId: string,
+) {
+  const amount =
+    transaction.amount * (transaction.remitterId === affectedUserId ? -1 : 1);
 
-export function calculateAmountForBeneficiary(transaction: TransactionModel) {
-  if (transaction.remitterPaidFee) {
-    return transaction.amount;
+  let fee = 0;
+
+  if (
+    transaction.remitterId === affectedUserId &&
+    transaction.remitterPaidFee
+  ) {
+    fee = -transaction.transactionFee;
+  } else if (
+    transaction.beneficiaryId === affectedUserId &&
+    !transaction.remitterPaidFee
+  ) {
+    fee = -transaction.transactionFee;
   }
-  return transaction.amount + transaction.transactionFee;
+
+  return amount + fee;
 }

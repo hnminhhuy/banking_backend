@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { TransactionStatus } from '../enums/transaction_status';
-import { CreateAnotherBankTransactionUsecase } from '../../../another-bank/core/usecases/transactions/create_another_bank_transaction.usecase';
+import { CreateExternalBankTransactionUsecase } from '../../../external-bank/core/usecases/transactions/create_external_bank_transaction.usecase';
 import { BankCode } from '../../../bank/core/enums/bank_code';
 import { GetBankUsecase } from '../../../bank/core/usecases';
 import { UpdateTransactionUsecase } from './update_transaction.usecase';
@@ -9,7 +9,7 @@ import { UpdateTransactionUsecase } from './update_transaction.usecase';
 export class ProcessInterBankTransactionUsecase {
   constructor(
     private readonly getBankUsecase: GetBankUsecase,
-    private readonly createAnotherBankTransactionUsecase: CreateAnotherBankTransactionUsecase,
+    private readonly createExternalBankTransactionUsecase: CreateExternalBankTransactionUsecase,
     private readonly updateTransactionStatusUsecase: UpdateTransactionUsecase,
     private readonly bankCode: BankCode,
   ) {}
@@ -17,20 +17,20 @@ export class ProcessInterBankTransactionUsecase {
   async execute(transaction: any): Promise<void> {
     const { id, beneficiaryBankId } = transaction;
 
-    const anotherBank = await this.getBankUsecase.execute(
+    const externalBank = await this.getBankUsecase.execute(
       'id',
       beneficiaryBankId,
     );
-    if (!anotherBank) {
+    if (!externalBank) {
       throw new BadRequestException(
         `Bank with ID ${beneficiaryBankId} not found`,
       );
     }
 
-    if (anotherBank.code === this.bankCode.ANOTHER_BANK) {
+    if (externalBank.code === this.bankCode.EXTERNAL_BANK) {
       try {
         const res =
-          await this.createAnotherBankTransactionUsecase.execute(transaction);
+          await this.createExternalBankTransactionUsecase.execute(transaction);
         if (res.data) {
           await this.updateTransactionStatusUsecase.execute(
             id,

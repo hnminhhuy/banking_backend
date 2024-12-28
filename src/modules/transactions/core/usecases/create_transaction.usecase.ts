@@ -27,9 +27,7 @@ export class CreateTransactionUsecase {
       | 'id'
     >;
 
-    params['status'] = !params['status']
-      ? TransactionStatus.CREATED
-      : params['status'];
+    params['status'] = TransactionStatus.CREATED;
 
     const transaction = new TransactionModel(params as CreateTransactionParams);
 

@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { GetBankAccountUsecase } from '../../../bank_account/core/usecases';
 import { GetBankUsecase } from '../../../bank/core/usecases';
-import { GetAnotherBankAccountInfoUsecase } from '../../../another-bank/core/usecases/bank_account/get_another_bank_user.usecase';
+import { GetExternalBankAccountInfoUsecase } from '../../../external-bank/core/usecases/bank_account/get_external_bank_user.usecase';
 import { GetConfigUsecase } from '../../../bank_config/core/usecase';
 import { CreateOtpUsecase } from '../../../otp/core/usecases';
 import { CreateTransactionUsecase } from './create_transaction.usecase';
@@ -15,18 +15,37 @@ import {
 } from '../models/transaction.model';
 import { TransactionType } from '../enums/transaction_type';
 import { OtpType } from '../../../otp/core/enums/otpType.enum';
+import { throwError } from '../../../../common/helpers/throw_error';
 
 @Injectable()
 export class CreateNormalTransactionUsecase {
+  private externalFee = 0;
+  private internalFee = 0;
+
   constructor(
     private readonly getBankAccountUsecase: GetBankAccountUsecase,
     private readonly getBankUsecase: GetBankUsecase,
-    private readonly getAnotherBankAccountInfoUsecase: GetAnotherBankAccountInfoUsecase,
+    private readonly getExternalBankAccountInfoUsecase: GetExternalBankAccountInfoUsecase,
     private readonly getConfigUsecase: GetConfigUsecase,
     private readonly createOtpUsecase: CreateOtpUsecase,
     private readonly createTransactionUsecase: CreateTransactionUsecase,
     private readonly bankCode: BankCode,
-  ) {}
+  ) {
+    this.initializeConfigValues();
+  }
+
+  private async initializeConfigValues(): Promise<void> {
+    try {
+      const [externalConfig, internalConfig] = await Promise.all([
+        this.getConfigUsecase.execute(ConfigKey.EXTERNAL_TRANSACTION_FEE),
+        this.getConfigUsecase.execute(ConfigKey.INTERNAL_TRANSACTION_FEE),
+      ]);
+      this.externalFee = externalConfig.getValue();
+      this.internalFee = internalConfig.getValue();
+    } catch (error) {
+      throwError('Error initializing fee config');
+    }
+  }
 
   public async execute(
     remitter: BankAccountModel,
@@ -51,27 +70,19 @@ export class CreateNormalTransactionUsecase {
     let fee = undefined;
 
     switch (beneficiaryBank.code) {
-      case this.bankCode.ANOTHER_BANK:
-        beneficiary = await this.getAnotherBankAccountInfoUsecase.execute(
+      case this.bankCode.EXTERNAL_BANK:
+        fee = this.externalFee;
+        beneficiary = await this.getExternalBankAccountInfoUsecase.execute(
           createTransactionDto.beneficiaryId,
         );
-        fee = (
-          await this.getConfigUsecase.execute(
-            ConfigKey.EXTERNAL_TRANSACTION_FEE,
-          )
-        ).getValue();
         break;
       case this.bankCode.DEFAULT:
+        fee = this.internalFee;
         beneficiary = await this.getBankAccountUsecase.execute(
           'id',
           createTransactionDto.beneficiaryId,
           ['user'],
         );
-        fee = (
-          await this.getConfigUsecase.execute(
-            ConfigKey.INTERNAL_TRANSACTION_FEE,
-          )
-        ).getValue();
         break;
       default:
         throw new BadRequestException('Invalid beneficiary bank id');

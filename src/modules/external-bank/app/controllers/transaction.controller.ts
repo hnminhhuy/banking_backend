@@ -9,8 +9,8 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateTransactionUsecase } from '../../../transactions/core/usecases';
 import { AuthGuard } from '@nestjs/passport';
 import { Route } from '../../../../decorators';
-import { TransactionRouteByAnotherBank } from '../routes/transaction.route';
-import { CreateTransactionForAnotherBankDto } from '../../../transactions/app/dtos';
+import { TransactionRouteByExternalBank } from '../routes/transaction.route';
+import { CreateTransactionForExternalBankDto } from '../../../transactions/app/dtos';
 import { TransactionModelParams } from '../../../transactions/core/models/transaction.model';
 import { TransactionType } from '../../../transactions/core/enums/transaction_type';
 import { TransactionStatus } from '../../../transactions/core/enums/transaction_status';
@@ -20,8 +20,8 @@ import { BankCode } from '../../../bank/core/enums/bank_code';
 import { ChangeBalanceUsecase } from '../../../bank_account/core/usecases';
 import { Transactional } from 'typeorm-transactional';
 
-@ApiTags(`Another Bank`)
-@Controller({ path: 'api/another-bank/v1/transactions' })
+@ApiTags(`External Bank`)
+@Controller({ path: 'api/external-bank/v1/transactions' })
 @ApiBearerAuth()
 @UseGuards(AuthGuard('jwt_bank'))
 export class TransactionController {
@@ -34,10 +34,10 @@ export class TransactionController {
   ) {}
 
   @Transactional()
-  @Route(TransactionRouteByAnotherBank.createTransaction)
+  @Route(TransactionRouteByExternalBank.createTransaction)
   async create(
     @Req() req: any,
-    @Body() body: CreateTransactionForAnotherBankDto,
+    @Body() body: CreateTransactionForExternalBankDto,
   ) {
     const beneficiaryBank = await this.getBankUsecase.execute(
       'code',

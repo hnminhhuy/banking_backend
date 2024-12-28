@@ -5,7 +5,7 @@ import {
 } from 'class-validator';
 
 @ValidatorConstraint({ name: 'DifferentFields', async: false })
-export class DifferentFieldsValidator implements ValidatorConstraintInterface {
+export class ValidateFieldDifferent implements ValidatorConstraintInterface {
   validate(value: any, args: ValidationArguments) {
     const object = args.object as any;
     const relatedPropertyName = args.constraints[0];
