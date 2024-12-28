@@ -30,8 +30,8 @@ export class TransactionDatasource {
   ) {}
 
   public async create(transaction: TransactionModel): Promise<void> {
-    const newUser = this.transactionRepository.create(transaction);
-    await this.transactionRepository.insert(newUser);
+    const newTransaction = this.transactionRepository.create(transaction);
+    await this.transactionRepository.insert(newTransaction);
   }
 
   public async get(
@@ -157,9 +157,8 @@ export class TransactionDatasource {
       completedAt:
         status === TransactionStatus.SUCCESS ||
         status === TransactionStatus.FAILED
-          ? new Date()
+          ? new Date().toUTCString()
           : undefined,
-      updatedAt: new Date(),
     });
     return result.affected > 0;
   }

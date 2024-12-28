@@ -63,10 +63,7 @@ export class TransactionController {
       body,
     );
 
-    return {
-      data: transaction,
-      statusCode: HttpStatus.CREATED,
-    };
+    return transaction;
   }
 
   @Route(TransactionRouteByCustomer.verifyOtp)

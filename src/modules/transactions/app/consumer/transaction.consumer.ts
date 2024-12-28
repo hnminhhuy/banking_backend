@@ -44,26 +44,20 @@ export class TransactionConsumer extends WorkerHost {
       ? amount
       : amount - transactionFee;
 
-    try {
-      await this.changeBalanceUsecase.execute(remitterId, -remitterAmount);
+    await this.changeBalanceUsecase.execute(remitterId, -remitterAmount);
 
-      if (remitterBankId === beneficiaryBankId) {
-        await this.creditBeneficiaryUsecase.execute(
-          id,
-          beneficiaryId,
-          beneficiaryAmount,
-        );
-      } else {
-        await this.processInterBankTransactionUsecase.execute(transaction);
-      }
+    if (remitterBankId === beneficiaryBankId) {
+      await this.creditBeneficiaryUsecase.execute(
+        id,
+        beneficiaryId,
+        beneficiaryAmount,
+      );
+    } else {
+      await this.processInterBankTransactionUsecase.execute(transaction);
+    }
 
-      if (type === TransactionType.DEBT) {
-        await this.updateDebtUsecase.execute(debtId, DebtStatus.Settled);
-      }
-    } catch (error) {
-      await this.changeBalanceUsecase.execute(remitterId, remitterAmount);
-
-      await this.handleTransactionFailureUsecase.execute(id, error);
+    if (type === TransactionType.DEBT) {
+      await this.updateDebtUsecase.execute(debtId, DebtStatus.Settled);
     }
   }
 }
