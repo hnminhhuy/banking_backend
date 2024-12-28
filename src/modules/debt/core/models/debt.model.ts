@@ -9,6 +9,8 @@ export interface DebtModelParams extends BaseModelParams {
   amount: number;
   status?: DebtStatus;
   message: string | undefined;
+  reminderFullName?: string;
+  debtorFullName?: string;
 }
 
 export class DebtModel extends BaseModel {
@@ -26,6 +28,12 @@ export class DebtModel extends BaseModel {
 
   @ApiPropertyOptional()
   message: string | undefined;
+
+  @ApiPropertyOptional()
+  public reminderFullName?: string;
+
+  @ApiPropertyOptional()
+  public debtorFullName?: string;
 
   constructor(partial: Partial<DebtModel>) {
     super(partial);

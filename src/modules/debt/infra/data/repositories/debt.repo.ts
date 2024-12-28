@@ -24,6 +24,10 @@ export class DebtRepo implements IDebtRepo {
     return this.debtDatasource.getDebt(key, value, relations);
   }
 
+  public getDebtWithUser(id: string): Promise<DebtModel | undefined> {
+    return this.debtDatasource.getDebtWithUser(id);
+  }
+
   public async list(
     conditions: Partial<DebtModelParams>,
     pageParams: PageParams,
@@ -35,6 +39,17 @@ export class DebtRepo implements IDebtRepo {
       pageParams,
       sortParams,
       relations,
+    );
+  }
+  public async listDebtWithUser(
+    conditions: Partial<DebtModelParams>,
+    pageParams: PageParams,
+    sortParams: SortParams<DebtSort>,
+  ): Promise<Page<DebtModel>> {
+    return await this.debtDatasource.listDebtWithUser(
+      conditions,
+      pageParams,
+      sortParams,
     );
   }
 

@@ -19,6 +19,7 @@ import { UserModule } from '../user/user.module';
 import { GetMaxBankAccountUsecase } from './core/usecases/get_max_bank_account.usecase';
 import { CacheModule } from '@nestjs/cache-manager';
 import { ExternalBankModule } from '../external-bank/external_bank.module';
+import { GetBankAccountWithUserUsecase } from './core/usecases/get_bank_account_with_user.usecase';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { ExternalBankModule } from '../external-bank/external_bank.module';
     BankAccountDatasource,
     CreateBankAccountUsecase,
     GetBankAccountUsecase,
+    GetBankAccountWithUserUsecase,
     ChangeBalanceUsecase,
     ListBankAccountsUsecase,
     GetMaxBankAccountUsecase,

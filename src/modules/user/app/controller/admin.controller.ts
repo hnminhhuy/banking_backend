@@ -83,7 +83,7 @@ export class UserControllerByAdmin {
       sortParams,
     );
     const data = users.data.map(
-      ({ password, isBlocked, createdBy, ...userData }) => userData,
+      ({ password, createdBy, ...userData }) => userData,
     );
 
     return {

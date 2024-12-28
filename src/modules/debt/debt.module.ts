@@ -16,6 +16,8 @@ import { TransactionModule } from '../transactions/transaction.module';
 import { BankConfigModule } from '../bank_config/bank_config.module';
 import { OtpModule } from '../otp/otp.module';
 import { UpdateDebtUsecase } from './core/usecases/update_debt.usecase';
+import { GetDebtWithUserUsecase } from './core/usecases/get_debt_with_user.usecase';
+import { ListDebtWithUserUsecase } from './core/usecases/list_debt_with_user.usecase';
 
 @Module({
   imports: [
@@ -34,7 +36,9 @@ import { UpdateDebtUsecase } from './core/usecases/update_debt.usecase';
     DebtDatasource,
     CreateDebtUsecase,
     GetDebtUsecase,
+    GetDebtWithUserUsecase,
     ListDebtUsecase,
+    ListDebtWithUserUsecase,
     CancelDebtUsecase,
     UpdateDebtUsecase,
   ],
