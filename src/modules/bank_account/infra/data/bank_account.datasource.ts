@@ -53,7 +53,7 @@ export class BankAccountDatasource {
 
     // Trả về kết quả dưới dạng BankAccountUserModel
     return new BankAccountUserModel({
-      bankId: result.bank_accounts_id,
+      id: result.bank_accounts_id,
       fullname: result.fullname,
     });
   }

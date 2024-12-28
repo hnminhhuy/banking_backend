@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class BankAccountUserModel {
   @ApiProperty()
-  bankId!: string;
+  id!: string;
 
   @ApiProperty()
   fullname!: string;
