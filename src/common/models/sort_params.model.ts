@@ -10,7 +10,7 @@ export class SortParams<T> {
   })
   public readonly direction: 'ASC' | 'DESC';
 
-  constructor(sort: T, direction: string | undefined) {
+  constructor(sort: T | undefined, direction: string | undefined) {
     this.sort = sort;
     this.direction = <'ASC' | 'DESC'>direction?.toUpperCase() ?? 'ASC';
   }

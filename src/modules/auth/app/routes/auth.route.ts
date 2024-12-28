@@ -27,4 +27,13 @@ export default {
     method: RequestMethod.POST,
     secure: true,
   },
+  oauthToken: <IRouteParams>{
+    path: 'oauth/token',
+    method: RequestMethod.POST,
+    secure: false,
+  },
+  refreshOAuthToken: <IRouteParams>{
+    path: 'oauth/token/refresh',
+    method: RequestMethod.POST,
+  },
 };

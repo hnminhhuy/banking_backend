@@ -6,7 +6,7 @@ import authConfig from 'src/config/auth.config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { UserModule } from '../user/user.module';
-import { AuthController } from './app/controller/auth.controller';
+import { AuthController as AuthControllerByUser } from './app/controller/user/auth.controller';
 import { IRefreshTokenRepo } from './core/repositories/refresh_token.irepo';
 import { RefreshTokenRepo } from './infra/data/repositories/refresh_token.repo';
 import { RefreshTokenDatasource } from './infra/data/refresh_token.datasource';
@@ -26,6 +26,10 @@ import {
 } from './core/usecases';
 import { AppModule } from 'src/app/app.module';
 import { RedisCacheModule } from '../redis_cache/redis_cache.module';
+import { GetOAuthTokenUsecase } from './core/usecases/login_bank.usecase';
+import { BankModule } from '../bank/bank.module';
+import { AuthController } from './app/controller/bank/auth.controller';
+import { JwtBankStrategy } from './strategies/jwt_bank.strategy';
 import { OtpModule } from '../otp/otp.module';
 import { CaptchaService } from './core/usecases/captcha.service';
 import { HttpModule } from '@nestjs/axios';
@@ -49,12 +53,14 @@ import { HttpModule } from '@nestjs/axios';
     forwardRef(() => RedisCacheModule),
     forwardRef(() => UserModule),
     forwardRef(() => AppModule),
+    forwardRef(() => BankModule),
     forwardRef(() => OtpModule),
   ],
-  controllers: [AuthController],
+  controllers: [AuthControllerByUser, AuthController],
   providers: [
     RoleAuthGuard,
     JwtUserStrategy,
+    JwtBankStrategy,
     {
       provide: IRefreshTokenRepo,
       useClass: RefreshTokenRepo,
@@ -68,6 +74,7 @@ import { HttpModule } from '@nestjs/axios';
     GetRefreshTokenUsecase,
     CreateAccessTokenUsecase,
     LoginUsecase,
+    GetOAuthTokenUsecase,
     //Reset password
     RequestOtpResetPasswordUsecase,
     GenerateResetPasswordTokenUsecase,

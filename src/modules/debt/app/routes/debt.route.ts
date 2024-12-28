@@ -64,7 +64,12 @@ export const DebtRoute = {
       ],
     },
   },
-
+  settleDebt: <IRouteParams>{
+    path: '/:id/settle',
+    method: RequestMethod.POST,
+    secure: true,
+    swaggerParams: {},
+  },
   listDebt: <IRouteParams>{
     path: '/',
     method: RequestMethod.GET,
@@ -85,7 +90,6 @@ export const DebtRoute = {
       ],
     },
   },
-
   cancelDebt: <IRouteParams>{
     path: '/:id',
     method: RequestMethod.PATCH,

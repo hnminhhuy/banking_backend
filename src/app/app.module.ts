@@ -18,16 +18,25 @@ import constantConfig from '../config/constant.config';
 import mailConfig from '../config/mail_service.config';
 import { MailModule } from '../modules/mail/mail.module';
 import redisConfig from 'src/config/redis.config';
+import { TransactionModule } from '../modules/transactions/transaction.module';
+import bullmqConfig from '../config/bullmq.config';
+import { BullModule } from '@nestjs/bullmq';
 import { BankConfigModule } from 'src/modules/bank_config/bank_config.module';
 import { AuthModule } from 'src/modules/auth/auth.module';
 import { SetCacheBlockedUserUsecase } from 'src/modules/redis_cache/core/usecases';
 import { RedisCacheModule } from 'src/modules/redis_cache/redis_cache.module';
+import { ConsoleModule } from 'nestjs-console';
+import appConfig from '../config/app.config';
+import { ExternalBankModule } from '../modules/external-bank/external_bank.module';
 import { OtpModule } from 'src/modules/otp/otp.module';
+import bankConfig from '../config/bank.config';
 import { DebtModule } from 'src/modules/debt/debt.module';
 import { ContactModule } from 'src/modules/contact/contact.module';
+import externalBankConfig from '../config/external-bank.config';
 
 @Module({
   imports: [
+    ConsoleModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [
@@ -37,6 +46,10 @@ import { ContactModule } from 'src/modules/contact/contact.module';
         constantConfig,
         mailConfig,
         redisConfig,
+        bullmqConfig,
+        appConfig,
+        externalBankConfig,
+        bankConfig,
       ],
     }),
     TypeOrmModule.forRootAsync({
@@ -53,13 +66,27 @@ import { ContactModule } from 'src/modules/contact/contact.module';
         return addTransactionalDataSource(new DataSource(options));
       },
     }),
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        connection: {
+          host: configService.get('redis.host'),
+          port: <number>configService.get('redis.port'),
+          db: <number>configService.get('bullmq.db'),
+        },
+      }),
+    }),
     forwardRef(() => RedisCacheModule),
     forwardRef(() => UserModule),
     forwardRef(() => AuthModule),
     forwardRef(() => BankModule),
     forwardRef(() => BankAccountModule),
     forwardRef(() => MailModule),
+    forwardRef(() => AuthModule),
+    forwardRef(() => TransactionModule),
     forwardRef(() => BankConfigModule),
+    forwardRef(() => ExternalBankModule),
     forwardRef(() => OtpModule),
     forwardRef(() => DebtModule),
     forwardRef(() => ContactModule),
@@ -77,4 +104,3 @@ export class AppModule implements OnModuleInit {
     await this.setCacheBlockedUserUsecase.execute();
   }
 }
-// export class AppModule {}

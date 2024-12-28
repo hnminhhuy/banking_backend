@@ -23,7 +23,7 @@ export class DateFilter {
   ) {
     this.from = from;
     this.to = to;
-    this.column = column;
+    this.column = column ?? 'createdAt';
   }
 
   public toFindCondition(): FindOperator<Date> | undefined {

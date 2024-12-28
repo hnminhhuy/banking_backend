@@ -26,17 +26,16 @@ export class CreateRefreshTokenUsecase {
   ) {}
 
   public async execute(
-    userId: string,
+    authId: string,
     provider: AuthProvider,
   ): Promise<RefreshTokenModel> {
     const existingRefreshToken = await this.getRefreshTokenUsecase.execute(
       'auth_id',
-      userId,
+      authId,
     );
 
     if (existingRefreshToken) {
       try {
-        // Verify the token
         await this.verifyTokenUsecase.execute(
           existingRefreshToken.refreshToken,
         );
@@ -67,7 +66,7 @@ export class CreateRefreshTokenUsecase {
     const params: RefreshTokenModelParams = {
       id: id,
       refreshToken: refreshToken,
-      authId: userId,
+      authId: authId,
       issuedAt: new Date(),
       provider: provider,
     };

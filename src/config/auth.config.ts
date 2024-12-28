@@ -10,12 +10,5 @@ export default registerAs('auth', () => ({
     },
   },
   jwtRefreshTokenExpired: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN,
-  google: {
-    clientId: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    redirectUri: process.env.GOOGLE_REDIRECT_URI,
-    authorizationUri: process.env.GOOLE_AUTHORIZATION_URI,
-    scope: process.env.GOOGLE_SCOPE,
-    userInfoUri: process.env.GOOGLE_USER_INFO,
-  },
+  hashKey: process.env.AUTH_HASH_KEY,
 }));

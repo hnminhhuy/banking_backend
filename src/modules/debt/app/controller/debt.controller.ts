@@ -27,6 +27,7 @@ import {
   GetDebtUsecase,
   ListDebtUsecase,
 } from '../../core/usecases';
+import { CreateDebtTransactionUsecase } from '../../../transactions/core/usecases/create_debt_transaction.usecase';
 import { GetDebtWithUserUsecase } from '../../core/usecases/get_debt_with_user.usecase';
 import { ListDebtWithUserUsecase } from '../../core/usecases/list_debt_with_user.usecase';
 
@@ -41,6 +42,7 @@ export class DebtController {
     private readonly listDebtWithUserUsecase: ListDebtWithUserUsecase,
     private readonly getBankAccountUsecase: GetBankAccountUsecase,
     private readonly cancelDebtUsecase: CancelDebtUsecase,
+    private readonly createDebtTransactionUsecase: CreateDebtTransactionUsecase,
   ) {}
   @Route(DebtRoute.createDebt)
   async createDebt(@Req() req, @Body() body: CreateDebtDto) {
@@ -201,5 +203,37 @@ export class DebtController {
           );
       }
     }
+  }
+
+  @Route(DebtRoute.settleDebt)
+  async settleDebt(@Req() req, @Param() param: GetDebtDto) {
+    const debt = await this.getDebtUsecase.execute('id', param.id);
+    if (!debt) {
+      throw new NotFoundException('Debt not found');
+    }
+
+    if (debt.reminderId === req.user.authId) {
+      throw new BadRequestException('Debt cannot be settled by the reminder');
+    }
+
+    const debtorAccount = await this.getBankAccountUsecase.execute(
+      'id',
+      debt.debtorId,
+      ['user'],
+    );
+
+    if (debtorAccount.user.id !== req.user.authId) {
+      throw new BadRequestException('Debt does not belong to the user');
+    }
+
+    const transaction = await this.createDebtTransactionUsecase.execute(
+      debt,
+      debtorAccount,
+    );
+
+    return {
+      data: transaction,
+      statusCode: HttpStatus.CREATED,
+    };
   }
 }

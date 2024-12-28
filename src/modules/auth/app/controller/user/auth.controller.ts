@@ -7,21 +7,21 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { LoginDto } from '../dtos/auth.dto';
+import { LoginDto } from '../../dtos/auth.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { Route } from '../../../../../decorators';
 import {
-  GenerateResetPasswordTokenUsecase,
   LoginUsecase,
   RefreshAccessTokenUsecase,
   RequestOtpResetPasswordUsecase,
+  GenerateResetPasswordTokenUsecase,
   ResetPasswordUsecase,
-} from '../../core/usecases';
-import { Route } from 'src/decorators';
-import authRoute from '../routes/auth.route';
-import { RequestResetPasswordDto } from '../dtos/request_reset_password.dto';
-import { OtpDto } from '../dtos/otp.dto';
-import { ResetPasswordDto } from '../dtos/reset_password.dto';
-import { CaptchaService } from '../../core/usecases/captcha.service';
+} from '../../../core/usecases';
+import { CaptchaService } from '../../../core/usecases/captcha.service';
+import { OtpDto } from '../../dtos/otp.dto';
+import { RequestResetPasswordDto } from '../../dtos/request_reset_password.dto';
+import { ResetPasswordDto } from '../../dtos/reset_password.dto';
+import authRoute from '../../routes/auth.route';
 
 @ApiTags('Public')
 @Controller({ path: 'api/auth/v1' })
@@ -39,11 +39,11 @@ export class AuthController {
   async login(@Body() body: LoginDto) {
     const { captchaToken } = body;
 
-    const isCaptchaValid =
-      await this.captchaService.verifyCaptcha(captchaToken);
+    // const isCaptchaValid =
+    //   await this.captchaService.verifyCaptcha(captchaToken);
 
-    if (!isCaptchaValid)
-      throw new ForbiddenException('CAPTCHA verification failed');
+    // if (!isCaptchaValid)
+    //   throw new ForbiddenException('CAPTCHA verification failed');
 
     const bearerToken = await this.loginUsecase.execute(
       body.username,
@@ -60,7 +60,7 @@ export class AuthController {
     const newAccessToken = await this.refreshAccessTokenUsecase.execute(
       req.user.id,
     );
-    return { accessToken: newAccessToken }; // Send the new access token in response
+    return { accessToken: newAccessToken };
   }
 
   @Route(authRoute.requestPasswordReset)

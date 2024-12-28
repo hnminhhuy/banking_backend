@@ -1,36 +1,74 @@
-import { Controller, Param, Query } from '@nestjs/common';
-import { GetBankAccountUsecase } from '../../../core/usecases';
+import { BadRequestException, Body, Controller } from '@nestjs/common';
+import {
+  ChangeBalanceUsecase,
+  GetBankAccountUsecase,
+} from '../../../core/usecases';
 import { Route } from '../../../../../decorators';
-import { GetBankAccountDto, GetBankAccountQuery } from '../../dtos';
+import { DepositDto, GetBankAccountDto } from '../../dtos';
 import { BankAccountRouteByCustomer } from '../../routes/customer/bank_account.route';
-import { GetBankAccountWithUserUsecase } from 'src/modules/bank_account/core/usecases/get_bank_account_with_user.usecase';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { GetExternalBankAccountInfoUsecase } from '../../../../external-bank/core/usecases/bank_account/get_external_bank_user.usecase';
 
 @Controller({ path: 'api/customer/v1/bank-accounts' })
+@ApiBearerAuth()
 export class BankAccountController {
   constructor(
-    private getBankAccountUsecase: GetBankAccountUsecase,
-    private readonly getBankAccountWithUserUsecase: GetBankAccountWithUserUsecase,
+    private readonly getBankAccountUsecase: GetBankAccountUsecase,
+    private readonly getExternalBankAccountUsecase: GetExternalBankAccountInfoUsecase,
+    private readonly changeBalanceUsecase: ChangeBalanceUsecase,
   ) {}
 
   @Route(BankAccountRouteByCustomer.getBankAccount)
-  async get(
-    @Param() param: GetBankAccountDto,
-    @Query() query: GetBankAccountQuery,
-  ) {
-    if (query.includeUser?.toString() === 'true') {
-      const bankAccount = await this.getBankAccountWithUserUsecase.execute(
-        param.id,
+  async get(@Body() body: GetBankAccountDto) {
+    let result = undefined;
+
+    if (!body.code) {
+      const bankAccount = await this.getBankAccountUsecase.execute(
+        'id',
+        body.id,
+        ['user'],
       );
-      return bankAccount;
+
+      if (!bankAccount) {
+        throw new BadRequestException(`Bank account with ${body.id} not found`);
+      }
+      result = {
+        id: bankAccount?.id,
+        fullName: bankAccount.user?.fullName,
+      };
+    } else {
+      result = (await this.getExternalBankAccountUsecase.execute(body.id)).data;
     }
+
+    return {
+      id: result.id,
+      fullName: result.fullName,
+    };
+  }
+
+  @Route(BankAccountRouteByCustomer.depositToAccount)
+  async deposit(@Body() body: DepositDto) {
     const bankAccount = await this.getBankAccountUsecase.execute(
       'id',
-      param.id,
-      undefined,
+      body.id,
+      ['user'],
     );
-    const { createdAt, updatedAt, bankId, userId, ...bankAccountData } =
-      bankAccount;
 
-    return bankAccountData;
+    if (!bankAccount) {
+      throw new BadRequestException(`Bank account ${body.id} not found`);
+    }
+
+    if (bankAccount.user.email !== body.email) {
+      throw new BadRequestException(
+        `Email ${body.email} is not belong to this bank account`,
+      );
+    }
+
+    const check = await this.changeBalanceUsecase.execute(
+      bankAccount.id,
+      bankAccount.balance + body.amount,
+    );
+
+    return check;
   }
 }

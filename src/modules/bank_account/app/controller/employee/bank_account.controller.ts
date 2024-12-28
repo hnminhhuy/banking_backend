@@ -7,8 +7,10 @@ import { PageParams, SortParams } from '../../../../../common/models';
 import { ListBankAccountDto } from '../../dtos/list_bank_account.dto';
 import { BankAccountSort } from '../../../core/enums/bank_account_sort';
 import { ListBankAccountsUsecase } from '../../../core/usecases/list_bank_account.usecase';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
-@Controller({ path: 'api/customer/v1/bank-accounts' })
+@Controller({ path: 'api/employee/v1/bank-accounts' })
+@ApiBearerAuth()
 export class BankAccountController {
   constructor(
     private readonly getBankAccountUsecase: GetBankAccountUsecase,

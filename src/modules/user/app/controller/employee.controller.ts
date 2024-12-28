@@ -17,9 +17,9 @@ import { SendMailUseCase } from '../../../mail/core/usecases/send_mail.usecase';
 import { BankAccountParams } from '../../../bank_account/core/models/bank_account.model';
 import { PageParams, SortParams } from '../../../../common/models';
 import { UserRole } from '../../core/enums/user_role';
-import { SendMailType } from '../../../mail/core/enums/send_mail_type';
 import { mailList } from '../../../mail/core/models/mail_list';
 import { Transactional } from 'typeorm-transactional';
+import { BankCode } from '../../../bank/core/enums/bank_code';
 
 @ApiTags('User By Employee')
 @Controller({ path: 'api/employee/v1/users' })
@@ -32,6 +32,7 @@ export class UserControllerByEmployee {
     private readonly getBankUsecase: GetBankUsecase,
     private readonly createBankAccountUsecase: CreateBankAccountUsecase,
     private readonly sendMailUsecase: SendMailUseCase,
+    private readonly bankCode: BankCode,
   ) {}
 
   @Route(employeeRoute.createCustomer)
@@ -51,7 +52,10 @@ export class UserControllerByEmployee {
     const { password, ...returnData } = createdUser;
     returnData['rawPassword'] = rawPassword;
 
-    const bank = await this.getBankUsecase.execute('code', 'NHB');
+    const bank = await this.getBankUsecase.execute(
+      'code',
+      this.bankCode.DEFAULT,
+    );
 
     const bankAccountParams: BankAccountParams = {
       bankId: bank.id,
@@ -94,6 +98,7 @@ export class UserControllerByEmployee {
       query.role,
       pageParams,
       sortParams,
+      ['bankAccount'],
     );
 
     const data = pageResult.data.map(
