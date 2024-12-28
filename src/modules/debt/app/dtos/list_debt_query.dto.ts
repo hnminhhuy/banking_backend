@@ -8,6 +8,9 @@ export class ListDebtQueryDto {
   category?: DebtCategory;
 
   @ApiPropertyOptional()
+  includeUser?: boolean;
+
+  @ApiPropertyOptional()
   amount?: number;
 
   @ApiPropertyOptional()
