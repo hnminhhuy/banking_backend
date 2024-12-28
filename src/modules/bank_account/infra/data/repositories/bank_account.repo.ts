@@ -4,6 +4,7 @@ import { BankAccountDatasource } from '../bank_account.datasource';
 import { BankAccountModel } from '../../../core/models/bank_account.model';
 import { PageParams, SortParams, Page } from '../../../../../common/models';
 import { BankAccountSort } from '../../../core/enums/bank_account_sort';
+import { BankAccountUserModel } from 'src/modules/bank_account/core/models/bank_account_user.model';
 
 @Injectable()
 export class BankAccountRepo implements IBankAccountRepo {
@@ -31,6 +32,12 @@ export class BankAccountRepo implements IBankAccountRepo {
     relations: string[] | undefined,
   ) {
     return await this.bankAccountDatasource.get(key, value, relations);
+  }
+
+  public async getBankAccountWithUser(
+    id: string,
+  ): Promise<BankAccountUserModel | undefined> {
+    return await this.bankAccountDatasource.getWithUser(id);
   }
 
   public async changeBalance(
