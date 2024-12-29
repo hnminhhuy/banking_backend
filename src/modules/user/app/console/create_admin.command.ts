@@ -42,9 +42,9 @@ export class CreateAdminCommand {
   async createAdmin(options: CreateAdminDto): Promise<void> {
     const adminDto = new CreateAdminDto();
     adminDto.email = options.email.toLowerCase().trim();
-    adminDto.fullName = options.fullName.toLowerCase().trim();
-    adminDto.username = options.username.toLowerCase().trim();
-    adminDto.password = options.password.toLowerCase().trim();
+    adminDto.fullName = options.fullName.trim();
+    adminDto.username = options.username.trim();
+    adminDto.password = options.password.trim();
 
     const errors = await validate(adminDto);
     if (errors.length > 0) {
