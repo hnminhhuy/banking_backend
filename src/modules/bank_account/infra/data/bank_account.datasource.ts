@@ -6,6 +6,7 @@ import { BankAccountModel } from '../../core/models/bank_account.model';
 import { Page, PageParams, SortParams } from '../../../../common/models';
 import { BankAccountSort } from '../../core/enums/bank_account_sort';
 import { paginate } from '../../../../common/helpers/pagination.helper';
+import { BankAccountUserModel } from '../../core/models/bank_account_user.model';
 
 @Injectable()
 export class BankAccountDatasource {
@@ -36,6 +37,25 @@ export class BankAccountDatasource {
 
     const entity = await query.getOne();
     return entity ? new BankAccountModel(entity) : undefined;
+  }
+
+  async getWithUser(id: string): Promise<BankAccountUserModel | undefined> {
+    const result = await this.bankAccountRepo
+      .createQueryBuilder('bank_accounts')
+      .innerJoinAndSelect('bank_accounts.user', 'user') // Join bảng users thông qua quan hệ
+      .select(['bank_accounts.id', 'user.fullName AS fullName']) // Lấy các cột cần thiết
+      .where('bank_accounts.id = :id', { id }) // Điều kiện lọc
+      .getRawOne();
+
+    if (!result) {
+      return undefined;
+    }
+
+    // Trả về kết quả dưới dạng BankAccountUserModel
+    return new BankAccountUserModel({
+      bankId: result.bank_accounts_id,
+      fullname: result.fullname,
+    });
   }
 
   public async changeBalance(
