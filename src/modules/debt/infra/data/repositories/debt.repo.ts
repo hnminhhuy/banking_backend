@@ -7,6 +7,7 @@ import { IDebtRepo } from 'src/modules/debt/core/repositories/debt.irepo';
 import { DebtDatasource } from '../../debt.datasource';
 import { PageParams, SortParams, Page } from 'src/common/models';
 import { DebtSort } from 'src/modules/debt/core/enum/debt_sort';
+import { DebtorNameModel } from 'src/modules/debt/core/models/debtor_name.model';
 
 @Injectable()
 export class DebtRepo implements IDebtRepo {
@@ -25,6 +26,12 @@ export class DebtRepo implements IDebtRepo {
 
   public getDebtWithUser(id: string): Promise<DebtModel | undefined> {
     return this.debtDatasource.getDebtWithUser(id);
+  }
+
+  public getAllDebtor(
+    remiderId: string,
+  ): Promise<DebtorNameModel[] | undefined> {
+    return this.debtDatasource.getAllDebtor(remiderId);
   }
 
   public async list(

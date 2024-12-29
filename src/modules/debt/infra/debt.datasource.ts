@@ -7,6 +7,7 @@ import { Page, PageParams, SortParams } from 'src/common/models';
 import { DebtSort } from '../core/enum/debt_sort';
 import { paginate } from 'src/common/helpers/pagination.helper';
 import { DebtStatus } from '../core/enum/debt_status';
+import { DebtorNameModel } from '../core/models/debtor_name.model';
 
 @Injectable()
 export class DebtDatasource {
@@ -89,6 +90,47 @@ export class DebtDatasource {
     }
 
     return undefined;
+  }
+
+  async getAllDebtor(
+    reminderId: string,
+  ): Promise<DebtorNameModel[] | undefined> {
+    const result = await this.debtRepository.query(
+      `
+    SELECT 
+      "debts"."id",
+      "debts"."created_at", 
+      "debts"."updated_at", 
+      "debts"."reminder_id", 
+      "debts"."debtor_id", 
+      "debts"."amount", 
+      "debts"."status", 
+      "debts"."message", 
+      "reminderUser"."fullname" AS "reminderFullName", 
+      "debtorUser"."fullname" AS "debtorFullName"
+    FROM "debts" "debts"
+    LEFT JOIN "bank_accounts" "reminderAccount" ON "reminderAccount"."id" = "debts"."reminder_id"
+    LEFT JOIN "users" "reminderUser" ON "reminderUser"."id" = "reminderAccount"."user_id"
+    LEFT JOIN "bank_accounts" "debtorAccount" ON "debtorAccount"."id" = "debts"."debtor_id"
+    LEFT JOIN "users" "debtorUser" ON "debtorUser"."id" = "debtorAccount"."user_id"
+    WHERE "debts"."reminder_id" = $1;
+  `,
+      [reminderId],
+    );
+
+    // Check if the result is empty
+    if (result.length === 0) {
+      console.log(`No debts found for reminderId: ${reminderId}`);
+      return []; // Return an empty array if no debts are found
+    }
+
+    return result.map(
+      (item) =>
+        new DebtorNameModel({
+          debtorId: item.debtor_id,
+          debtorFullName: item.debtorFullName,
+        }),
+    );
   }
 
   async listDebtWithUser(

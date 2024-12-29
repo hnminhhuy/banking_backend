@@ -29,6 +29,7 @@ import {
 } from '../../core/usecases';
 import { GetDebtWithUserUsecase } from '../../core/usecases/get_debt_with_user.usecase';
 import { ListDebtWithUserUsecase } from '../../core/usecases/list_debt_with_user.usecase';
+import { GetAllDebtorUsecase } from '../../core/usecases/get_all_debto.usecase';
 
 @ApiTags('Debt by Customer')
 @Controller({ path: 'api/customer/v1/debt' })
@@ -37,6 +38,7 @@ export class DebtController {
     private readonly createDebtUsecase: CreateDebtUsecase,
     private readonly getDebtUsecase: GetDebtUsecase,
     private readonly getDebtWithUserUsecase: GetDebtWithUserUsecase,
+    private readonly getAllDetorUsecase: GetAllDebtorUsecase,
     private readonly listDebtUsecase: ListDebtUsecase,
     private readonly listDebtWithUserUsecase: ListDebtWithUserUsecase,
     private readonly getBankAccountUsecase: GetBankAccountUsecase,
@@ -106,6 +108,32 @@ export class DebtController {
       debt,
       statusCode: 200,
     };
+  }
+
+  @Route(DebtRoute.getAllDebtors)
+  async getAllDebtors(@Req() req) {
+    try {
+      const bankAccount = await this.getBankAccountUsecase.execute(
+        'user_id',
+        req.user.authId,
+      );
+      const debtors = await this.getAllDetorUsecase.execute(bankAccount.id);
+
+      if (!debtors || debtors.length === 0) {
+        throw new NotFoundException('No debtors found for the reminder');
+      }
+
+      return {
+        debtors,
+        statusCode: HttpStatus.OK,
+      };
+    } catch (error) {
+      // Handle any errors that occur during the process
+      if (error.message === 'ReminderNotFoundError') {
+        throw new NotFoundException('Reminder not found');
+      }
+      throw new InternalServerErrorException('An unexpected error occurred');
+    }
   }
 
   @Route(DebtRoute.listDebt)
