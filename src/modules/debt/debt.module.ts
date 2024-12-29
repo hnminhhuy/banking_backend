@@ -12,6 +12,10 @@ import {
   GetDebtUsecase,
   ListDebtUsecase,
 } from './core/usecases';
+import { TransactionModule } from '../transactions/transaction.module';
+import { BankConfigModule } from '../bank_config/bank_config.module';
+import { OtpModule } from '../otp/otp.module';
+import { UpdateDebtUsecase } from './core/usecases/update_debt.usecase';
 import { GetDebtWithUserUsecase } from './core/usecases/get_debt_with_user.usecase';
 import { ListDebtWithUserUsecase } from './core/usecases/list_debt_with_user.usecase';
 import { GetAllDebtorUsecase } from './core/usecases/get_all_debto.usecase';
@@ -20,6 +24,9 @@ import { GetAllDebtorUsecase } from './core/usecases/get_all_debto.usecase';
   imports: [
     TypeOrmModule.forFeature([DebtEntity]),
     forwardRef(() => BankAccountModule),
+    forwardRef(() => TransactionModule),
+    forwardRef(() => BankConfigModule),
+    forwardRef(() => OtpModule),
   ],
   controllers: [DebtController],
   providers: [
@@ -35,7 +42,8 @@ import { GetAllDebtorUsecase } from './core/usecases/get_all_debto.usecase';
     ListDebtUsecase,
     ListDebtWithUserUsecase,
     CancelDebtUsecase,
+    UpdateDebtUsecase,
   ],
-  exports: [],
+  exports: [UpdateDebtUsecase, GetDebtUsecase],
 })
 export class DebtModule {}

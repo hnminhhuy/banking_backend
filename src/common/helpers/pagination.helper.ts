@@ -4,7 +4,7 @@ import { PageParams, SortParams } from '../models';
 export async function paginate<Entity>(
   repo: Repository<Entity>,
   pageParams: PageParams,
-  sortParams: SortParams<any>,
+  sortParams: SortParams<any> | undefined,
   relations: string[] | undefined,
   conditions: FindOptionsWhere<Entity> = {},
 ) {

@@ -27,4 +27,8 @@ export class BankDto extends BaseDto {
   @IsString()
   @Length(5, 255)
   logoUrl!: string;
+
+  @ApiProperty()
+  @IsString()
+  algorithm!: string;
 }

@@ -2,14 +2,16 @@ import { RequestMethod, HttpStatus } from '@nestjs/common';
 import { IRouteParams } from '../../../../../decorators';
 import { BankAccountModel } from '../../../core/models/bank_account.model';
 import { GetBankAccountDto } from '../../dtos';
+import { UserRole } from '../../../../user/core/enums/user_role';
 
 export const BankAccountRouteByCustomer = {
   getBankAccount: <IRouteParams>{
-    path: '/:id',
-    method: RequestMethod.GET,
-    secure: false,
+    path: '/get-one',
+    method: RequestMethod.POST,
+    secure: true,
+    roles: [UserRole.Customer],
     swaggerParams: {
-      param: GetBankAccountDto,
+      body: GetBankAccountDto,
       responses: [
         {
           status: HttpStatus.OK,
@@ -17,5 +19,12 @@ export const BankAccountRouteByCustomer = {
         },
       ],
     },
+  },
+  depositToAccount: <IRouteParams>{
+    path: '/deposit',
+    method: RequestMethod.POST,
+    secure: true,
+    roles: [UserRole.Customer],
+    swaggerParams: {},
   },
 };

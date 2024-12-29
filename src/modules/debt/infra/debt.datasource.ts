@@ -280,4 +280,12 @@ export class DebtDatasource {
 
     return result.affected > 0;
   }
+
+  async updateDebt(debtId: string, status: DebtStatus): Promise<boolean> {
+    const result = await this.debtRepository.update(debtId, {
+      status: status,
+    });
+
+    return result.affected > 0;
+  }
 }

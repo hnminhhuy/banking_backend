@@ -25,6 +25,7 @@ import { BankAccountModule } from '../bank_account/bank_account.module';
 import { MailModule } from '../mail/mail.module';
 import { AppModule } from 'src/app/app.module';
 import { RedisCacheModule } from '../redis_cache/redis_cache.module';
+import { CreateAdminCommand } from './app/console/create_admin.command';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { RedisCacheModule } from '../redis_cache/redis_cache.module';
     forwardRef(() => AppModule),
   ],
   providers: [
+    CreateAdminCommand,
     {
       provide: IUserRepo,
       useClass: UserRepo,

@@ -19,6 +19,9 @@ export class BankEntity extends BaseEntity {
   @Column({ name: 'logo_url' })
   logoUrl?: string;
 
+  @Column()
+  algorithm!: string;
+
   constructor(model: Partial<BankModel>) {
     super();
     Object.assign(this, model);
