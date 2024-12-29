@@ -3,12 +3,12 @@ import { BaseEntity } from 'src/common/entitites/base.entity';
 import { BankAccountEntity } from 'src/modules/bank_account/infra/data/entities/bank_account.entity';
 import { UserRole } from 'src/modules/user/core/enums/user_role';
 import { UserModel } from 'src/modules/user/core/models/user.model';
-import { Column, Entity, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, OneToOne } from 'typeorm';
 
 @Entity('users')
 export class UserEntity extends BaseEntity {
   @Column({ name: 'created_by' })
-  createdBy: string | undefined;
+  createdBy?: string;
 
   @Column()
   email: string;
@@ -32,6 +32,10 @@ export class UserEntity extends BaseEntity {
   @OneToOne(() => BankAccountEntity, (bankAccount) => bankAccount.user)
   @ApiProperty({ type: () => BankAccountEntity })
   bankAccount?: BankAccountEntity;
+
+  @OneToOne(() => UserEntity)
+  @JoinColumn({ name: 'created_by' })
+  createdByEmployee?: UserEntity;
 
   constructor(model: Partial<UserModel>) {
     super();

@@ -66,7 +66,7 @@ export class BankAccountController {
 
     const check = await this.changeBalanceUsecase.execute(
       bankAccount.id,
-      bankAccount.balance + body.amount,
+      body.amount,
     );
 
     return check;
