@@ -7,7 +7,6 @@ import { TransactionType } from '../../core/enums/transaction_type';
 import { DebtStatus } from '../../../debt/core/enum/debt_status';
 import {
   CreditBeneficiaryUsecase,
-  HandleTransactionFailureUsecase,
   ProcessInterBankTransactionUsecase,
 } from '../../core/usecases';
 
@@ -18,7 +17,6 @@ export class TransactionConsumer extends WorkerHost {
     private readonly updateDebtUsecase: UpdateDebtUsecase,
     private readonly creditBeneficiaryUsecase: CreditBeneficiaryUsecase,
     private readonly processInterBankTransactionUsecase: ProcessInterBankTransactionUsecase,
-    private readonly handleTransactionFailureUsecase: HandleTransactionFailureUsecase,
   ) {
     super();
   }
