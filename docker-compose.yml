@@ -11,41 +11,18 @@ services:
     restart: on-failure
     volumes:
       - ./:/var/www
-    env_file:
-      - .env.main-bank
     ports:
-      - '${MAIN_BANK_PORT}:80'
-    depends_on:
-      - postgres
-      - external-main
-
-  external-main:
-    image: external-bank/main:18-alpine
-    build:
-      context: .
-    command: >
-      /bin/sh -c "npm install &&
-                  npm run build &&
-                  npm run migration:run &&
-                  npm run start:dev"
-    restart: on-failure
-    env_file:
-      - .env.external-bank
-    ports:
-      - '${EXTERNAL_BANK_PORT}:80'
-    volumes:
-      - ./:/var/www
+      - '${APP_PORT}:80'
     depends_on:
       - postgres
 
   postgres:
     image: postgres:16-alpine
-    container_name: postgres
     restart: on-failure
     environment:
       POSTGRES_USER: ${PG_USERNAME}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
-      POSTGRES_MULTIPLE_DATABASES: ${PG_MULTIPLE_DATABASE}
+      POSTGRES_MULTIPLE_DATABASES: ${PG_DATABASE}
     ports:
       - '${PG_PORT}:5432'
     volumes:
@@ -54,7 +31,6 @@ services:
 
   redis:
     image: redis:alpine
-    container_name: redis
     restart: on-failure
     ports:
       - '${REDIS_PORT}:6379'
