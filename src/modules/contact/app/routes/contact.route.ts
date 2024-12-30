@@ -9,6 +9,7 @@ export const ContactRoute = {
     path: '/',
     method: RequestMethod.POST,
     secure: true,
+    roles: [UserRole.Customer],
     swaggerParams: {
       responses: [
         {

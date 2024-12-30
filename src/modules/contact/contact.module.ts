@@ -15,6 +15,7 @@ import {
 } from './core/usecases';
 import { ContactEntity } from './infra/data/entities/contact.entity';
 import { ContactController } from './app/controller/contact.controller';
+import { ExternalBankModule } from '../external-bank/external_bank.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ContactController } from './app/controller/contact.controller';
     forwardRef(() => BankAccountModule),
     forwardRef(() => BankModule),
     forwardRef(() => UserModule),
+    forwardRef(() => ExternalBankModule),
   ],
   controllers: [ContactController],
   providers: [
