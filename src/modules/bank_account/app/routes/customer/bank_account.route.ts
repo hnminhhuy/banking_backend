@@ -24,7 +24,7 @@ export const BankAccountRouteByCustomer = {
     path: '/deposit',
     method: RequestMethod.POST,
     secure: true,
-    roles: [UserRole.Customer],
+    roles: [UserRole.Employee],
     swaggerParams: {},
   },
 };
