@@ -2,7 +2,6 @@ import { HttpStatus, RequestMethod } from '@nestjs/common';
 import { IRouteParams } from 'src/decorators';
 import { DebtModel } from '../../core/models/debt.model';
 import { BaseException } from 'src/exceptions';
-import { DebtorNameModel } from '../../core/models/debtor_name.model';
 
 export const DebtRoute = {
   createDebt: <IRouteParams>{
@@ -65,47 +64,12 @@ export const DebtRoute = {
       ],
     },
   },
-
-  getAllDebtors: <IRouteParams>{
-    path: '/list/debtors',
-    method: RequestMethod.GET,
+  settleDebt: <IRouteParams>{
+    path: '/:id/settle',
+    method: RequestMethod.POST,
     secure: true,
-    swaggerParams: {
-      responses: [
-        {
-          status: HttpStatus.OK,
-          description: 'List of debtors successfully retrieved',
-          type: [DebtorNameModel], // Assuming DebtorNameModel is the model for the debtor info
-        },
-        {
-          status: HttpStatus.BAD_REQUEST,
-          description: 'Bad request',
-          type: BaseException,
-        },
-        {
-          status: HttpStatus.NOT_FOUND,
-          description: 'No debtors found for the reminder',
-          type: BaseException,
-        },
-        {
-          status: HttpStatus.INTERNAL_SERVER_ERROR,
-          description: 'Unexpected server error',
-          type: BaseException,
-        },
-        {
-          status: HttpStatus.UNAUTHORIZED,
-          type: BaseException,
-          description: 'Authentication required',
-        },
-        {
-          status: HttpStatus.FORBIDDEN,
-          type: BaseException,
-          description: 'Access denied',
-        },
-      ],
-    },
+    swaggerParams: {},
   },
-
   listDebt: <IRouteParams>{
     path: '/',
     method: RequestMethod.GET,
@@ -126,7 +90,6 @@ export const DebtRoute = {
       ],
     },
   },
-
   cancelDebt: <IRouteParams>{
     path: '/:id',
     method: RequestMethod.PATCH,
