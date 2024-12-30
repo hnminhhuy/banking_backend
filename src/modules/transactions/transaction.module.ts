@@ -33,6 +33,7 @@ import { HandleTimeoutTransactionUsecase } from './core/usecases/handle_timeout_
 import { UpdateTransactionsUsecase } from './core/usecases/update_transactions_status.usecase';
 import { TransactionSchedule } from './app/schedules/transaction_schedule';
 import { ScheduleModule } from '@nestjs/schedule';
+import { StatisticTransactionUsecase } from './core/usecases/statistic_transaction.usecase';
 
 @Module({
   imports: [
@@ -75,6 +76,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     ProcessInterBankTransactionUsecase,
     HandleTimeoutTransactionUsecase,
     UpdateTransactionsUsecase,
+    StatisticTransactionUsecase,
   ],
   exports: [
     CreateTransactionUsecase,

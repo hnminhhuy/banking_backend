@@ -4,6 +4,7 @@ import {
   PageParams,
   SortParams,
 } from '../../../../common/models';
+import { BankModel } from '../../../bank/core/models/bank.model';
 import { TransactionSort } from '../enums/transaction_sort';
 import { TransactionStatus } from '../enums/transaction_status';
 import { TransactionType } from '../enums/transaction_type';
@@ -40,4 +41,9 @@ export abstract class ITransactionRepo {
     status: TransactionStatus | undefined,
     completedAt: Date,
   ): Promise<void>;
+
+  public abstract statistic(
+    defaultBank: BankModel,
+    externalBank: BankModel,
+  ): Promise<any>;
 }

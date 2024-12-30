@@ -1,15 +1,17 @@
-import { Controller, Query } from '@nestjs/common';
+import { BadRequestException, Controller, Param, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ListTransactionUsecase } from '../../../core/usecases';
 import { Route } from '../../../../../decorators';
 import { TransactionRouteByAdmin } from '../../routes/admin/admin.route';
-import { ReconcileTransactionDto } from '../../dtos';
+import { ReconcileTransactionDto, StatisticTransactionDto } from '../../dtos';
 import {
   DateFilter,
   PageParams,
   SortParams,
 } from '../../../../../common/models';
 import { TransactionSort } from '../../../core/enums/transaction_sort';
+import { StatisticTransactionUsecase } from '../../../core/usecases/statistic_transaction.usecase';
+import { GetBankUsecase } from '../../../../bank/core/usecases';
 
 @ApiTags('Admin \\ Transaction')
 @ApiBearerAuth()
@@ -17,6 +19,8 @@ import { TransactionSort } from '../../../core/enums/transaction_sort';
 export class TransactionController {
   constructor(
     private readonly listTransactionUsecase: ListTransactionUsecase,
+    private readonly getBankUsecase: GetBankUsecase,
+    private readonly statisticTransactionUsecase: StatisticTransactionUsecase,
   ) {}
 
   @Route(TransactionRouteByAdmin.reconcileTransaction)
@@ -53,5 +57,16 @@ export class TransactionController {
         totalCount: transactions.totalCount,
       },
     };
+  }
+
+  @Route(TransactionRouteByAdmin.statisticTransaction)
+  async statistic(@Param() param: StatisticTransactionDto) {
+    const externalBank = await this.getBankUsecase.execute('id', param.bankId);
+
+    if (!externalBank) {
+      throw new BadRequestException('Bank not found');
+    }
+
+    return await this.statisticTransactionUsecase.execute(externalBank);
   }
 }

@@ -35,3 +35,10 @@ export class ReconcileTransactionDto extends IntersectionType(
   @IsOptional()
   bankId?: string;
 }
+
+export class StatisticTransactionDto {
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  bankId?: string;
+}

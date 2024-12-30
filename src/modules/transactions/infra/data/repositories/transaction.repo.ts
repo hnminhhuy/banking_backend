@@ -14,6 +14,7 @@ import {
   TransactionModel,
   TransactionModelParams,
 } from '../../../core/models/transaction.model';
+import { BankModel } from '../../../../bank/core/models/bank.model';
 
 @Injectable()
 export class TransactionRepo implements ITransactionRepo {
@@ -71,6 +72,16 @@ export class TransactionRepo implements ITransactionRepo {
       ids,
       status,
       completedAt,
+    );
+  }
+
+  public async statistic(
+    defaultBank: BankModel,
+    externalBank: BankModel,
+  ): Promise<any> {
+    return await this.transactionDatasource.statistic(
+      defaultBank,
+      externalBank,
     );
   }
 }
