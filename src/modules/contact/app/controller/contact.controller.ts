@@ -31,6 +31,7 @@ import { ContactModelParams } from '../../core/models/contact.model';
 import { ListContactDto } from '../dtos/list_contact';
 import { PageParams, SortParams } from 'src/common/models';
 import { ContactSort } from '../../core/enums/contact_sort';
+import { GetAllContactInfoUsecase } from '../../core/usecases/get_all_contact_info.usecase';
 
 @ApiTags('Contact')
 @Controller('api/customer/v1/contact')
@@ -38,6 +39,7 @@ export class ContactController {
   constructor(
     private readonly createContactUsecase: CreateContactUsecase,
     private readonly getContactUsecase: GetContactUsecase,
+    private readonly getAllContactInfoUsecase: GetAllContactInfoUsecase,
     private readonly listContactUsecase: ListContactUsecase,
     private readonly updateContactUsecase: UpdateContactUsecase,
     private readonly deleteContactUsecase: DeleteContactUsecase,
@@ -81,7 +83,7 @@ export class ContactController {
     }
   }
   @Route(ContactRoute.getContact)
-  async getDebt(@Req() req, @Param() param: GetContactDto) {
+  async getContact(@Req() req, @Param() param: GetContactDto) {
     const contact = await this.getContactUsecase.execute('id', param.id);
     if (!contact) {
       throw new NotFoundException('Contact not found');
@@ -92,6 +94,20 @@ export class ContactController {
       );
     return {
       contact,
+      statusCode: 200,
+    };
+  }
+
+  @Route(ContactRoute.getAllContact)
+  async getAllContact(@Req() req) {
+    const contacts = await this.getAllContactInfoUsecase.execute(
+      req.user.authId,
+    );
+    if (!contacts) {
+      throw new NotFoundException('Contact not found');
+    }
+    return {
+      contacts,
       statusCode: 200,
     };
   }

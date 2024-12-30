@@ -7,6 +7,7 @@ import { IContactRepo } from 'src/modules/contact/core/repositories/contact.irep
 import { ContactDatasource } from '../../contact.datasource';
 import { PageParams, SortParams, Page } from 'src/common/models';
 import { ContactSort } from 'src/modules/contact/core/enums/contact_sort';
+import { ContactUserModel } from 'src/modules/contact/core/models/contact_user.model';
 
 @Injectable()
 export class ContactRepo implements IContactRepo {
@@ -22,6 +23,12 @@ export class ContactRepo implements IContactRepo {
     relations: string[] | undefined,
   ): Promise<ContactModel | undefined> {
     return await this.contactDatasource.getContact(key, value, relations);
+  }
+
+  public async getAllContact(
+    userId: string,
+  ): Promise<ContactUserModel[] | undefined> {
+    return await this.contactDatasource.getAllContact(userId);
   }
 
   public async list(
