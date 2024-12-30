@@ -1,7 +1,7 @@
 import { Page, PageParams, SortParams } from 'src/common/models';
 import { DebtModel, DebtModelParams } from '../models/debt.model';
 import { DebtSort } from '../enum/debt_sort';
-import { DebtStatus } from '../enum/debt_status';
+import { DebtorNameModel } from '../models/debtor_name.model';
 
 export abstract class IDebtRepo {
   public abstract create(debt: DebtModel): Promise<void>;
@@ -13,6 +13,9 @@ export abstract class IDebtRepo {
 
   public abstract getDebtWithUser(id: string): Promise<DebtModel | undefined>;
 
+  public abstract getAllDebtor(
+    remiderId: string,
+  ): Promise<DebtorNameModel[] | undefined>;
   public abstract list(
     conditions: Partial<DebtModelParams>,
     pageParams: PageParams,
@@ -27,5 +30,4 @@ export abstract class IDebtRepo {
   ): Promise<Page<DebtModel>>;
 
   public abstract cancelDebt(debtId: string): Promise<boolean>;
-  public abstract update(debtId: string, status: DebtStatus): Promise<boolean>;
 }

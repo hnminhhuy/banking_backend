@@ -18,6 +18,7 @@ import { OtpModule } from '../otp/otp.module';
 import { UpdateDebtUsecase } from './core/usecases/update_debt.usecase';
 import { GetDebtWithUserUsecase } from './core/usecases/get_debt_with_user.usecase';
 import { ListDebtWithUserUsecase } from './core/usecases/list_debt_with_user.usecase';
+import { GetAllDebtorUsecase } from './core/usecases/get_all_debto.usecase';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { ListDebtWithUserUsecase } from './core/usecases/list_debt_with_user.use
     CreateDebtUsecase,
     GetDebtUsecase,
     GetDebtWithUserUsecase,
+    GetAllDebtorUsecase,
     ListDebtUsecase,
     ListDebtWithUserUsecase,
     CancelDebtUsecase,
