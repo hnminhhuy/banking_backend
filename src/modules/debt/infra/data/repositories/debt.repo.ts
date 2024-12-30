@@ -8,6 +8,7 @@ import { DebtDatasource } from '../../debt.datasource';
 import { PageParams, SortParams, Page } from 'src/common/models';
 import { DebtSort } from 'src/modules/debt/core/enum/debt_sort';
 import { DebtorNameModel } from 'src/modules/debt/core/models/debtor_name.model';
+import { DebtStatus } from '../../../core/enum/debt_status';
 
 @Injectable()
 export class DebtRepo implements IDebtRepo {
@@ -61,5 +62,12 @@ export class DebtRepo implements IDebtRepo {
 
   public async cancelDebt(debtId: string): Promise<boolean> {
     return await this.debtDatasource.cancelDebt(debtId);
+  }
+
+  public async updateDebt(
+    debtId: string,
+    status: DebtStatus,
+  ): Promise<boolean> {
+    return await this.debtDatasource.updateDebt(debtId, status);
   }
 }

@@ -6,6 +6,6 @@ import { DebtStatus } from '../enum/debt_status';
 export class UpdateDebtUsecase {
   constructor(private readonly debtRepo: IDebtRepo) {}
   public async execute(debtId: string, status: DebtStatus): Promise<boolean> {
-    return await this.debtRepo.update(debtId, status);
+    return await this.debtRepo.updateDebt(debtId, status);
   }
 }

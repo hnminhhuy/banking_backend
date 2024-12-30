@@ -2,6 +2,7 @@ import { Page, PageParams, SortParams } from 'src/common/models';
 import { DebtModel, DebtModelParams } from '../models/debt.model';
 import { DebtSort } from '../enum/debt_sort';
 import { DebtorNameModel } from '../models/debtor_name.model';
+import { DebtStatus } from '../enum/debt_status';
 
 export abstract class IDebtRepo {
   public abstract create(debt: DebtModel): Promise<void>;
@@ -30,4 +31,8 @@ export abstract class IDebtRepo {
   ): Promise<Page<DebtModel>>;
 
   public abstract cancelDebt(debtId: string): Promise<boolean>;
+  public abstract updateDebt(
+    debtId: string,
+    status: DebtStatus,
+  ): Promise<boolean>;
 }
