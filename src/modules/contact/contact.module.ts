@@ -17,6 +17,7 @@ import { ContactEntity } from './infra/data/entities/contact.entity';
 import { ContactController } from './app/controller/contact.controller';
 import { GetAllContactInfoUsecase } from './core/usecases/get_all_contact_info.usecase';
 import { ExternalBankModule } from '../external-bank/external_bank.module';
+import { GetAllContactInfoUsecase } from './core/usecases/get_all_contact_info.usecase';
 
 @Module({
   imports: [
