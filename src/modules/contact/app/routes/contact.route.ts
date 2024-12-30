@@ -3,6 +3,7 @@ import { IRouteParams } from 'src/decorators';
 import { BaseException } from 'src/exceptions';
 import { ContactModel } from '../../core/models/contact.model';
 import { UserRole } from 'src/modules/user/core/enums/user_role';
+import { ContactUserModel } from '../../core/models/contact_user.model';
 
 export const ContactRoute = {
   createContact: <IRouteParams>{
@@ -49,6 +50,27 @@ export const ContactRoute = {
     swaggerParams: {
       responses: [
         { status: HttpStatus.OK, type: ContactModel },
+        {
+          status: HttpStatus.BAD_REQUEST,
+          description: 'Bad request',
+          type: BaseException,
+        },
+        {
+          status: HttpStatus.NOT_FOUND,
+          description: 'Contact not found',
+          type: BaseException,
+        },
+      ],
+    },
+  },
+
+  getAllContact: <IRouteParams>{
+    path: '/contact/all',
+    method: RequestMethod.GET,
+    secure: true,
+    swaggerParams: {
+      responses: [
+        { status: HttpStatus.OK, type: ContactUserModel },
         {
           status: HttpStatus.BAD_REQUEST,
           description: 'Bad request',
