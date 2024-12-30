@@ -10,7 +10,11 @@ import { ListTransactionUsecase } from '../../../core/usecases';
 import { Route } from '../../../../../decorators';
 import { TransactionRouteByEmployee } from '../../routes/employee/transaction.route';
 import { GetUserTransactionDto, ListTransactionDto } from '../../dtos';
-import { PageParams, SortParams } from '../../../../../common/models';
+import {
+  DateFilter,
+  PageParams,
+  SortParams,
+} from '../../../../../common/models';
 import { TransactionSort } from '../../../core/enums/transaction_sort';
 import { GetUserUsecase } from '../../../../user/core/usecases';
 import { UserRole } from '../../../../user/core/enums/user_role';
@@ -56,10 +60,19 @@ export class TransactionController {
       query.direction,
     );
 
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const datefilter = new DateFilter(
+      thirtyDaysAgo,
+      new Date(),
+      TransactionSort.COMPLETED_AT,
+    );
+
     const transactions = await this.listTransactionUsecase.execute(
       pageParams,
       sortParams,
-      undefined,
+      datefilter,
       query.category === TransactionCategory.INCOMING
         ? undefined
         : user.bankAccount.id,

@@ -70,7 +70,6 @@ export class TransactionDatasource {
   ): Promise<Page<TransactionModel>> {
     const conditions: FindOptionsWhere<TransactionEntity> = {};
     const orderBy: FindOptionsOrder<TransactionEntity> = {};
-
     if (dateFilterParams && dateFilterParams.column !== undefined) {
       if (dateFilterParams.from && dateFilterParams.to) {
         conditions[dateFilterParams.column as keyof TransactionEntity] = <any>(
