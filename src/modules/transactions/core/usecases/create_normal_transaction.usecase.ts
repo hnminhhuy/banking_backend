@@ -43,7 +43,7 @@ export class CreateNormalTransactionUsecase {
       this.externalFee = externalConfig.getValue();
       this.internalFee = internalConfig.getValue();
     } catch (error) {
-      throwError('Error initializing fee config');
+      throwError(error.message);
     }
   }
 

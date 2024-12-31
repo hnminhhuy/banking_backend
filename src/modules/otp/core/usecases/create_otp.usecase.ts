@@ -14,7 +14,6 @@ import { ConfigKey } from 'src/modules/bank_config/core/enum/config_key';
 import { GetUserUsecase } from 'src/modules/user/core/usecases';
 import { mailList } from 'src/modules/mail/core/models/mail_list';
 import { UserModel } from 'src/modules/user/core/models/user.model';
-import { use } from 'passport';
 
 @Injectable()
 export class CreateOtpUsecase {

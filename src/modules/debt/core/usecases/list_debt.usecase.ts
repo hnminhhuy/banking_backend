@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IDebtRepo } from '../repositories/debt.irepo';
-import { DebtModel, DebtModelParams } from '../models/debt.model';
+import { DebtModelParams } from '../models/debt.model';
 import { PageParams, SortParams } from 'src/common/models';
 import { DebtSort } from '../enum/debt_sort';
 
