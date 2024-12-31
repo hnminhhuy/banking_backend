@@ -132,7 +132,7 @@ export class ContactController {
     );
 
     const data = pageResult.data.map(
-      ({ id, userId, ...returnedData }) => returnedData,
+      ({ userId, ...returnedData }) => returnedData,
     );
 
     return {
