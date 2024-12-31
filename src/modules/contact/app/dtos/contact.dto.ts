@@ -36,4 +36,8 @@ export class UpdateContactDto extends PickType(ContactDto, ['nickname']) {
   @ApiPropertyOptional()
   @IsString()
   beneficiaryId: string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  code: string;
 }
