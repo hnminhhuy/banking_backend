@@ -21,6 +21,7 @@ import {
 import { TransactionSort } from '../../core/enums/transaction_sort';
 import { TransactionStatus } from '../../core/enums/transaction_status';
 import { TransactionType } from '../../core/enums/transaction_type';
+import { BankModel } from '../../../bank/core/models/bank.model';
 
 @Injectable()
 export class TransactionDatasource {
@@ -70,7 +71,6 @@ export class TransactionDatasource {
   ): Promise<Page<TransactionModel>> {
     const conditions: FindOptionsWhere<TransactionEntity> = {};
     const orderBy: FindOptionsOrder<TransactionEntity> = {};
-
     if (dateFilterParams && dateFilterParams.column !== undefined) {
       if (dateFilterParams.from && dateFilterParams.to) {
         conditions[dateFilterParams.column as keyof TransactionEntity] = <any>(
@@ -177,5 +177,53 @@ export class TransactionDatasource {
         { ...data, completedAt: completedAt },
       );
     }
+  }
+
+  public async statistic(
+    defaultBank: BankModel,
+    externalBank: BankModel,
+  ): Promise<any> {
+    const result = await this.transactionRepository
+      .createQueryBuilder('transactions')
+      .select([
+        `SUM(CASE 
+         WHEN transactions.status = :status 
+           AND transactions.remitterBankId = :defaultBankId 
+           AND transactions.beneficiaryBankId = :externalBankId 
+         THEN 
+           CASE 
+             WHEN transactions.remitterPaidFee 
+             THEN transactions.transactionFee + transactions.amount 
+             ELSE transactions.amount 
+           END
+         ELSE 0 END) as outcomingAmount`,
+        `SUM(CASE 
+         WHEN transactions.status = :status 
+           AND transactions.remitterBankId = :externalBankId 
+           AND transactions.beneficiaryBankId = :defaultBankId 
+         THEN 
+           CASE 
+             WHEN transactions.remitterPaidFee 
+             THEN transactions.amount 
+             ELSE transactions.amount + transactions.transactionFee 
+           END
+         ELSE 0 END) as incomingAmount`,
+        `COUNT(CASE 
+         WHEN transactions.status = :status 
+           AND (transactions.remitterBankId = :externalBankId OR transactions.beneficiaryBankId = :externalBankId) 
+         THEN 1 ELSE NULL END) as transactionCount`,
+      ])
+      .setParameters({
+        status: TransactionStatus.SUCCESS,
+        defaultBankId: defaultBank.id,
+        externalBankId: externalBank.id,
+      })
+      .getRawOne();
+
+    return {
+      outcomingAmount: parseInt(result.outcomingamount) ?? 0,
+      incomingAmount: parseInt(result.incomingamount) ?? 0,
+      transactionCount: parseInt(result.transactioncount) ?? 0,
+    };
   }
 }

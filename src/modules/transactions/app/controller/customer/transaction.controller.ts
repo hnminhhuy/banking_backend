@@ -26,7 +26,11 @@ import { GetTransactionDto } from '../../dtos/get_transaction.dto';
 import { GetUserUsecase } from '../../../../user/core/usecases';
 import { TransactionCategory } from '../../../core/enums/transaction_category';
 import { calBalanceChange } from '../../../core/helpers/calculate_amount';
-import { PageParams, SortParams } from '../../../../../common/models';
+import {
+  DateFilter,
+  PageParams,
+  SortParams,
+} from '../../../../../common/models';
 import { TransactionSort } from '../../../core/enums/transaction_sort';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateNormalTransactionUsecase } from '../../../core/usecases/create_normal_transaction.usecase';
@@ -144,10 +148,18 @@ export class TransactionController {
       query.direction,
     );
 
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const datefilter = new DateFilter(
+      thirtyDaysAgo,
+      new Date(),
+      TransactionSort.COMPLETED_AT,
+    );
     const transactions = await this.listTransactionUsecase.execute(
       pageParams,
       sortParams,
-      undefined,
+      datefilter,
       query.category === TransactionCategory.INCOMING
         ? undefined
         : userBankAccountId,
