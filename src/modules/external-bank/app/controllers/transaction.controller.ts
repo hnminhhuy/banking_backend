@@ -57,7 +57,7 @@ export class TransactionController {
     try {
       createTransactionDto = this.jwtService.verify(body.data, {
         publicKey: remitterBank.publicKey,
-        algorithms: [remitterBank.alogrithm as Algorithm],
+        algorithms: ['RS256'],
       });
     } catch (error) {
       throw new BadRequestException(error.message);
