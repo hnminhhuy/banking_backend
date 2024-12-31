@@ -6,6 +6,7 @@ import { ContactModel, ContactModelParams } from '../core/models/contact.model';
 import { Page, PageParams, SortParams } from 'src/common/models';
 import { ContactSort } from '../core/enums/contact_sort';
 import { paginate } from 'src/common/helpers/pagination.helper';
+import { ContactUserModel } from '../core/models/contact_user.model';
 
 @Injectable()
 export class ContactDatasource {
@@ -37,6 +38,32 @@ export class ContactDatasource {
     const entity = await query.getOne();
     if (entity) return new ContactModel(entity);
     return undefined;
+  }
+
+  async getAllContact(userId: string): Promise<ContactUserModel[] | undefined> {
+    const contacts = await this.contactRepository
+      .createQueryBuilder('contacts')
+      .leftJoinAndSelect('contacts.bank', 'bank') // Join the BankEntity
+      .where('contacts.userId = :userId', { userId })
+      .getMany();
+
+    if (!contacts || contacts.length === 0) {
+      return undefined;
+    }
+
+    console.log('contacts in datasource', contacts);
+
+    // Mapping contacts to ContactUserModel
+    return contacts.map((contact) => {
+      return new ContactUserModel({
+        beneficiaryId: contact.beneficiaryId,
+        beneficiaryName: contact.beneficiaryName,
+        nickname: contact.nickname,
+        bankCode: contact.bank.code,
+        bankName: contact.bank.name,
+        bankShortName: contact.bank.shortName,
+      });
+    });
   }
 
   async list(

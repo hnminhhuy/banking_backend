@@ -15,7 +15,7 @@ import {
 } from './core/usecases';
 import { ContactEntity } from './infra/data/entities/contact.entity';
 import { ContactController } from './app/controller/contact.controller';
-import { ExternalBankModule } from '../external-bank/external_bank.module';
+import { GetAllContactInfoUsecase } from './core/usecases/get_all_contact_info.usecase';
 
 @Module({
   imports: [
@@ -23,7 +23,6 @@ import { ExternalBankModule } from '../external-bank/external_bank.module';
     forwardRef(() => BankAccountModule),
     forwardRef(() => BankModule),
     forwardRef(() => UserModule),
-    forwardRef(() => ExternalBankModule),
   ],
   controllers: [ContactController],
   providers: [
@@ -34,6 +33,7 @@ import { ExternalBankModule } from '../external-bank/external_bank.module';
     ContactDatasource,
     CreateContactUsecase,
     GetContactUsecase,
+    GetAllContactInfoUsecase,
     ListContactUsecase,
     UpdateContactUsecase,
     DeleteContactUsecase,
