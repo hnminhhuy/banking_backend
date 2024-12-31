@@ -16,6 +16,8 @@ import { BankModule } from '../bank/bank.module';
 import { CreateExternalBankTransactionUsecase } from './core/usecases/transactions/create_external_bank_transaction.usecase';
 import { ITransactionRepo } from './core/repositories/transaction.irepo';
 import { TransactionRepo } from './infra/repositories/transaction.repo';
+import { JwtModule, JwtService } from '@nestjs/jwt';
+import { BankConfigModule } from '../bank_config/bank_config.module';
 
 @Module({
   imports: [
@@ -24,9 +26,11 @@ import { TransactionRepo } from './infra/repositories/transaction.repo';
     BullModule.registerQueue({
       name: 'transaction-interbank-queue',
     }),
+    JwtModule,
     forwardRef(() => BankAccountModule),
     forwardRef(() => BankModule),
     forwardRef(() => TransactionModule),
+    forwardRef(() => BankConfigModule),
   ],
   controllers: [BankAccountController, TransactionController],
   providers: [
