@@ -49,7 +49,7 @@ export class ApiExceptionFilter implements ExceptionFilter {
             data = {
               code: ERROR_CODES.FORBIDDEN_ACCESS,
               status,
-              message: 'You are unauthorized to use this resource.',
+              message: message || 'You are unauthorized to use this resource.',
             };
 
             break;
@@ -58,7 +58,7 @@ export class ApiExceptionFilter implements ExceptionFilter {
             data = {
               code: ERROR_CODES.UNAUTHORIZED_ACCESS,
               status,
-              message: 'You are unauthorized.',
+              message: message || 'You are unauthorized.',
             };
 
             break;
@@ -68,7 +68,7 @@ export class ApiExceptionFilter implements ExceptionFilter {
             data = {
               code: ERROR_CODES.BAD_REQUEST,
               status,
-              message,
+              message: message || 'Bad request',
             };
 
             break;
@@ -78,9 +78,16 @@ export class ApiExceptionFilter implements ExceptionFilter {
             data = {
               code: ERROR_CODES.RESOURCE_NOT_FOUND,
               status,
-              message: 'The resource can not be found.',
+              message: message || 'The resource can not be found.',
             };
-
+            break;
+          }
+          case 'ConflictException': { // Added ConflictException case
+            data = {
+              code: ERROR_CODES.CONFLICT,
+              status,
+              message: 'A conflict occurred with the current state of the resource.',
+            };
             break;
           }
           default: {
