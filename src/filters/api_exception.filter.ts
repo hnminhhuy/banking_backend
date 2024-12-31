@@ -82,11 +82,13 @@ export class ApiExceptionFilter implements ExceptionFilter {
             };
             break;
           }
-          case 'ConflictException': { // Added ConflictException case
+          case 'ConflictException': {
+            // Added ConflictException case
             data = {
               code: ERROR_CODES.CONFLICT,
               status,
-              message: 'A conflict occurred with the current state of the resource.',
+              message:
+                'A conflict occurred with the current state of the resource.',
             };
             break;
           }

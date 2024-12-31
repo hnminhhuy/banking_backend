@@ -5,7 +5,6 @@ import {
   BankAccountParams,
 } from '../models/bank_account.model';
 import { GetBankUsecase } from '../../../bank/core/usecases';
-import { GetBankAccountUsecase } from './get_bank_account.usecase';
 import { GetMaxBankAccountUsecase } from './get_max_bank_account.usecase';
 import { ConfigService } from '@nestjs/config';
 import { Cache } from 'cache-manager';

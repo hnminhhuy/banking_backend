@@ -23,7 +23,6 @@ import { BankCode } from '../../../bank/core/enums/bank_code';
 import { ChangeBalanceUsecase } from '../../../bank_account/core/usecases';
 import { Transactional } from 'typeorm-transactional';
 import { JwtService } from '@nestjs/jwt';
-import { Algorithm } from 'jsonwebtoken';
 
 @ApiTags(`External Bank`)
 @Controller({ path: 'api/external-bank/v1/transactions' })

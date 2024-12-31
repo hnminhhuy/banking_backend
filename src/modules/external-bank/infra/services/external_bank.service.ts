@@ -8,7 +8,6 @@ import { Cache } from 'cache-manager';
 import { throwError } from '../../../../common/helpers/throw_error';
 import { JwtService } from '@nestjs/jwt';
 import { GetConfigUsecase } from '../../../bank_config/core/usecase';
-import { ConfigKey } from '../../../bank_config/core/enum/config_key';
 
 @Injectable()
 export class ExternalBankService {
@@ -147,7 +146,7 @@ export class ExternalBankService {
 
   protected async getAccessToken(): Promise<string> {
     let accessTokenInfo = await this.getCacheAccessToken();
-    let refreshTokenInfo = await this.getCacheRefreshToken();
+    const refreshTokenInfo = await this.getCacheRefreshToken();
 
     if (
       (!accessTokenInfo && !refreshTokenInfo) ||

@@ -4,14 +4,7 @@ import { BankAccountEntity } from 'src/modules/bank_account/infra/data/entities/
 import { ContactEntity } from 'src/modules/contact/infra/data/entities/contact.entity';
 import { UserRole } from 'src/modules/user/core/enums/user_role';
 import { UserModel } from 'src/modules/user/core/models/user.model';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  OneToMany,
-  OneToOne,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
 
 @Entity('users')
 export class UserEntity extends BaseEntity {

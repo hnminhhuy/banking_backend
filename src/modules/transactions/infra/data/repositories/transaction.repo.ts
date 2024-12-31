@@ -10,10 +10,7 @@ import {
 import { TransactionSort } from '../../../core/enums/transaction_sort';
 import { TransactionStatus } from '../../../core/enums/transaction_status';
 import { TransactionType } from '../../../core/enums/transaction_type';
-import {
-  TransactionModel,
-  TransactionModelParams,
-} from '../../../core/models/transaction.model';
+import { TransactionModel } from '../../../core/models/transaction.model';
 import { BankModel } from '../../../../bank/core/models/bank.model';
 
 @Injectable()

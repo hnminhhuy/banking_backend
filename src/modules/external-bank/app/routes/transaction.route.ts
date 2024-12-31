@@ -1,9 +1,6 @@
 import { RequestMethod, HttpStatus } from '@nestjs/common';
 import { IRouteParams } from '../../../../decorators';
-import {
-  CreateTransactionForExternalBankDto,
-  TransactionData,
-} from '../../../transactions/app/dtos';
+import { TransactionData } from '../../../transactions/app/dtos';
 import { TransactionModel } from '../../../transactions/core/models/transaction.model';
 
 export const TransactionRouteByExternalBank = {
