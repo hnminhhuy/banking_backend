@@ -49,3 +49,29 @@ export class TopicNotificationDto extends PickType(NotificationDto, [
   })
   topic: string;
 }
+
+export class SendNotificationDto {
+  @ApiProperty({
+    type: String,
+    description: 'Client device token',
+  })
+  token: string;
+
+  @ApiProperty({
+    type: String,
+    description: 'Notification Title',
+  })
+  title: string;
+
+  @ApiProperty({
+    type: String,
+    description: 'Notification Body',
+  })
+  body: string;
+
+  @ApiPropertyOptional({
+    type: String,
+    description: 'Notification Icon / Logo',
+  })
+  icon: string;
+}

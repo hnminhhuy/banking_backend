@@ -3,6 +3,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { FcmService } from '../../infra/services/fcm.service';
 import {
   MultipleDeviceNotificationDto,
+  SendNotificationDto,
   TopicNotificationDto,
 } from '../dtos/notification.dto';
 import { Route } from '../../../../decorators';
@@ -14,9 +15,7 @@ export class FcmController {
   constructor(private readonly fcmService: FcmService) {}
 
   @Route(FcmRoute.sendNotification)
-  async sendNotification(
-    @Body() body: { token: string; title: string; body: string; icon: string },
-  ) {
+  async sendNotification(@Body() body: SendNotificationDto) {
     return this.fcmService.sendNotification({
       token: body.token,
       title: body.title,

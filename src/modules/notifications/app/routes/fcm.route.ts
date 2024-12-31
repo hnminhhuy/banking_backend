@@ -2,14 +2,16 @@ import { HttpStatus, RequestMethod } from '@nestjs/common';
 import { IRouteParams } from 'src/decorators';
 import { BaseException } from 'src/exceptions';
 import { UserRole } from '../../../user/core/enums/user_role';
+import { SendNotificationDto } from '../dtos/notification.dto';
 
 export const FcmRoute = {
   sendNotification: <IRouteParams>{
     path: '/send-notification',
     method: RequestMethod.POST,
-    secure: true,
-    roles: [UserRole.Customer],
+    // secure: true,
+    // roles: [UserRole.Customer],
     swaggerParams: {
+      body: SendNotificationDto,
       responses: [
         {
           status: HttpStatus.OK,
