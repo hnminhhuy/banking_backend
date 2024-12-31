@@ -48,7 +48,7 @@ export class TransactionController {
     );
     let createTransactionDto: CreateTransactionForExternalBankDto = undefined;
     try {
-      createTransactionDto = this.jwtService.verify(body.data, {
+      createTransactionDto = await this.jwtService.verifyAsync(body.data, {
         publicKey: remitterBank.publicKey,
         algorithms: ['RS256'],
       });
