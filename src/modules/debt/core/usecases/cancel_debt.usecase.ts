@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { DebtModel, DebtModelParams } from '../models/debt.model';
 import { IDebtRepo } from '../repositories/debt.irepo';
 import { GetBankAccountUsecase } from 'src/modules/bank_account/core/usecases';
 import { DebtStatus } from '../enum/debt_status';

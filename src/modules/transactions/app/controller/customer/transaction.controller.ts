@@ -2,7 +2,6 @@ import {
   BadRequestException,
   Body,
   Controller,
-  HttpStatus,
   NotFoundException,
   Param,
   Query,
@@ -174,7 +173,7 @@ export class TransactionController {
       undefined,
     );
 
-    let data = transactions.data.map((transaction) => {
+    const data = transactions.data.map((transaction) => {
       const isRemitter = transaction.remitterId === userBankAccountId;
 
       let transactionCategory = isRemitter

@@ -1,13 +1,5 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { UserModel } from 'src/modules/user/core/models/user.model';
-import {
-  GetUserUsecase,
-  UpdateUserPasswordUsecase,
-} from 'src/modules/user/core/usecases';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { UpdateUserPasswordUsecase } from 'src/modules/user/core/usecases';
 
 @Injectable()
 export class ResetPasswordUsecase {

@@ -11,17 +11,12 @@ import { TransactionSort } from '../enums/transaction_sort';
 import { SORT_DIRECTION } from '../../../../common/enums';
 import { TransactionStatus } from '../enums/transaction_status';
 import { UpdateTransactionsUsecase } from './update_transactions_status.usecase';
-import { SendPushNotificationUseCase } from '../../../notifications/core/usecases/send_push_notification.usecase';
-import { GetBankAccountUsecase } from '../../../bank_account/core/usecases';
-import { NotificationType } from '../../../notifications/core/enums/notification_type';
 
 @Injectable()
 export class HandleTimeoutTransactionUsecase {
   constructor(
     private readonly listTransactionUsecase: ListTransactionUsecase,
     private readonly updateTransactionsUsecase: UpdateTransactionsUsecase,
-    private readonly sendPushNotificationUsecase: SendPushNotificationUseCase,
-    private readonly getBankAccountUsecase: GetBankAccountUsecase,
   ) {}
 
   public async execute(): Promise<void> {

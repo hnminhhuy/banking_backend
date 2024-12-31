@@ -28,7 +28,6 @@ import { Transactional } from 'typeorm-transactional';
 import { SendPushNotificationUseCase } from '../../../notifications/core/usecases/send_push_notification.usecase';
 import { NotificationType } from '../../../notifications/core/enums/notification_type';
 import { JwtService } from '@nestjs/jwt';
-import { Algorithm } from 'jsonwebtoken';
 
 @ApiTags(`External Bank`)
 @Controller({ path: 'api/external-bank/v1/transactions' })
