@@ -8,6 +8,7 @@ import { DepositDto, GetBankAccountDto } from '../../dtos';
 import { BankAccountRouteByCustomer } from '../../routes/customer/bank_account.route';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { GetExternalBankAccountInfoUsecase } from '../../../../external-bank/core/usecases/bank_account/get_external_bank_user.usecase';
+import { BankCode } from 'src/modules/bank/core/enums/bank_code';
 
 @Controller({ path: 'api/customer/v1/bank-accounts' })
 @ApiBearerAuth()
@@ -16,13 +17,14 @@ export class BankAccountController {
     private readonly getBankAccountUsecase: GetBankAccountUsecase,
     private readonly getExternalBankAccountUsecase: GetExternalBankAccountInfoUsecase,
     private readonly changeBalanceUsecase: ChangeBalanceUsecase,
+    private readonly bankCode: BankCode,
   ) {}
 
   @Route(BankAccountRouteByCustomer.getBankAccount)
   async get(@Body() body: GetBankAccountDto) {
     let result = undefined;
 
-    if (!body.code) {
+    if (body.code === this.bankCode.DEFAULT) {
       const bankAccount = await this.getBankAccountUsecase.execute(
         'id',
         body.id,
