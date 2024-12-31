@@ -7,22 +7,18 @@ export class TransactionService extends ExternalBankService {
   async createTransaction(
     params: TransactionModelParams,
   ): Promise<Record<string, any>> {
-    const data = await this.jwtService.sign(
-      {
-        id: params.id,
-        remitterId: params.remitterId,
-        beneficiaryId: params.beneficiaryId,
-        beneficiaryName: params.beneficiaryName,
-        remitterName: params.remitterName,
-        amount: params.amount,
-        message: params.message,
-        transactionFee: params.transactionFee,
-        remitterPaidFee: params.remitterPaidFee,
-      },
-      {
-        expiresIn: '5m',
-      },
-    );
+    const data = await this.jwtService.sign({
+      id: params.id,
+      remitterId: params.remitterId,
+      beneficiaryId: params.beneficiaryId,
+      beneficiaryName: params.beneficiaryName,
+      remitterName: params.remitterName,
+      amount: params.amount,
+      message: params.message,
+      transactionFee: params.transactionFee,
+      remitterPaidFee: params.remitterPaidFee,
+    });
+
     const response = await this.safeRequest(
       'POST',
       `${this.getBaseUrl()}/api/external-bank/v1/transactions`,

@@ -48,6 +48,7 @@ import { HttpModule } from '@nestjs/axios';
       inject: [ConfigService],
       useFactory: (configService: ConfigService): any =>
         configService.get<JwtModuleOptions>('auth.jwt'),
+      global: true,
     }),
     HttpModule,
     forwardRef(() => RedisCacheModule),
