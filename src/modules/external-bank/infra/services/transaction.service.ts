@@ -21,7 +21,6 @@ export class TransactionService extends ExternalBankService {
       },
       {
         expiresIn: '5m',
-        secret: this.configService.get<string>('auth.jwt.publicKey'),
       },
     );
     const response = await this.safeRequest(
