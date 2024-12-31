@@ -1,5 +1,6 @@
-import { PickType } from '@nestjs/swagger';
+import { ApiProperty, PickType } from '@nestjs/swagger';
 import { TransactionDto } from './transaction.dto';
+import { IsString } from 'class-validator';
 
 export class CreateTransactionDto extends PickType(TransactionDto, [
   'remitterId',
@@ -9,6 +10,12 @@ export class CreateTransactionDto extends PickType(TransactionDto, [
   'message',
   'remitterPaidFee',
 ]) {}
+
+export class TransactionData {
+  @ApiProperty()
+  @IsString()
+  data!: string;
+}
 
 export class CreateTransactionForExternalBankDto extends PickType(
   TransactionDto,

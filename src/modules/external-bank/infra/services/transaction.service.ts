@@ -7,9 +7,7 @@ export class TransactionService extends ExternalBankService {
   async createTransaction(
     params: TransactionModelParams,
   ): Promise<Record<string, any>> {
-    const response = await this.safeRequest(
-      'POST',
-      `${this.getBaseUrl()}/api/external-bank/v1/transactions`,
+    const data = await this.jwtService.sign(
       {
         id: params.id,
         remitterId: params.remitterId,
@@ -20,6 +18,17 @@ export class TransactionService extends ExternalBankService {
         message: params.message,
         transactionFee: params.transactionFee,
         remitterPaidFee: params.remitterPaidFee,
+      },
+      {
+        expiresIn: '5m',
+        secret: this.configService.get<string>('auth.jwt.publicKey'),
+      },
+    );
+    const response = await this.safeRequest(
+      'POST',
+      `${this.getBaseUrl()}/api/external-bank/v1/transactions`,
+      {
+        data: data,
       },
       {},
     );

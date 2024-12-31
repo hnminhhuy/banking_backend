@@ -6,13 +6,18 @@ import { AxiosError, AxiosResponse, Method } from 'axios';
 import { lastValueFrom } from 'rxjs';
 import { Cache } from 'cache-manager';
 import { throwError } from '../../../../common/helpers/throw_error';
+import { JwtService } from '@nestjs/jwt';
+import { GetConfigUsecase } from '../../../bank_config/core/usecase';
+import { ConfigKey } from '../../../bank_config/core/enum/config_key';
 
 @Injectable()
 export class ExternalBankService {
   constructor(
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     private readonly httpService: HttpService,
-    private readonly configService: ConfigService,
+    protected configService: ConfigService,
+    protected jwtService: JwtService,
+    protected getConfigUsecase: GetConfigUsecase,
   ) {
     const requiredConfigs = [
       'external_bank.apiUrl',

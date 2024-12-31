@@ -10,7 +10,10 @@ import { CreateTransactionUsecase } from '../../../transactions/core/usecases';
 import { AuthGuard } from '@nestjs/passport';
 import { Route } from '../../../../decorators';
 import { TransactionRouteByExternalBank } from '../routes/transaction.route';
-import { CreateTransactionForExternalBankDto } from '../../../transactions/app/dtos';
+import {
+  CreateTransactionForExternalBankDto,
+  TransactionData,
+} from '../../../transactions/app/dtos';
 import { TransactionModelParams } from '../../../transactions/core/models/transaction.model';
 import { TransactionType } from '../../../transactions/core/enums/transaction_type';
 import { TransactionStatus } from '../../../transactions/core/enums/transaction_status';
@@ -24,6 +27,8 @@ import {
 import { Transactional } from 'typeorm-transactional';
 import { SendPushNotificationUseCase } from '../../../notifications/core/usecases/send_push_notification.usecase';
 import { NotificationType } from '../../../notifications/core/enums/notification_type';
+import { JwtService } from '@nestjs/jwt';
+import { Algorithm } from 'jsonwebtoken';
 
 @ApiTags(`External Bank`)
 @Controller({ path: 'api/external-bank/v1/transactions' })
@@ -35,6 +40,7 @@ export class TransactionController {
     private readonly updateTransactionUsecase: UpdateTransactionUsecase,
     private readonly changeBalanceUsecase: ChangeBalanceUsecase,
     private readonly getBankUsecase: GetBankUsecase,
+    private readonly jwtService: JwtService,
     private readonly bankCode: BankCode,
     private readonly sendPushNotificationUsecase: SendPushNotificationUseCase,
     private readonly getBankAccountUsecase: GetBankAccountUsecase,
@@ -42,33 +48,39 @@ export class TransactionController {
 
   @Transactional()
   @Route(TransactionRouteByExternalBank.createTransaction)
-  async create(
-    @Req() req: any,
-    @Body() body: CreateTransactionForExternalBankDto,
-  ) {
+  async create(@Req() req: any, @Body() body: TransactionData) {
+    const remitterBank = await this.getBankUsecase.execute(
+      'id',
+      req.user.authId,
+    );
+    let createTransactionDto: CreateTransactionForExternalBankDto = undefined;
+    try {
+      createTransactionDto = this.jwtService.verify(body.data, {
+        publicKey: remitterBank.publicKey,
+        algorithms: [remitterBank.alogrithm as Algorithm],
+      });
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+
     const beneficiaryBank = await this.getBankUsecase.execute(
       'code',
       this.bankCode.DEFAULT,
     );
 
-    const remitterBank = await this.getBankUsecase.execute(
-      'id',
-      req.user.authId,
-    );
-
     const params: TransactionModelParams = {
-      id: body.id,
-      amount: body.amount,
-      remitterId: body.remitterId,
+      id: createTransactionDto.id,
+      amount: createTransactionDto.amount,
+      remitterId: createTransactionDto.remitterId,
       type: TransactionType.NORMAL,
-      transactionFee: body.transactionFee,
-      beneficiaryId: body.beneficiaryId,
+      transactionFee: createTransactionDto.transactionFee,
+      beneficiaryId: createTransactionDto.beneficiaryId,
       beneficiaryBankId: beneficiaryBank.id,
-      remitterPaidFee: body.remitterPaidFee,
-      message: body.message,
-      beneficiaryName: body.beneficiaryName,
+      remitterPaidFee: createTransactionDto.remitterPaidFee,
+      message: createTransactionDto.message,
+      beneficiaryName: createTransactionDto.beneficiaryName,
       remitterBankId: remitterBank.id,
-      remitterName: body.remitterName,
+      remitterName: createTransactionDto.remitterName,
       status: TransactionStatus.PROCESSING,
     };
 
