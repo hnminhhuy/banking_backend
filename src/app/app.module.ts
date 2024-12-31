@@ -33,6 +33,7 @@ import bankConfig from '../config/bank.config';
 import { DebtModule } from 'src/modules/debt/debt.module';
 import { ContactModule } from 'src/modules/contact/contact.module';
 import externalBankConfig from '../config/external-bank.config';
+import { NotificationModule } from '../modules/notifications/notification.module';
 
 @Module({
   imports: [
@@ -90,6 +91,7 @@ import externalBankConfig from '../config/external-bank.config';
     forwardRef(() => OtpModule),
     forwardRef(() => DebtModule),
     forwardRef(() => ContactModule),
+    forwardRef(() => NotificationModule),
   ],
   controllers: [AppController],
   providers: [],
