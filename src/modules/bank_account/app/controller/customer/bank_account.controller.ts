@@ -9,6 +9,8 @@ import { BankAccountRouteByCustomer } from '../../routes/customer/bank_account.r
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { GetExternalBankAccountInfoUsecase } from '../../../../external-bank/core/usecases/bank_account/get_external_bank_user.usecase';
 import { BankCode } from 'src/modules/bank/core/enums/bank_code';
+import { GetBankUsecase } from '../../../../bank/core/usecases';
+import { throwError } from '../../../../../common/helpers/throw_error';
 
 @Controller({ path: 'api/customer/v1/bank-accounts' })
 @ApiBearerAuth()
@@ -18,6 +20,7 @@ export class BankAccountController {
     private readonly getExternalBankAccountUsecase: GetExternalBankAccountInfoUsecase,
     private readonly changeBalanceUsecase: ChangeBalanceUsecase,
     private readonly bankCode: BankCode,
+    private readonly getBankUsecase: GetBankUsecase,
   ) {}
 
   @Route(BankAccountRouteByCustomer.getBankAccount)
@@ -39,7 +42,11 @@ export class BankAccountController {
         fullName: bankAccount.user?.fullName,
       };
     } else {
-      result = (await this.getExternalBankAccountUsecase.execute(body.id)).data;
+      const bank = await this.getBankUsecase.execute('code', body.code);
+      result = (
+        (await this.getExternalBankAccountUsecase.execute(bank, body.id)) ??
+        throwError()
+      ).data;
     }
 
     return {

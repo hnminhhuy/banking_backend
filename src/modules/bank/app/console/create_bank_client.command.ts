@@ -80,6 +80,7 @@ export class CreateAuthClientCommand {
       publicKey: bankDto.publicKey,
       logoUrl: bankDto.logoUrl,
       algorithm: bankDto.algorithm,
+      metadata: {},
     };
 
     const bank = await this.createBankUsecase.execute(bankParams);
@@ -89,7 +90,10 @@ export class CreateAuthClientCommand {
       .toString();
 
     console.log('=============================');
-    console.log('client_id: ' + bank.id);
-    console.log('client_secret: ' + clientSecret);
+    console.log('Client created successfully');
+    console.log({
+      clientId: bank.id,
+      clientSecret,
+    });
   }
 }

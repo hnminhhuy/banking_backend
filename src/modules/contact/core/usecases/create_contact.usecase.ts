@@ -43,6 +43,7 @@ export class CreateContactUsecase {
         break;
       case this.bankCode.EXTERNAL_BANK:
         contactUser = await this.getExternalBankAccountInfoUsecase.execute(
+          bank,
           params['beneficiaryId'],
         );
         beneficiaryName = contactUser.data.fullName;

@@ -1,3 +1,5 @@
+import { BankModel } from '../../../bank/core/models/bank.model';
+
 export abstract class IBankAccountRepo {
-  abstract get(id: string): Promise<any>;
+  abstract get(externalBank: BankModel, id: string): Promise<any>;
 }

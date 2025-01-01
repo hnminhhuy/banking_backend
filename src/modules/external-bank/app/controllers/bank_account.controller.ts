@@ -6,10 +6,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { BankAccountRouteByExternalBank } from '../routes/bank_account.route';
-import {
-  GetBankAccountDto,
-  GetBankAccountExternalDto,
-} from '../../../bank_account/app/dtos';
+import { GetBankAccountExternalDto } from '../../../bank_account/app/dtos';
 import { GetBankAccountUsecase } from '../../../bank_account/core/usecases';
 import { Route } from '../../../../decorators';
 import { AuthGuard } from '@nestjs/passport';
