@@ -152,6 +152,7 @@ export class ContactController {
   ) {
     try {
       const result = await this.updateContactUsecase.execute(
+        body.code,
         req.user.authId,
         params.id,
         body,
@@ -165,6 +166,7 @@ export class ContactController {
         result,
       };
     } catch (error) {
+      console.log(error);
       switch (error.message) {
         case 'NotFoundContactError':
           throw new NotFoundException('Contact not found');
