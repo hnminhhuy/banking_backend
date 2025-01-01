@@ -9,6 +9,10 @@ export class GetBankAccountDto extends PickType(BankAccountDto, ['id']) {
   code: string;
 }
 
+export class GetBankAccountExternalDto extends PickType(BankAccountDto, [
+  'id',
+]) {}
+
 export class GetBankAccountQuery {
   @ApiProperty()
   includeUser?: boolean;
