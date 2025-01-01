@@ -54,13 +54,13 @@ export class TransactionController {
     );
     let createTransactionDto: CreateTransactionForExternalBankDto = undefined;
     try {
-      createTransactionDto = await this.jwtService.verifyAsync(body.data, {
+      createTransactionDto = await this.jwtService.verifyAsync(body.sign, {
         publicKey: remitterBank.publicKey,
         algorithms: ['RS256'],
       });
 
       if (!createTransactionDto) {
-        throw new BadRequestException('Invalid data');
+        throw new BadRequestException('Invalid sign');
       }
 
       if (
@@ -140,6 +140,11 @@ export class TransactionController {
       throw new BadRequestException(error.message);
     }
 
-    return true;
+    const responseData = { isSuccess: true };
+    const signature = await this.jwtService.sign(responseData);
+    return {
+      isSuccess: true,
+      signature: signature,
+    };
   }
 }

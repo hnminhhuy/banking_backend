@@ -9,7 +9,7 @@ export class TransactionService extends ExternalBankService {
     externalBank: BankModel,
     params: TransactionModelParams,
   ): Promise<Record<string, any>> {
-    const data = await this.jwtService.sign({
+    const sign = await this.jwtService.sign({
       id: params.id,
       remitterId: params.remitterId,
       beneficiaryId: params.beneficiaryId,
@@ -26,7 +26,7 @@ export class TransactionService extends ExternalBankService {
       'POST',
       `${this.getBaseUrl(externalBank)}/api/external-bank/v1/transactions`,
       {
-        data: data,
+        sign: sign,
         id: params.id,
         remitterId: params.remitterId,
         beneficiaryId: params.beneficiaryId,
