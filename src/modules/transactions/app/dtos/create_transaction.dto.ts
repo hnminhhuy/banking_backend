@@ -42,5 +42,5 @@ export class ExternalTransactionData extends PickType(
 ) {
   @ApiProperty()
   @IsString()
-  data!: string;
+  sign!: string;
 }
