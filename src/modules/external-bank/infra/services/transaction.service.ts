@@ -24,6 +24,15 @@ export class TransactionService extends ExternalBankService {
       `${this.getBaseUrl()}/api/external-bank/v1/transactions`,
       {
         data: data,
+        id: params.id,
+        remitterId: params.remitterId,
+        beneficiaryId: params.beneficiaryId,
+        beneficiaryName: params.beneficiaryName,
+        remitterName: params.remitterName,
+        amount: params.amount,
+        message: params.message,
+        transactionFee: params.transactionFee,
+        remitterPaidFee: params.remitterPaidFee,
       },
       {},
     );
