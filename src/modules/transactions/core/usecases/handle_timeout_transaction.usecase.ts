@@ -11,13 +11,17 @@ import { TransactionSort } from '../enums/transaction_sort';
 import { SORT_DIRECTION } from '../../../../common/enums';
 import { TransactionStatus } from '../enums/transaction_status';
 import { UpdateTransactionsUsecase } from './update_transactions_status.usecase';
-import { DataSource } from 'typeorm';
+import { SendPushNotificationUseCase } from '../../../notifications/core/usecases/send_push_notification.usecase';
+import { GetBankAccountUsecase } from '../../../bank_account/core/usecases';
+import { NotificationType } from '../../../notifications/core/enums/notification_type';
 
 @Injectable()
 export class HandleTimeoutTransactionUsecase {
   constructor(
     private readonly listTransactionUsecase: ListTransactionUsecase,
     private readonly updateTransactionsUsecase: UpdateTransactionsUsecase,
+    private readonly sendPushNotificationUsecase: SendPushNotificationUseCase,
+    private readonly getBankAccountUsecase: GetBankAccountUsecase,
   ) {}
 
   public async execute(): Promise<void> {
@@ -60,6 +64,28 @@ export class HandleTimeoutTransactionUsecase {
           TransactionStatus.FAILED,
         );
       }
+
+      transactions.forEach(async (transaction) => {
+        if (transaction.status === TransactionStatus.PROCESSING) {
+          const remitterAccount = await this.getBankAccountUsecase.execute(
+            'id',
+            transaction.remitterId,
+          );
+          this.sendPushNotificationUsecase
+            .execute(
+              remitterAccount?.userId,
+              NotificationType.TRANSACTION_FAILED,
+              undefined,
+              transaction.id,
+            )
+            .then(() => {
+              console.log('Push notification sent');
+            })
+            .catch((error) => {
+              console.log(error.message);
+            });
+        }
+      });
       currentPage++;
     } while (page && page.data.length === pageSize);
   }

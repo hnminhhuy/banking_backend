@@ -37,7 +37,7 @@ export class NotificationBodyHandlerUsecase {
           throwError('Transaction is required');
         }
 
-        message = `Giao dịch ${transaction.amount} đến ${
+        message = `Giao dịch ${transaction.amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} đến ${
           transaction.beneficiaryName
         } đã thành công!`;
         return message;
@@ -52,7 +52,7 @@ export class NotificationBodyHandlerUsecase {
           throwError('Transaction is required');
         }
 
-        message = `Giao dịch ${transactionFailed.amount} đến ${
+        message = `Giao dịch ${transactionFailed.amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} đến ${
           transactionFailed.beneficiaryName
         } đã thất bại!`;
         return message;
@@ -91,18 +91,19 @@ export class NotificationBodyHandlerUsecase {
           throwError('Transaction is required');
         }
 
-        let amount = calBalanceChange(transaction, user.id);
+        let amount = calBalanceChange(transaction, user.bankAccount.id);
 
-        if (user.id === transaction.remitterId) {
-          message = `Tài khoản của bạn đã bị trừ -${amount} đến ${transaction.beneficiaryName}. Số dư hiện tại của bạn là ${user.bankAccount.balance}`;
+        if (user.bankAccount.id === transaction.remitterId) {
+          message = `Tài khoản của bạn đã bị trừ ${amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} đến ${transaction.beneficiaryName}. Số dư hiện tại của bạn là ${user.bankAccount.balance.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}`;
           return message;
         }
 
         amount = calBalanceChange(transaction, user.id);
-        if (user.id === transaction.beneficiaryId) {
-          message = `Tài khoản của bạn đã được cộng +${amount} từ ${transaction.remitterName}. Số dư hiện tại của bạn là ${user.bankAccount.balance}`;
+        if (user.bankAccount.id === transaction.beneficiaryId) {
+          message = `Tài khoản của bạn đã được cộng +${amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} từ ${transaction.remitterName}. Số dư hiện tại của bạn là ${user.bankAccount.balance.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}`;
           return message;
         }
+        return message;
       }
       default:
         throwError('Invalid notification type');

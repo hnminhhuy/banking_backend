@@ -17,8 +17,13 @@ import { TransactionStatus } from '../../../transactions/core/enums/transaction_
 import { UpdateTransactionUsecase } from '../../../transactions/core/usecases/update_transaction.usecase';
 import { GetBankUsecase } from '../../../bank/core/usecases';
 import { BankCode } from '../../../bank/core/enums/bank_code';
-import { ChangeBalanceUsecase } from '../../../bank_account/core/usecases';
+import {
+  ChangeBalanceUsecase,
+  GetBankAccountUsecase,
+} from '../../../bank_account/core/usecases';
 import { Transactional } from 'typeorm-transactional';
+import { SendPushNotificationUseCase } from '../../../notifications/core/usecases/send_push_notification.usecase';
+import { NotificationType } from '../../../notifications/core/enums/notification_type';
 
 @ApiTags(`External Bank`)
 @Controller({ path: 'api/external-bank/v1/transactions' })
@@ -31,6 +36,8 @@ export class TransactionController {
     private readonly changeBalanceUsecase: ChangeBalanceUsecase,
     private readonly getBankUsecase: GetBankUsecase,
     private readonly bankCode: BankCode,
+    private readonly sendPushNotificationUsecase: SendPushNotificationUseCase,
+    private readonly getBankAccountUsecase: GetBankAccountUsecase,
   ) {}
 
   @Transactional()
@@ -77,6 +84,25 @@ export class TransactionController {
         transaction.id,
         TransactionStatus.SUCCESS,
       );
+
+      const beneficiaryAccount = await this.getBankAccountUsecase.execute(
+        'id',
+        transaction.beneficiaryId,
+      );
+
+      await this.sendPushNotificationUsecase
+        .execute(
+          beneficiaryAccount?.userId,
+          NotificationType.BALANCE_UPDATE,
+          undefined,
+          transaction.id,
+        )
+        .then(() => {
+          console.log('Push notification sent');
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
     } catch (error) {
       await this.updateTransactionUsecase.execute(
         transaction.id,

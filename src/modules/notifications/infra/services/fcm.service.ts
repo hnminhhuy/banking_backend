@@ -32,6 +32,10 @@ export class FcmService {
     body: string,
     icon: string,
   ) {
+    console.log(tokens);
+    if (tokens.length === 0) {
+      return { success: false, message: 'No tokens provided' };
+    }
     const message = {
       webpush: {
         notification: {
