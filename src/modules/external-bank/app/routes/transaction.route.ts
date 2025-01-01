@@ -1,6 +1,6 @@
 import { RequestMethod, HttpStatus } from '@nestjs/common';
 import { IRouteParams } from '../../../../decorators';
-import { CreateTransactionForExternalBankDto } from '../../../transactions/app/dtos';
+import { ExternalTransactionData } from '../../../transactions/app/dtos';
 import { TransactionModel } from '../../../transactions/core/models/transaction.model';
 
 export const TransactionRouteByExternalBank = {
@@ -9,7 +9,7 @@ export const TransactionRouteByExternalBank = {
     method: RequestMethod.POST,
     secure: true,
     swaggerParams: {
-      body: CreateTransactionForExternalBankDto,
+      body: ExternalTransactionData,
       responses: [{ status: HttpStatus.CREATED, type: TransactionModel }],
     },
   },

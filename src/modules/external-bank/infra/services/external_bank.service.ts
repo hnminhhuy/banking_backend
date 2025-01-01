@@ -6,35 +6,24 @@ import { AxiosError, AxiosResponse, Method } from 'axios';
 import { lastValueFrom } from 'rxjs';
 import { Cache } from 'cache-manager';
 import { throwError } from '../../../../common/helpers/throw_error';
+import { JwtService } from '@nestjs/jwt';
+import { BankModel } from '../../../bank/core/models/bank.model';
 
 @Injectable()
 export class ExternalBankService {
   constructor(
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     private readonly httpService: HttpService,
-    private readonly configService: ConfigService,
-  ) {
-    const requiredConfigs = [
-      'external_bank.apiUrl',
-      'external_bank.auth.url',
-      'external_bank.auth.clientId',
-      'external_bank.auth.clientSecret',
-      'external_bank.auth.refreshUrl',
-    ];
-    for (const key of requiredConfigs) {
-      if (!this.configService.get(key)) {
-        throw new Error(`Missing configuration: ${key}`);
-      }
-    }
-  }
+    protected configService: ConfigService,
+    protected jwtService: JwtService,
+  ) {}
 
-  protected getBaseUrl(): string {
-    return (
-      this.configService.get<string>('external_bank.apiUrl') ?? throwError()
-    );
+  protected getBaseUrl(externalBank: BankModel): string {
+    return externalBank.metadata.apiUrl ?? throwError();
   }
 
   protected async request(
+    externalBank: BankModel,
     method: Method,
     url: string,
     body: Record<string, any> | undefined,
@@ -43,13 +32,13 @@ export class ExternalBankService {
     try {
       return await lastValueFrom(
         this.httpService.request({
-          baseURL: this.getBaseUrl(),
+          baseURL: this.getBaseUrl(externalBank),
           url: url,
           data: body,
           method: method,
           params: params,
           headers: {
-            Authorization: `Bearer ${await this.getAccessToken()}`,
+            Authorization: `Bearer ${await this.getAccessToken(externalBank)}`,
           },
         }),
       );
@@ -64,13 +53,14 @@ export class ExternalBankService {
   }
 
   protected async safeRequest(
+    externalBank: BankModel,
     method: Method,
     url: string,
     body: Record<string, any> | undefined,
     params: Record<string, any> | undefined,
   ): Promise<AxiosResponse> {
     try {
-      return await this.request(method, url, body, params);
+      return await this.request(externalBank, method, url, body, params);
     } catch (error: any) {
       if (error instanceof AxiosError) {
         if (
@@ -80,7 +70,7 @@ export class ExternalBankService {
           )
         ) {
           await this.delCacheAccessToken();
-          return await this.request(method, url, body, params);
+          return await this.request(externalBank, method, url, body, params);
         }
       }
 
@@ -140,9 +130,9 @@ export class ExternalBankService {
     );
   }
 
-  protected async getAccessToken(): Promise<string> {
+  protected async getAccessToken(externalBank: BankModel): Promise<string> {
     let accessTokenInfo = await this.getCacheAccessToken();
-    let refreshTokenInfo = await this.getCacheRefreshToken();
+    const refreshTokenInfo = await this.getCacheRefreshToken();
 
     if (
       (!accessTokenInfo && !refreshTokenInfo) ||
@@ -150,19 +140,10 @@ export class ExternalBankService {
         new Date(refreshTokenInfo.refreshTokenExpiresAt) < new Date())
     ) {
       const response = await lastValueFrom(
-        this.httpService.post(
-          this.configService.get<string>('external_bank.auth.url') ??
-            throwError(),
-          {
-            clientId:
-              this.configService.get<string>('external_bank.auth.clientId') ??
-              throwError(),
-            clientSecret:
-              this.configService.get<string>(
-                'external_bank.auth.clientSecret',
-              ) ?? throwError(),
-          },
-        ),
+        this.httpService.post(externalBank.metadata.authUrl ?? throwError(), {
+          clientId: externalBank.metadata.clientId ?? throwError(),
+          clientSecret: externalBank.metadata.clientSecret ?? throwError(),
+        }),
       );
       if (
         !response.data.data?.accessToken ||
@@ -179,8 +160,7 @@ export class ExternalBankService {
     if (new Date(accessTokenInfo.accessTokenExpiresAt) < new Date()) {
       const response = await lastValueFrom(
         this.httpService.post(
-          this.configService.get<string>('external_bank.auth.refreshUrl') ??
-            throwError(),
+          externalBank.metadata.refreshUrl ?? throwError(),
           {},
           {
             headers: {

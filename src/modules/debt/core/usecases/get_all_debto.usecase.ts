@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { IDebtRepo } from '../repositories/debt.irepo';
-import { DebtModel } from '../models/debt.model';
 import { DebtorNameModel } from '../models/debtor_name.model';
 
 @Injectable()

@@ -148,7 +148,7 @@ export class TransactionController {
       ['remitterBank', 'beneficiaryBank'],
     );
 
-    let data = transactions.data.map((transaction) => {
+    const data = transactions.data.map((transaction) => {
       return {
         id: transaction.id,
         createdAt: transaction.createdAt,

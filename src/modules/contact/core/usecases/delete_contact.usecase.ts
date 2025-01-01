@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IContactRepo } from '../repositories/contact.irepo';
 import { GetContactUsecase } from './get_contact.usecase';
-import { GetBankAccountUsecase } from 'src/modules/bank_account/core/usecases';
 
 @Injectable()
 export class DeleteContactUsecase {

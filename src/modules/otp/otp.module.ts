@@ -4,7 +4,6 @@ import { CreateOtpUsecase, VerifyOtpUsecase } from './core/usecases';
 import { MailModule } from '../mail/mail.module';
 import { BankConfigModule } from '../bank_config/bank_config.module';
 import { UserModule } from '../user/user.module';
-import { OtpController } from './app/otp.controller';
 
 @Module({
   imports: [

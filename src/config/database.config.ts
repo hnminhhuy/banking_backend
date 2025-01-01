@@ -1,4 +1,5 @@
 import { registerAs } from '@nestjs/config';
+import { isDevelopmentEnv } from 'src/common/helpers/env.helper';
 
 export default registerAs('database', () => ({
   postgres: {
@@ -12,5 +13,6 @@ export default registerAs('database', () => ({
     password: process.env.PG_PASSWORD,
     database: process.env.PG_DATABASE,
     autoLoadEntities: true,
+    ssl: true,
   },
 }));

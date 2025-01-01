@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { IContactRepo } from '../repositories/contact.irepo';
-import { ContactModel } from '../models/contact.model';
 import { ContactUserModel } from '../models/contact_user.model';
 
 @Injectable()

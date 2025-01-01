@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsDateString, IsOptional, IsUUID } from 'class-validator';
+import { IsDateString } from 'class-validator';
 import { DebtStatus } from '../../core/enum/debt_status';
 import { DebtCategory } from '../../core/enum/debt_category';
 
