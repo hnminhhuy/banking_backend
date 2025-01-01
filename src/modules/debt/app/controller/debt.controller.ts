@@ -96,15 +96,22 @@ export class DebtController {
     if (!debt) {
       throw new NotFoundException('Debt not found');
     }
-    const bankAccount = await this.getBankAccountUsecase.execute(
-      'id',
-      debt.reminderId,
+    let bankAccount = await this.getBankAccountUsecase.execute(
+      'user_id',
+      req.user.authId,
     );
-    if (!bankAccount) {
-      throw new NotFoundException('Bank Account not found');
-    }
+    // console.log('banj 102', bankAccount);
+    // bankAccount =
+    //   bankAccount ||
+    //   (await this.getBankAccountUsecase.execute('id', debt.debtorId));
 
-    if (req.user.authId !== bankAccount.userId)
+    // console.log('banj 106', bankAccount);
+
+    // if (!bankAccount) {
+    //   throw new NotFoundException('Bank Account not found');
+    // }
+
+    if (bankAccount.id !== debt.reminderId && bankAccount.id !== debt.debtorId)
       throw new ForbiddenException('You are not authorized to get this debt');
     return {
       debt,

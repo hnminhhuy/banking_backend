@@ -121,12 +121,14 @@ export class TransactionController {
     const transactionAmount = calBalanceChange(transaction, userBankAccountId);
 
     return {
-      id: transaction.id,
-      date: transaction.updatedAt,
-      status: transaction.status,
-      category: transactionCategory,
-      amount: transactionAmount,
-      message: transaction.message,
+      // id: transaction.id,
+      // date: transaction.updatedAt,
+      // status: transaction.status,
+      // category: transactionCategory,
+      // amount: transactionAmount,
+      // message: transaction.message,
+      transaction,
+      statusCode: 200,
     };
   }
 
