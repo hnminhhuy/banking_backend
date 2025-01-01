@@ -10,6 +10,14 @@ import { NotificationEntity } from './infra/data/entities/notification.entity';
 import { NotificationIRepo } from './core/repositories/notification.irepo';
 import { NotificationRepo } from './infra/data/repositories/notification.repo';
 import { NotificationDatasource } from './infra/data/notification.datasource';
+import { SendTopicNotification } from './core/usecases/fcm_service/send_topic_notification';
+import { SendNotificationToMultipleTokensUsecase } from './core/usecases/fcm_service/send_notification_to_multiple_tokens.usecase';
+import { SendNotificationUsecase } from './core/usecases/fcm_service/send_notification.usecase';
+import { FcmServiceIRepo } from './core/repositories/fcm_service.irepo';
+import { FcmServiceRepo } from './infra/data/repositories/fcm_service.repo';
+import { CreateFcmTokenUsecase } from './core/usecases/fcm_token/create_fcm_token.usecase';
+import { DeleteFcmTokenUsecase } from './core/usecases/fcm_token/delete_fcm_token.usecase';
+import { ListFcmTokenUsecase } from './core/usecases/fcm_token/list_fcm_token.usecase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([FcmTokenEntity, NotificationEntity])],
@@ -24,8 +32,18 @@ import { NotificationDatasource } from './infra/data/notification.datasource';
       provide: NotificationIRepo,
       useClass: NotificationRepo,
     },
+    {
+      provide: FcmServiceIRepo,
+      useClass: FcmServiceRepo,
+    },
     NotificationDatasource,
     FcmTokenDatasource,
+    SendTopicNotification,
+    SendNotificationToMultipleTokensUsecase,
+    SendNotificationUsecase,
+    CreateFcmTokenUsecase,
+    DeleteFcmTokenUsecase,
+    ListFcmTokenUsecase,
   ],
 })
 export class NotificationModule {

@@ -1,8 +1,11 @@
-import { Injectable } from '@nestjs/common';
 import { BaseModel } from '../../../../common/models';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-@Injectable()
+export interface NotificationModelParams {
+  title: string;
+  body: string;
+  readAt?: Date;
+}
 export class NotificationModel extends BaseModel {
   @ApiProperty()
   public readonly title: string;
