@@ -16,5 +16,5 @@ export const pgDataSource = new DataSource({
   username: PG_USERNAME,
   password: PG_PASSWORD,
   migrations: ['dist/src/migrations/*.js'],
-  ssl: true,
+  ssl: !isDevelopmentEnv(),
 });

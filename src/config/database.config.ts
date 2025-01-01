@@ -13,6 +13,6 @@ export default registerAs('database', () => ({
     password: process.env.PG_PASSWORD,
     database: process.env.PG_DATABASE,
     autoLoadEntities: true,
-    ssl: true,
+    ssl: !isDevelopmentEnv(),
   },
 }));
