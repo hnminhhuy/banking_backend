@@ -4,7 +4,7 @@ import { NotificationType } from '../enums/notification_type';
 
 export interface NotificationModelParams {
   userId: string;
-  title: string;
+  title?: string;
   body: string;
   type: NotificationType;
   readAt?: Date;

@@ -20,6 +20,7 @@ import { DeleteFcmTokenUsecase } from './core/usecases/fcm_token/delete_fcm_toke
 import { ListFcmTokenUsecase } from './core/usecases/fcm_token/list_fcm_token.usecase';
 import { CreateNotificationUsecase } from './core/usecases/notification/create_notification.usecase';
 import { ListNotificationUsecase } from './core/usecases/notification/list_notification.usecase';
+import { SendPushNotificationUseCase } from './core/usecases/send_push_notification.usecase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([FcmTokenEntity, NotificationEntity])],
@@ -48,6 +49,7 @@ import { ListNotificationUsecase } from './core/usecases/notification/list_notif
     ListFcmTokenUsecase,
     CreateNotificationUsecase,
     ListNotificationUsecase,
+    SendPushNotificationUseCase,
   ],
 })
 export class NotificationModule {
