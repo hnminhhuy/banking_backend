@@ -11,12 +11,6 @@ export class CreateTransactionDto extends PickType(TransactionDto, [
   'remitterPaidFee',
 ]) {}
 
-export class TransactionData {
-  @ApiProperty()
-  @IsString()
-  data!: string;
-}
-
 export class CreateTransactionForExternalBankDto extends PickType(
   TransactionDto,
   [
@@ -31,3 +25,22 @@ export class CreateTransactionForExternalBankDto extends PickType(
     'transactionFee',
   ],
 ) {}
+
+export class ExternalTransactionData extends PickType(
+  CreateTransactionForExternalBankDto,
+  [
+    'id',
+    'remitterId',
+    'remitterName',
+    'beneficiaryId',
+    'beneficiaryName',
+    'amount',
+    'message',
+    'remitterPaidFee',
+    'transactionFee',
+  ],
+) {
+  @ApiProperty()
+  @IsString()
+  data!: string;
+}
