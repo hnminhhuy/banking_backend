@@ -1,6 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { BaseModel, BaseModelParams } from 'src/common/models';
 import { DebtStatus } from '../enum/debt_status';
+import { BankAccountModel } from '../../../bank_account/core/models/bank_account.model';
+import { BankAccountEntity } from '../../../bank_account/infra/data/entities/bank_account.entity';
 
 export interface DebtModelParams extends BaseModelParams {
   id?: string;
@@ -30,10 +32,13 @@ export class DebtModel extends BaseModel {
   message: string | undefined;
 
   @ApiPropertyOptional()
-  public reminderFullName?: string;
+  public reminderFullName?: string | undefined;
 
   @ApiPropertyOptional()
-  public debtorFullName?: string;
+  public debtorFullName?: string | undefined;
+
+  @ApiPropertyOptional()
+  public reminderAccount: BankAccountModel | BankAccountEntity | undefined;
 
   constructor(partial: Partial<DebtModel>) {
     super(partial);

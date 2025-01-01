@@ -4,6 +4,7 @@ import { ListFcmTokenUsecase } from './fcm_token/list_fcm_token.usecase';
 import { SendNotificationToMultipleTokensUsecase } from './fcm_service/send_notification_to_multiple_tokens.usecase';
 import { NotificationType } from '../enums/notification_type';
 import { NotificationIcon } from '../enums/notification_icon';
+import { NotificationBodyHandlerUsecase } from './notification_body_handler.usecase';
 
 @Injectable()
 export class SendPushNotificationUseCase {
@@ -11,9 +12,22 @@ export class SendPushNotificationUseCase {
     private readonly createNotificationUsecase: CreateNotificationUsecase,
     private readonly listFcmTokenUsecase: ListFcmTokenUsecase,
     private readonly sendNotificationToMultipleTokensUsecase: SendNotificationToMultipleTokensUsecase,
+    private readonly notificationBodyHandlerUsecase: NotificationBodyHandlerUsecase,
   ) {}
 
-  public async execute(userId: string, type: NotificationType, body: string) {
+  public async execute(
+    userId: string,
+    type: NotificationType,
+    debtId: string | undefined,
+    transactionId: string | undefined,
+  ) {
+    const body = await this.notificationBodyHandlerUsecase.execute(
+      type,
+      userId,
+      transactionId,
+      debtId,
+    );
+
     const notification = await this.createNotificationUsecase.execute({
       userId,
       body,

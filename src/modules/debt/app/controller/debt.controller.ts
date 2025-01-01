@@ -31,6 +31,8 @@ import { CreateDebtTransactionUsecase } from '../../../transactions/core/usecase
 import { GetDebtWithUserUsecase } from '../../core/usecases/get_debt_with_user.usecase';
 import { ListDebtWithUserUsecase } from '../../core/usecases/list_debt_with_user.usecase';
 import { GetAllDebtorUsecase } from '../../core/usecases/get_all_debto.usecase';
+import { SendPushNotificationUseCase } from '../../../notifications/core/usecases/send_push_notification.usecase';
+import { NotificationType } from '../../../notifications/core/enums/notification_type';
 
 @ApiTags('Debt by Customer')
 @Controller({ path: 'api/customer/v1/debt' })
@@ -45,6 +47,7 @@ export class DebtController {
     private readonly getBankAccountUsecase: GetBankAccountUsecase,
     private readonly cancelDebtUsecase: CancelDebtUsecase,
     private readonly createDebtTransactionUsecase: CreateDebtTransactionUsecase,
+    private readonly sendPushNotificationUsecase: SendPushNotificationUseCase,
   ) {}
   @Route(DebtRoute.createDebt)
   async createDebt(@Req() req, @Body() body: CreateDebtDto) {
@@ -63,6 +66,25 @@ export class DebtController {
       if (!data) {
         throw new InternalServerErrorException('Failed to create debt record');
       }
+      const debtorAccount = await this.getBankAccountUsecase.execute(
+        'id',
+        body.debtorId,
+        ['user'],
+      );
+
+      this.sendPushNotificationUsecase
+        .execute(
+          debtorAccount.userId,
+          NotificationType.DEBT_CREATED_FOR_YOU,
+          data.id,
+          undefined,
+        )
+        .then(() => {
+          console.log('Push notification sent');
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
 
       return {
         data,

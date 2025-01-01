@@ -16,10 +16,16 @@ export class FcmController {
 
   @Route(FcmRoute.createFcmToken)
   async createFcmToken(@Req() req: any, @Body() body: FcmTokenDto) {
-    return await this.createFcmTokenUsecase.execute({
-      token: body.token,
-      userId: req.user.authId,
-    });
+    try {
+      const fcm = await this.createFcmTokenUsecase.execute({
+        token: body.token,
+        userId: req.user.authId,
+      });
+      return true;
+    } catch (error) {
+      console.log(error.message);
+      return false;
+    }
   }
 
   @Route(FcmRoute.deleteFcmToken)

@@ -5,12 +5,13 @@ import { NotificationType } from '../enums/notification_type';
 import { throwError } from '../../../../common/helpers/throw_error';
 import { GetUserUsecase } from '../../../user/core/usecases';
 import { calBalanceChange } from '../../../transactions/core/helpers/calculate_amount';
+import { GetDebtWithUserUsecase } from '../../../debt/core/usecases/get_debt_with_user.usecase';
 
 @Injectable()
 export class NotificationBodyHandlerUsecase {
   constructor(
     private readonly getUserUsecase: GetUserUsecase,
-    private readonly getDebtUsecase: GetDebtUsecase,
+    private readonly getDebtWithUserUsecase: GetDebtWithUserUsecase,
     private readonly getTransactionUsecase: GetTransactionUsecase,
   ) {}
 
@@ -36,9 +37,9 @@ export class NotificationBodyHandlerUsecase {
           throwError('Transaction is required');
         }
 
-        message = `Transaction of ${transaction.amount} to ${
+        message = `Giao dịch ${transaction.amount} đến ${
           transaction.beneficiaryName
-        } was successful!`;
+        } đã thành công!`;
         return message;
       }
       case NotificationType.TRANSACTION_FAILED: {
@@ -51,31 +52,28 @@ export class NotificationBodyHandlerUsecase {
           throwError('Transaction is required');
         }
 
-        message = `Transaction of ${transactionFailed.amount} to ${
+        message = `Giao dịch ${transactionFailed.amount} đến ${
           transactionFailed.beneficiaryName
-        } failed!`;
+        } đã thất bại!`;
         return message;
       }
       case NotificationType.DEBT_CREATED_FOR_YOU: {
-        const debt = await this.getDebtUsecase.execute('id', debtId, undefined);
+        const debt = await this.getDebtWithUserUsecase.execute(debtId);
+
         if (!debt) {
           throwError('Debt is required');
         }
 
-        message = `You have a debt of ${debt.amount} from ${
-          debt.debtorFullName
-        }`;
+        message = `Bạn có một khoản nợ ${debt.amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} từ ${debt.reminderFullName}`;
         return message;
       }
       case NotificationType.DEBT_PAID: {
-        const debtPaid = await this.getDebtUsecase.execute('id', debtId, [
-          'debtorFullName',
-        ]);
+        const debtPaid = await this.getDebtWithUserUsecase.execute(debtId);
         if (!debtPaid) {
           throwError('Debt is required');
         }
 
-        message = `You have  been paid a debt of ${debtPaid.amount} from ${
+        message = `Bạn đã được trả một khoản nợ ${debtPaid.amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} từ ${
           debtPaid.debtorFullName
         }`;
         return message;
@@ -96,13 +94,13 @@ export class NotificationBodyHandlerUsecase {
         let amount = calBalanceChange(transaction, user.id);
 
         if (user.id === transaction.remitterId) {
-          message = `Your account has been changed with -${amount} to ${transaction.beneficiaryName}. Now your balance is ${user.bankAccount.balance}`;
+          message = `Tài khoản của bạn đã bị trừ -${amount} đến ${transaction.beneficiaryName}. Số dư hiện tại của bạn là ${user.bankAccount.balance}`;
           return message;
         }
 
         amount = calBalanceChange(transaction, user.id);
         if (user.id === transaction.beneficiaryId) {
-          message = `Your account has been changed with +${amount} from ${transaction.remitterName}. Now your balance is ${user.bankAccount.balance}`;
+          message = `Tài khoản của bạn đã được cộng +${amount} từ ${transaction.remitterName}. Số dư hiện tại của bạn là ${user.bankAccount.balance}`;
           return message;
         }
       }

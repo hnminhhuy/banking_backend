@@ -33,6 +33,11 @@ export class AddNotificationTable1735718454416 implements MigrationInterface {
             type: 'varchar',
           },
           {
+            name: 'read_at',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
             name: 'created_at',
             type: 'timestamp',
             default: 'now()',

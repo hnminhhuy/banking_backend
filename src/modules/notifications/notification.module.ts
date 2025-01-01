@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import { FcmService } from './infra/services/fcm.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -22,9 +22,20 @@ import { CreateNotificationUsecase } from './core/usecases/notification/create_n
 import { ListNotificationUsecase } from './core/usecases/notification/list_notification.usecase';
 import { SendPushNotificationUseCase } from './core/usecases/send_push_notification.usecase';
 import { FcmController } from './app/controllers/fcm_token.controller';
+import { NotificationBodyHandlerUsecase } from './core/usecases/notification_body_handler.usecase';
+import { DebtModule } from '../debt/debt.module';
+import { UserModule } from '../user/user.module';
+import { BankAccountModule } from '../bank_account/bank_account.module';
+import { TransactionModule } from '../transactions/transaction.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([FcmTokenEntity, NotificationEntity])],
+  imports: [
+    TypeOrmModule.forFeature([FcmTokenEntity, NotificationEntity]),
+    forwardRef(() => DebtModule),
+    forwardRef(() => UserModule),
+    forwardRef(() => BankAccountModule),
+    forwardRef(() => TransactionModule),
+  ],
   controllers: [FcmController],
   providers: [
     FcmService,
@@ -51,7 +62,9 @@ import { FcmController } from './app/controllers/fcm_token.controller';
     CreateNotificationUsecase,
     ListNotificationUsecase,
     SendPushNotificationUseCase,
+    NotificationBodyHandlerUsecase,
   ],
+  exports: [SendPushNotificationUseCase],
 })
 export class NotificationModule {
   constructor() {

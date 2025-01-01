@@ -33,17 +33,23 @@ export class FcmService {
     icon: string,
   ) {
     const message = {
-      notification: {
-        title,
-        body,
-        icon,
+      webpush: {
+        notification: {
+          title,
+          body,
+          icon,
+        },
       },
       tokens,
     };
 
     try {
       const response = await admin.messaging().sendEachForMulticast(message);
-      console.log('Successfully sent messages:', response);
+      if (response.failureCount > 0) {
+        console.log('Failed to send messages:', response.responses);
+      } else {
+        console.log('Successfully sent messages:', response);
+      }
       return {
         success: true,
         message: `Successfully sent ${response.successCount} messages; ${response.failureCount} failed.`,

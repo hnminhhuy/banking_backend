@@ -16,7 +16,7 @@ export class NotificationEntity extends BaseEntity {
   @Column({ type: 'varchar' })
   type: NotificationType;
 
-  @Column({ type: 'timestamp', name: 'reat_at' })
+  @Column({ type: 'timestamp', name: 'read_at' })
   readAt!: Date;
 
   constructor(partial: Partial<NotificationEntity>) {
