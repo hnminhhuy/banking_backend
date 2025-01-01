@@ -1,5 +1,6 @@
 import { Column, Entity } from 'typeorm';
 import { BaseEntity } from '../../../../../common/entitites';
+import { NotificationType } from '../../../core/enums/notification_type';
 
 @Entity('notifications')
 export class NotificationEntity extends BaseEntity {
@@ -11,6 +12,9 @@ export class NotificationEntity extends BaseEntity {
 
   @Column({ type: 'varchar' })
   body: string;
+
+  @Column({ type: 'varchar' })
+  type: NotificationType;
 
   @Column({ type: 'timestamp', name: 'reat_at' })
   readAt!: Date;

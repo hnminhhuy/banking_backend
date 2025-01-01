@@ -18,6 +18,8 @@ import { FcmServiceRepo } from './infra/data/repositories/fcm_service.repo';
 import { CreateFcmTokenUsecase } from './core/usecases/fcm_token/create_fcm_token.usecase';
 import { DeleteFcmTokenUsecase } from './core/usecases/fcm_token/delete_fcm_token.usecase';
 import { ListFcmTokenUsecase } from './core/usecases/fcm_token/list_fcm_token.usecase';
+import { CreateNotificationUsecase } from './core/usecases/notification/create_notification.usecase';
+import { ListNotificationUsecase } from './core/usecases/notification/list_notification.usecase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([FcmTokenEntity, NotificationEntity])],
@@ -44,6 +46,8 @@ import { ListFcmTokenUsecase } from './core/usecases/fcm_token/list_fcm_token.us
     CreateFcmTokenUsecase,
     DeleteFcmTokenUsecase,
     ListFcmTokenUsecase,
+    CreateNotificationUsecase,
+    ListNotificationUsecase,
   ],
 })
 export class NotificationModule {
