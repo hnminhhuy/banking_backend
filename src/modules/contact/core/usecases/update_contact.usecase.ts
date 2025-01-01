@@ -60,6 +60,7 @@ export class UpdateContactUsecase {
           break;
         case this.bankCode.EXTERNAL_BANK:
           contactUser = await this.getExternalBankAccountInfoUsecase.execute(
+            bank,
             updatedFields.beneficiaryId,
           );
           if (!contactUser) throw new Error('BankAccountNotFoundError');
