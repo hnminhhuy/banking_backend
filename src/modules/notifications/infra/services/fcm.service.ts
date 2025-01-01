@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import * as admin from 'firebase-admin';
-import {
-  MultipleDeviceNotificationDto,
-  NotificationDto,
-  TopicNotificationDto,
-} from '../../app/dtos/notification.dto';
 
 @Injectable()
 export class FcmService {
-  async sendNotification({ token, title, body, icon }: NotificationDto) {
+  async sendNotification(
+    token: string,
+    title: string,
+    body: string,
+    icon: string,
+  ) {
     try {
       const response = await admin.messaging().send({
         token,
@@ -26,12 +26,12 @@ export class FcmService {
     }
   }
 
-  async sendNotificationToMultipleTokens({
-    tokens,
-    title,
-    body,
-    icon,
-  }: MultipleDeviceNotificationDto) {
+  async sendNotificationToMultipleTokens(
+    tokens: string[],
+    title: string,
+    body: string,
+    icon: string,
+  ) {
     const message = {
       notification: {
         title,
@@ -54,12 +54,12 @@ export class FcmService {
     }
   }
 
-  async sendTopicNotification({
-    topic,
-    title,
-    body,
-    icon,
-  }: TopicNotificationDto) {
+  async sendTopicNotification(
+    topic: string,
+    title: string,
+    body: string,
+    icon: string,
+  ) {
     const message = {
       notification: {
         title,
