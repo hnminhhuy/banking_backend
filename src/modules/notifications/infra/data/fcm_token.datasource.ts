@@ -16,8 +16,8 @@ export class FcmTokenDatasource {
     await this.fcmTokenRepository.insert(newFcmToken);
   }
 
-  async deleteByToken(token: string): Promise<void> {
-    await this.fcmTokenRepository.delete({ token });
+  async deleteByToken(userId: string, token: string): Promise<void> {
+    await this.fcmTokenRepository.delete({ userId: userId, token: token });
   }
 
   async findAllByUserId(userId: string): Promise<FcmTokenModel[]> {

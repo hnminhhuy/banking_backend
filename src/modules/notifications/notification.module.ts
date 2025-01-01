@@ -21,10 +21,11 @@ import { ListFcmTokenUsecase } from './core/usecases/fcm_token/list_fcm_token.us
 import { CreateNotificationUsecase } from './core/usecases/notification/create_notification.usecase';
 import { ListNotificationUsecase } from './core/usecases/notification/list_notification.usecase';
 import { SendPushNotificationUseCase } from './core/usecases/send_push_notification.usecase';
+import { FcmController } from './app/controllers/fcm_token.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([FcmTokenEntity, NotificationEntity])],
-  controllers: [],
+  controllers: [FcmController],
   providers: [
     FcmService,
     {

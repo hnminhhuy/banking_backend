@@ -11,8 +11,8 @@ export class FcmTokenRepo implements FcmTokenIRepo {
     return this.fcmTokenDatasource.create(params);
   }
 
-  async deleteByToken(token: string) {
-    return this.fcmTokenDatasource.deleteByToken(token);
+  async deleteByToken(userId: string, token: string) {
+    return this.fcmTokenDatasource.deleteByToken(userId, token);
   }
 
   async findAllByUserId(userId: string) {

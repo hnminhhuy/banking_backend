@@ -23,6 +23,7 @@ export class AddFcmTokenModel1735718261023 implements MigrationInterface {
           {
             name: 'token',
             type: 'varchar',
+            isUnique: true,
           },
           {
             name: 'created_at',
