@@ -8,15 +8,19 @@ import { Cache } from 'cache-manager';
 import { throwError } from '../../../../common/helpers/throw_error';
 import { JwtService } from '@nestjs/jwt';
 import { GetConfigUsecase } from '../../../bank_config/core/usecase';
+import { GetBankUsecase } from '../../../bank/core/usecases';
+import { BankModel } from '../../../bank/core/models/bank.model';
 
 @Injectable()
 export class ExternalBankService {
+  private externalBank: BankModel = undefined;
   constructor(
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     private readonly httpService: HttpService,
     protected configService: ConfigService,
     protected jwtService: JwtService,
     protected getConfigUsecase: GetConfigUsecase,
+    private readonly getBankUsecase: GetBankUsecase,
   ) {
     const requiredConfigs = [
       'external_bank.apiUrl',
@@ -30,6 +34,7 @@ export class ExternalBankService {
         throw new Error(`Missing configuration: ${key}`);
       }
     }
+    this.externalBank = this.getBankUsecase.execute('id', '');
   }
 
   protected getBaseUrl(): string {
