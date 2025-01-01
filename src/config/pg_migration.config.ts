@@ -1,4 +1,5 @@
 import { config } from 'dotenv';
+import { isDevelopmentEnv } from 'src/common/helpers/env.helper';
 import { DataSource } from 'typeorm';
 
 config();
@@ -15,4 +16,5 @@ export const pgDataSource = new DataSource({
   username: PG_USERNAME,
   password: PG_PASSWORD,
   migrations: ['dist/src/migrations/*.js'],
+  ssl: !isDevelopmentEnv(),
 });
