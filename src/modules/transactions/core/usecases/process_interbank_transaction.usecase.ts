@@ -29,8 +29,10 @@ export class ProcessInterBankTransactionUsecase {
 
     if (externalBank.code === this.bankCode.EXTERNAL_BANK) {
       try {
-        const res =
-          await this.createExternalBankTransactionUsecase.execute(transaction);
+        const res = await this.createExternalBankTransactionUsecase.execute(
+          externalBank,
+          transaction,
+        );
         if (res.data) {
           await this.updateTransactionStatusUsecase.execute(
             id,

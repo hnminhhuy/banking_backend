@@ -73,6 +73,7 @@ export class CreateNormalTransactionUsecase {
       case this.bankCode.EXTERNAL_BANK:
         fee = this.externalFee;
         beneficiary = await this.getExternalBankAccountInfoUsecase.execute(
+          beneficiaryBank,
           createTransactionDto.beneficiaryId,
         );
         break;

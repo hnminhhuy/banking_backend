@@ -1,10 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ExternalBankService } from './external_bank.service';
 import { TransactionModelParams } from '../../../transactions/core/models/transaction.model';
+import { BankModel } from '../../../bank/core/models/bank.model';
 
 @Injectable()
 export class TransactionService extends ExternalBankService {
   async createTransaction(
+    externalBank: BankModel,
     params: TransactionModelParams,
   ): Promise<Record<string, any>> {
     const data = await this.jwtService.sign({
@@ -20,8 +22,9 @@ export class TransactionService extends ExternalBankService {
     });
 
     const response = await this.safeRequest(
+      externalBank,
       'POST',
-      `${this.getBaseUrl()}/api/external-bank/v1/transactions`,
+      `${this.getBaseUrl(externalBank)}/api/external-bank/v1/transactions`,
       {
         data: data,
         id: params.id,

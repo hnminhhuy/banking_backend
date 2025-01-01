@@ -23,6 +23,9 @@ export class BankEntity extends BaseEntity {
   @Column()
   algorithm!: string;
 
+  @Column({ name: 'metadata', type: 'jsonb' })
+  metadata?: Record<string, any>;
+
   /** Relations */
   @OneToMany(() => ContactEntity, (contact) => contact.bank)
   contacts!: ContactEntity[];

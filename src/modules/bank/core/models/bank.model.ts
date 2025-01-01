@@ -8,6 +8,7 @@ export interface BankModelParams extends BaseModelParams {
   publicKey: string;
   logoUrl: string | undefined;
   algorithm: string;
+  metadata?: Record<string, any> | undefined;
 }
 
 export class BankModel extends BaseModel {
@@ -28,6 +29,9 @@ export class BankModel extends BaseModel {
 
   @ApiPropertyOptional()
   public readonly logoUrl: string | undefined;
+
+  @ApiPropertyOptional()
+  public readonly metadata: Record<string, any> | undefined;
 
   constructor(partial: Partial<BankModel>) {
     super(partial);
