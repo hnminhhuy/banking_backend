@@ -6,7 +6,10 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { BankAccountRouteByExternalBank } from '../routes/bank_account.route';
-import { GetBankAccountDto } from '../../../bank_account/app/dtos';
+import {
+  GetBankAccountDto,
+  GetBankAccountExternalDto,
+} from '../../../bank_account/app/dtos';
 import { GetBankAccountUsecase } from '../../../bank_account/core/usecases';
 import { Route } from '../../../../decorators';
 import { AuthGuard } from '@nestjs/passport';
@@ -19,7 +22,7 @@ export class BankAccountController {
   constructor(private readonly getBankAccountUsecase: GetBankAccountUsecase) {}
 
   @Route(BankAccountRouteByExternalBank.getBankAccount)
-  async get(@Param() param: GetBankAccountDto) {
+  async get(@Param() param: GetBankAccountExternalDto) {
     const bankAccount = await this.getBankAccountUsecase.execute(
       'id',
       param.id,
