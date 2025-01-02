@@ -143,7 +143,9 @@ export class TransactionDatasource {
       items = await query.getMany();
     }
 
-    const transactions = items.map((bank) => new TransactionModel(bank));
+    const transactions = items.map(
+      (transaction) => new TransactionModel(transaction),
+    );
 
     return new Page(pageParams.page, totalCount, transactions);
   }

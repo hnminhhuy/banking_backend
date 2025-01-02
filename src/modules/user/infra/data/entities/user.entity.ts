@@ -6,7 +6,6 @@ import { UserRole } from 'src/modules/user/core/enums/user_role';
 import { UserModel } from 'src/modules/user/core/models/user.model';
 import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
 
-
 @Entity('users')
 export class UserEntity extends BaseEntity {
   @Column({ name: 'created_by' })

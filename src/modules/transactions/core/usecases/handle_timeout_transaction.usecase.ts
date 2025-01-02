@@ -59,6 +59,7 @@ export class HandleTimeoutTransactionUsecase {
           TransactionStatus.FAILED,
         );
       }
+
       currentPage++;
     } while (page && page.data.length === pageSize);
   }

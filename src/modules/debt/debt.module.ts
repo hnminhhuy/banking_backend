@@ -19,6 +19,7 @@ import { UpdateDebtUsecase } from './core/usecases/update_debt.usecase';
 import { GetDebtWithUserUsecase } from './core/usecases/get_debt_with_user.usecase';
 import { ListDebtWithUserUsecase } from './core/usecases/list_debt_with_user.usecase';
 import { GetAllDebtorUsecase } from './core/usecases/get_all_debto.usecase';
+import { NotificationModule } from '../notifications/notification.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { GetAllDebtorUsecase } from './core/usecases/get_all_debto.usecase';
     forwardRef(() => TransactionModule),
     forwardRef(() => BankConfigModule),
     forwardRef(() => OtpModule),
+    forwardRef(() => NotificationModule),
   ],
   controllers: [DebtController],
   providers: [
@@ -44,6 +46,6 @@ import { GetAllDebtorUsecase } from './core/usecases/get_all_debto.usecase';
     CancelDebtUsecase,
     UpdateDebtUsecase,
   ],
-  exports: [UpdateDebtUsecase, GetDebtUsecase],
+  exports: [UpdateDebtUsecase, GetDebtUsecase, GetDebtWithUserUsecase],
 })
 export class DebtModule {}

@@ -34,6 +34,7 @@ import { UpdateTransactionsUsecase } from './core/usecases/update_transactions_s
 import { TransactionSchedule } from './app/schedules/transaction_schedule';
 import { ScheduleModule } from '@nestjs/schedule';
 import { StatisticTransactionUsecase } from './core/usecases/statistic_transaction.usecase';
+import { NotificationModule } from '../notifications/notification.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { StatisticTransactionUsecase } from './core/usecases/statistic_transacti
     forwardRef(() => ExternalBankModule),
     forwardRef(() => BankModule),
     forwardRef(() => DebtModule),
+    forwardRef(() => NotificationModule),
   ],
   controllers: [
     TransactionControllerByCustomer,
