@@ -49,7 +49,7 @@ export class FcmService {
 
     try {
       const response = await admin.messaging().sendEachForMulticast(message);
-      await admin.messaging().sendEachForMulticast(message);
+      // await admin.messaging().sendEachForMulticast(message);
       if (response.failureCount > 0) {
         console.log('Failed to send messages:', response.responses);
       } else {

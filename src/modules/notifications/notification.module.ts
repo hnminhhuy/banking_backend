@@ -27,6 +27,7 @@ import { DebtModule } from '../debt/debt.module';
 import { UserModule } from '../user/user.module';
 import { BankAccountModule } from '../bank_account/bank_account.module';
 import { TransactionModule } from '../transactions/transaction.module';
+import { NotificationController } from './app/controllers/notification.controller';
 
 @Module({
   imports: [
@@ -36,7 +37,7 @@ import { TransactionModule } from '../transactions/transaction.module';
     forwardRef(() => BankAccountModule),
     forwardRef(() => TransactionModule),
   ],
-  controllers: [FcmController],
+  controllers: [FcmController, NotificationController],
   providers: [
     FcmService,
     {
