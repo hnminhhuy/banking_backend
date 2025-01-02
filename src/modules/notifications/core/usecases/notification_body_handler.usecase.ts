@@ -27,36 +27,6 @@ export class NotificationBodyHandlerUsecase {
     let message = '';
 
     switch (type) {
-      case NotificationType.TRANSACTION_SUCCESS: {
-        const transaction = await this.getTransactionUsecase.execute(
-          'id',
-          transactionId,
-          undefined,
-        );
-        if (!transaction) {
-          throwError('Transaction is required');
-        }
-
-        message = `Giao dịch ${transaction.amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} đến ${
-          transaction.beneficiaryName
-        } đã thành công!`;
-        return message;
-      }
-      case NotificationType.TRANSACTION_FAILED: {
-        const transactionFailed = await this.getTransactionUsecase.execute(
-          'id',
-          transactionId,
-          undefined,
-        );
-        if (!transactionFailed) {
-          throwError('Transaction is required');
-        }
-
-        message = `Giao dịch ${transactionFailed.amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} đến ${
-          transactionFailed.beneficiaryName
-        } đã thất bại!`;
-        return message;
-      }
       case NotificationType.DEBT_CREATED_FOR_YOU: {
         const debt = await this.getDebtWithUserUsecase.execute(debtId);
 
@@ -64,7 +34,7 @@ export class NotificationBodyHandlerUsecase {
           throwError('Debt is required');
         }
 
-        message = `Bạn có một khoản nợ ${debt.amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} từ ${debt.reminderFullName}`;
+        message = `Bạn có một khoản nợ ${Number(debt.amount).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} từ ${debt.reminderFullName}`;
         return message;
       }
       case NotificationType.DEBT_PAID: {
@@ -73,9 +43,20 @@ export class NotificationBodyHandlerUsecase {
           throwError('Debt is required');
         }
 
-        message = `Bạn đã được trả một khoản nợ ${debtPaid.amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} từ ${
+        message = `Bạn đã được trả một khoản nợ ${Number(debtPaid.amount).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} từ ${
           debtPaid.debtorFullName
         }`;
+        return message;
+      }
+      case NotificationType.DEBT_CANCEL: {
+        const debtPaid = await this.getDebtWithUserUsecase.execute(debtId);
+        if (!debtPaid) {
+          throwError('Debt is required');
+        }
+
+        message = `Khoản nợ ${Number(debtPaid.amount).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} từ ${
+          debtPaid.debtorFullName
+        } đã được hủy`;
         return message;
       }
       case NotificationType.BALANCE_UPDATE: {
@@ -87,19 +68,16 @@ export class NotificationBodyHandlerUsecase {
         const user = await this.getUserUsecase.execute('id', userId, [
           'bankAccount',
         ]);
+        console.log(user);
         if (!transaction) {
           throwError('Transaction is required');
         }
 
         let amount = calBalanceChange(transaction, user.bankAccount.id);
-
         if (user.bankAccount.id === transaction.remitterId) {
           message = `Tài khoản của bạn đã bị trừ ${amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} đến ${transaction.beneficiaryName}. Số dư hiện tại của bạn là ${user.bankAccount.balance.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}`;
           return message;
-        }
-
-        amount = calBalanceChange(transaction, user.id);
-        if (user.bankAccount.id === transaction.beneficiaryId) {
+        } else if (user.bankAccount.id === transaction.beneficiaryId) {
           message = `Tài khoản của bạn đã được cộng +${amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} từ ${transaction.remitterName}. Số dư hiện tại của bạn là ${user.bankAccount.balance.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}`;
           return message;
         }

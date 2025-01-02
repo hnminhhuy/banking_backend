@@ -63,7 +63,6 @@ export class TransactionConsumer extends WorkerHost {
         beneficiaryId,
         beneficiaryAmount,
       );
-
       await this.sendPushNotificationUsecase
         .execute(
           beneficiary?.userId,
@@ -71,8 +70,8 @@ export class TransactionConsumer extends WorkerHost {
           undefined,
           transaction.id,
         )
-        .then(() => {
-          console.log('Push notification sent');
+        .then((res) => {
+          console.log('Debt balance for beneficiary', res);
         })
         .catch((error) => {
           console.log(error.message);
@@ -86,26 +85,12 @@ export class TransactionConsumer extends WorkerHost {
     await this.sendPushNotificationUsecase
       .execute(
         remitter?.userId,
-        NotificationType.TRANSACTION_SUCCESS,
-        undefined,
-        transaction.id,
-      )
-      .then(() => {
-        console.log('Push notification sent');
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
-
-    await this.sendPushNotificationUsecase
-      .execute(
-        remitter?.userId,
         NotificationType.BALANCE_UPDATE,
         undefined,
         transaction.id,
       )
-      .then(() => {
-        console.log('Push notification sent');
+      .then((res) => {
+        console.log('Debt balance for remitter', res);
       })
       .catch((error) => {
         console.log(error.message);
@@ -121,8 +106,8 @@ export class TransactionConsumer extends WorkerHost {
           undefined,
           transaction.id,
         )
-        .then(() => {
-          console.log('Push notification sent');
+        .then((res) => {
+          console.log('Notification success debt', res);
         })
         .catch((error) => {
           console.log(error.message);

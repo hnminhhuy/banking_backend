@@ -37,7 +37,7 @@ export class SendPushNotificationUseCase {
     const fcmTokens = await this.listFcmTokenUsecase.execute(userId);
 
     try {
-      await this.sendNotificationToMultipleTokensUsecase.execute(
+      return await this.sendNotificationToMultipleTokensUsecase.execute(
         fcmTokens.map((fcmToken) => fcmToken.token),
         notification.title,
         notification.body,

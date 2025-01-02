@@ -65,27 +65,6 @@ export class HandleTimeoutTransactionUsecase {
         );
       }
 
-      transactions.forEach(async (transaction) => {
-        if (transaction.status === TransactionStatus.PROCESSING) {
-          const remitterAccount = await this.getBankAccountUsecase.execute(
-            'id',
-            transaction.remitterId,
-          );
-          this.sendPushNotificationUsecase
-            .execute(
-              remitterAccount?.userId,
-              NotificationType.TRANSACTION_FAILED,
-              undefined,
-              transaction.id,
-            )
-            .then(() => {
-              console.log('Push notification sent');
-            })
-            .catch((error) => {
-              console.log(error.message);
-            });
-        }
-      });
       currentPage++;
     } while (page && page.data.length === pageSize);
   }

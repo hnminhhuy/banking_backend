@@ -72,7 +72,7 @@ export class DebtController {
         ['user'],
       );
 
-      this.sendPushNotificationUsecase
+      await this.sendPushNotificationUsecase
         .execute(
           debtorAccount.userId,
           NotificationType.DEBT_CREATED_FOR_YOU,

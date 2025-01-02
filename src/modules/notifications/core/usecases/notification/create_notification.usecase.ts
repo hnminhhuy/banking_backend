@@ -26,14 +26,11 @@ export class CreateNotificationUsecase {
       case NotificationType.DEBT_CREATED_FOR_YOU:
         params['title'] = NotificationTitle.DEBT_CREATED_FOR_YOU;
         break;
-      case NotificationType.TRANSACTION_FAILED:
-        params['title'] = NotificationTitle.TRANSACTION_FAILED;
-        break;
-      case NotificationType.TRANSACTION_SUCCESS:
-        params['title'] = NotificationTitle.TRANSACTION_SUCCESS;
-        break;
       case NotificationType.DEBT_PAID:
         params['title'] = NotificationTitle.DEBT_PAID;
+        break;
+      case NotificationType.DEBT_CANCEL:
+        params['title'] = NotificationTitle.DEBT_CANCEL;
         break;
       default:
         throw new Error('Invalid notification type');
