@@ -67,4 +67,17 @@ export class NotificationDatasource {
 
     return new Page(pageParams.page, totalCount, notifications);
   }
+
+  async markAllAsRead(userId: string): Promise<void> {
+    await this.notificationRepository.update(
+      { userId, readAt: null },
+      { readAt: new Date() },
+    );
+  }
+
+  async countUnreadNotifications(userId: string): Promise<number> {
+    return this.notificationRepository.count({
+      where: { userId, readAt: null },
+    });
+  }
 }

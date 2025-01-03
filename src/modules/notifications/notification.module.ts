@@ -28,6 +28,8 @@ import { UserModule } from '../user/user.module';
 import { BankAccountModule } from '../bank_account/bank_account.module';
 import { TransactionModule } from '../transactions/transaction.module';
 import { NotificationController } from './app/controllers/notification.controller';
+import { CountUnreadNotificationUsecase } from './core/usecases/notification/count_unread_notification.usecase';
+import { MarkAsReadNotificationUsecase } from './core/usecases/notification/mark_as_read_notification.usecase';
 
 @Module({
   imports: [
@@ -64,6 +66,8 @@ import { NotificationController } from './app/controllers/notification.controlle
     ListNotificationUsecase,
     SendPushNotificationUseCase,
     NotificationBodyHandlerUsecase,
+    CountUnreadNotificationUsecase,
+    MarkAsReadNotificationUsecase,
   ],
   exports: [SendPushNotificationUseCase],
 })

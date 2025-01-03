@@ -12,6 +12,7 @@ export class NotificationRepo implements NotificationIRepo {
   constructor(
     private readonly notificationDatasource: NotificationDatasource,
   ) {}
+
   async create(notification: NotificationModel): Promise<void> {
     await this.notificationDatasource.create(notification);
   }
@@ -27,5 +28,12 @@ export class NotificationRepo implements NotificationIRepo {
       userId,
       type,
     );
+  }
+
+  async markAsRead(userId: string): Promise<void> {
+    await this.notificationDatasource.markAllAsRead(userId);
+  }
+  async countUnread(userId: string): Promise<number> {
+    return this.notificationDatasource.countUnreadNotifications(userId);
   }
 }

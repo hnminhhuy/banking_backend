@@ -13,4 +13,18 @@ export const NotificationRoute = {
       query: NotificationDto,
     },
   },
+
+  markAsRead: <IRouteParams>{
+    path: '/read',
+    method: RequestMethod.POST,
+    secure: true,
+    roles: [UserRole.Customer],
+  },
+
+  countUnread: <IRouteParams>{
+    path: '/unreads/count',
+    method: RequestMethod.GET,
+    secure: true,
+    roles: [UserRole.Customer],
+  },
 };
