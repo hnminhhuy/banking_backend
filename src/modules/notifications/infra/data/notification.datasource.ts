@@ -69,15 +69,22 @@ export class NotificationDatasource {
   }
 
   async markAllAsRead(userId: string): Promise<void> {
-    await this.notificationRepository.update(
-      { userId, readAt: null },
-      { readAt: new Date() },
-    );
+    await this.notificationRepository
+      .createQueryBuilder()
+      .update()
+      .set({ readAt: new Date() })
+      .where('userId = :userId AND readAt IS NULL', { userId })
+      .execute();
   }
 
   async countUnreadNotifications(userId: string): Promise<number> {
-    return this.notificationRepository.count({
-      where: { userId, readAt: null },
-    });
+    const query = `
+      SELECT COUNT(*) AS count
+      FROM notifications
+      WHERE user_id = $1 AND read_at IS NULL;
+    `;
+
+    const result = await this.notificationRepository.query(query, [userId]);
+    return parseInt(result[0].count, 10);
   }
 }
