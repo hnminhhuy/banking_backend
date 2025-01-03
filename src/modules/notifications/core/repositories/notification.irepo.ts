@@ -11,4 +11,7 @@ export abstract class NotificationIRepo {
     userId: string,
     type: NotificationType | undefined,
   ): Promise<Page<NotificationModel>>;
+
+  abstract markAsRead(userId: string): Promise<void>;
+  abstract countUnread(userId: string): Promise<number>;
 }

@@ -67,4 +67,24 @@ export class NotificationDatasource {
 
     return new Page(pageParams.page, totalCount, notifications);
   }
+
+  async markAllAsRead(userId: string): Promise<void> {
+    await this.notificationRepository
+      .createQueryBuilder()
+      .update()
+      .set({ readAt: new Date() })
+      .where('userId = :userId AND readAt IS NULL', { userId })
+      .execute();
+  }
+
+  async countUnreadNotifications(userId: string): Promise<number> {
+    const query = `
+      SELECT COUNT(*) AS count
+      FROM notifications
+      WHERE user_id = $1 AND read_at IS NULL;
+    `;
+
+    const result = await this.notificationRepository.query(query, [userId]);
+    return parseInt(result[0].count, 10);
+  }
 }

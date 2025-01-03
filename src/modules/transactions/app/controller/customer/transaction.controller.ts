@@ -120,14 +120,12 @@ export class TransactionController {
     const transactionAmount = calBalanceChange(transaction, userBankAccountId);
 
     return {
-      // id: transaction.id,
-      // date: transaction.updatedAt,
-      // status: transaction.status,
-      // category: transactionCategory,
-      // amount: transactionAmount,
-      // message: transaction.message,
-      transaction,
-      statusCode: 200,
+      id: transaction.id,
+      date: transaction.updatedAt,
+      status: transaction.status,
+      category: transactionCategory,
+      amount: transactionAmount,
+      message: transaction.message,
     };
   }
 
@@ -172,7 +170,7 @@ export class TransactionController {
       query.category === TransactionCategory.DEBT
         ? TransactionType.DEBT
         : undefined,
-      undefined,
+      ['beneficiaryBank', 'remitterBank'],
     );
 
     const data = transactions.data.map((transaction) => {
@@ -198,6 +196,17 @@ export class TransactionController {
         category: transactionCategory,
         amount: transactionAmount,
         message: transaction.message,
+        relatedUser: {
+          name: isRemitter
+            ? transaction.beneficiaryName
+            : transaction.remitterName,
+          bankAccountId: isRemitter
+            ? transaction.beneficiaryId
+            : transaction.remitterId,
+          bankName: isRemitter
+            ? transaction.beneficiaryBank.name
+            : transaction.remitterBank.name,
+        },
       };
     });
 
