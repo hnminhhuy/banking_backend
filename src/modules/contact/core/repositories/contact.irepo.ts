@@ -1,7 +1,7 @@
 import { Page, PageParams, SortParams } from 'src/common/models';
 import { ContactModel, ContactModelParams } from '../models/contact.model';
 import { ContactSort } from '../enums/contact_sort';
-import { ContactUserModel } from '../models/contact_user.model';
+import { AllContactUserModel } from '../models/contact_user.model';
 
 export abstract class IContactRepo {
   public abstract create(contact: ContactModel): Promise<void>;
@@ -13,7 +13,7 @@ export abstract class IContactRepo {
 
   public abstract getAllContact(
     userId: string,
-  ): Promise<ContactUserModel[] | undefined>;
+  ): Promise<AllContactUserModel[] | undefined>;
 
   public abstract list(
     userId: string,

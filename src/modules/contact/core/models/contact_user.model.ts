@@ -23,3 +23,13 @@ export class ContactUserModel {
     Object.assign(this, partial);
   }
 }
+
+export class AllContactUserModel extends ContactUserModel {
+  @ApiProperty()
+  public readonly bankId: string;
+
+  constructor(partial: Partial<AllContactUserModel>) {
+    super(partial);
+    Object.assign(this, partial);
+  }
+}
