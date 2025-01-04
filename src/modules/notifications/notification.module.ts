@@ -30,6 +30,7 @@ import { TransactionModule } from '../transactions/transaction.module';
 import { NotificationController } from './app/controllers/notification.controller';
 import { CountUnreadNotificationUsecase } from './core/usecases/notification/count_unread_notification.usecase';
 import { MarkAsReadNotificationUsecase } from './core/usecases/notification/mark_as_read_notification.usecase';
+import { SendEventUsecase } from './core/usecases/send_event.usecase';
 
 @Module({
   imports: [
@@ -68,8 +69,9 @@ import { MarkAsReadNotificationUsecase } from './core/usecases/notification/mark
     NotificationBodyHandlerUsecase,
     CountUnreadNotificationUsecase,
     MarkAsReadNotificationUsecase,
+    SendEventUsecase,
   ],
-  exports: [SendPushNotificationUseCase],
+  exports: [SendPushNotificationUseCase, SendEventUsecase],
 })
 export class NotificationModule {
   constructor() {
