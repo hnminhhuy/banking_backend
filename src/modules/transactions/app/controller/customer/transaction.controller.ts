@@ -111,22 +111,15 @@ export class TransactionController {
       throw new BadRequestException('This transaction does not belong to you');
     }
 
-    const isRemitter = transaction.remitterId === userBankAccountId;
+    // const isRemitter = transaction.remitterId === userBankAccountId;
 
-    const transactionCategory = isRemitter
-      ? TransactionCategory.OUTCOMING
-      : TransactionCategory.INCOMING;
+    // const transactionCategory = isRemitter
+    //   ? TransactionCategory.OUTCOMING
+    //   : TransactionCategory.INCOMING;
 
-    const transactionAmount = calBalanceChange(transaction, userBankAccountId);
+    // const transactionAmount = calBalanceChange(transaction, userBankAccountId);
 
-    return {
-      id: transaction.id,
-      date: transaction.updatedAt,
-      status: transaction.status,
-      category: transactionCategory,
-      amount: transactionAmount,
-      message: transaction.message,
-    };
+    return transaction;
   }
 
   @Route(TransactionRouteByCustomer.listTransaction)
