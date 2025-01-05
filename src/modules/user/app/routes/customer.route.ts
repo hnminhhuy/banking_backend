@@ -21,4 +21,20 @@ export default {
       ],
     },
   },
+  getDashboardInfo: <IRouteParams>{
+    path: '/dashboard/info',
+    method: RequestMethod.GET,
+    secure: true,
+    roles: [UserRole.Customer],
+    swaggerParams: {
+      responses: [
+        { status: HttpStatus.OK, type: UserModel },
+        {
+          status: HttpStatus.BAD_REQUEST,
+          description: 'Bad request',
+          type: BaseException,
+        },
+      ],
+    },
+  },
 };
