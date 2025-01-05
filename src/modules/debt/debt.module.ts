@@ -20,6 +20,7 @@ import { GetDebtWithUserUsecase } from './core/usecases/get_debt_with_user.useca
 import { ListDebtWithUserUsecase } from './core/usecases/list_debt_with_user.usecase';
 import { GetAllDebtorUsecase } from './core/usecases/get_all_debto.usecase';
 import { NotificationModule } from '../notifications/notification.module';
+import { GetCustomerDashboardCountUsecase } from './core/usecases/get_customer_dashboard_count.usecase';
 
 @Module({
   imports: [
@@ -45,7 +46,13 @@ import { NotificationModule } from '../notifications/notification.module';
     ListDebtWithUserUsecase,
     CancelDebtUsecase,
     UpdateDebtUsecase,
+    GetCustomerDashboardCountUsecase,
   ],
-  exports: [UpdateDebtUsecase, GetDebtUsecase, GetDebtWithUserUsecase],
+  exports: [
+    UpdateDebtUsecase,
+    GetDebtUsecase,
+    GetDebtWithUserUsecase,
+    GetCustomerDashboardCountUsecase,
+  ],
 })
 export class DebtModule {}

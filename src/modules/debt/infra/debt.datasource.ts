@@ -288,4 +288,31 @@ export class DebtDatasource {
 
     return result.affected > 0;
   }
+
+  async getDashboardCount(reminderId: string): Promise<Record<string, any>> {
+    const currentMonthStart = new Date();
+    currentMonthStart.setDate(1);
+    currentMonthStart.setHours(0, 0, 0, 0);
+
+    const currentMonthEnd = new Date(currentMonthStart);
+    currentMonthEnd.setMonth(currentMonthEnd.getMonth() + 1);
+    const result = await this.debtRepository
+      .createQueryBuilder('debt')
+      .select([
+        `COUNT(CASE WHEN debt.reminderId = :reminderId AND debt.createdAt >= :currentMonthStart AND debt.createdAt <= :currentMonthEnd THEN 0 ELSE NULL END) as totaldebtcreated `,
+        `SUM(CASE WHEN debt.reminderId = :reminderId AND debt.createdAt >= :currentMonthStart AND debt.createdAt <= :currentMonthEnd AND debt.status = :settled THEN debt.amount ELSE 0 END) as totalpaid `,
+      ])
+      .setParameters({
+        reminderId: reminderId,
+        currentMonthEnd: currentMonthEnd,
+        currentMonthStart: currentMonthStart,
+        settled: DebtStatus.Settled,
+      })
+      .getRawOne();
+
+    return {
+      totalDebtCreated: parseInt(result.totaldebtcreated),
+      totalPaidMount: parseInt(result.totalpaid),
+    };
+  }
 }

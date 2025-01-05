@@ -70,4 +70,10 @@ export class DebtRepo implements IDebtRepo {
   ): Promise<boolean> {
     return await this.debtDatasource.updateDebt(debtId, status);
   }
+
+  public async getDashboardCount(
+    reminderId: string,
+  ): Promise<Record<string, any>> {
+    return await this.debtDatasource.getDashboardCount(reminderId);
+  }
 }

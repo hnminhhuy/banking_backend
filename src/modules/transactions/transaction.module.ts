@@ -85,6 +85,7 @@ import { NotificationModule } from '../notifications/notification.module';
     GetTransactionUsecase,
     UpdateTransactionUsecase,
     CreateDebtTransactionUsecase,
+    ListTransactionUsecase,
   ],
 })
 export class TransactionModule {}

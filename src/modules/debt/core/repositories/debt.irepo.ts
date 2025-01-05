@@ -35,4 +35,8 @@ export abstract class IDebtRepo {
     debtId: string,
     status: DebtStatus,
   ): Promise<boolean>;
+
+  public abstract getDashboardCount(
+    reminderId: string,
+  ): Promise<Record<string, any>>;
 }
