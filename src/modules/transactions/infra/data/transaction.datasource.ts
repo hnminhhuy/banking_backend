@@ -236,11 +236,10 @@ export class TransactionDatasource {
   ): Promise<Record<string, any>> {
     const groupByClause = `DATE_TRUNC('day', transactions.completedAt)`;
 
-    // Calculate the date range using JavaScript Date
     const dateRange =
       mode === TransactionCustomerChartMode.Weekly
-        ? new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) // 7 days ago
-        : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // 30 days ago
+        ? `NOW() - INTERVAL '7 days'`
+        : `NOW() - INTERVAL '30 days'`; // For monthly, limit to last 30 days
 
     // Build the query
     let query = this.transactionRepository
@@ -248,8 +247,8 @@ export class TransactionDatasource {
       .select([
         `${groupByClause}::date as time`, // Format as plain date
         'COUNT(transactions.id) as totalCount', // Total transactions
-        `COUNT(CASE WHEN transactions.remitterId = :bankAccountId THEN 1 ELSE NULL END) as remitterCount`, // Count remitter transactions
-        `COUNT(CASE WHEN transactions.beneficiaryId = :bankAccountId THEN 1 ELSE NULL END) as beneficiaryCount`, // Count beneficiary transactions
+        `SUM(CASE WHEN transactions.remitterId = :bankAccountId THEN 1 ELSE 0 END) as remitterCount`, // Count remitter transactions
+        `SUM(CASE WHEN transactions.beneficiaryId = :bankAccountId THEN 1 ELSE 0 END) as beneficiaryCount`, // Count beneficiary transactions
       ])
       .where(
         new Brackets((qb) => {
@@ -267,7 +266,7 @@ export class TransactionDatasource {
 
     // Apply date filter if necessary
     if (dateRange) {
-      query.andWhere('transactions.completedAt >= :dateRange', { dateRange });
+      query.andWhere(`transactions.completedAt >= ${dateRange}`);
     }
 
     let result = await query
@@ -278,21 +277,21 @@ export class TransactionDatasource {
     // Format the result for total transaction counts
     const formattedResult = result.map((item: any) => ({
       time: new Date(item.time).toLocaleDateString('vi'), // Formatted as YYYY-MM-DD
-      value: item.totalCount, // No need to parseInt as it's already an integer
+      value: parseInt(item.totalcount, 10),
       type: 'transaction',
     }));
 
     // Format the result for remitter transactions (Outcoming)
     const totalOutcoming = result.map((item: any) => ({
       time: new Date(item.time).toLocaleDateString('vi'), // Formatted as YYYY-MM-DD
-      value: item.remitterCount, // Remitter is Outcoming
+      value: parseInt(item.remittercount, 10), // Remitter is Outcoming
       type: 'outcoming',
     }));
 
     // Format the result for beneficiary transactions (Incoming)
     const totalIncoming = result.map((item: any) => ({
       time: new Date(item.time).toLocaleDateString('vi'), // Formatted as YYYY-MM-DD
-      value: item.beneficiaryCount, // Beneficiary is Incoming
+      value: parseInt(item.beneficiarycount, 10), // Beneficiary is Incoming
       type: 'incoming',
     }));
 
