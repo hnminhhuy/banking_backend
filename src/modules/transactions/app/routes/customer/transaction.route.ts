@@ -3,7 +3,10 @@ import { IRouteParams } from '../../../../../decorators';
 import { TransactionModel } from '../../../core/models/transaction.model';
 import { UserRole } from '../../../../user/core/enums/user_role';
 import { CreateTransactionDto, ListTransactionDto } from '../../dtos';
-import { GetTransactionDto } from '../../dtos/get_transaction.dto';
+import {
+  GetChartMode,
+  GetTransactionDto,
+} from '../../dtos/get_transaction.dto';
 
 export const TransactionRouteByCustomer = {
   createTransaction: <IRouteParams>{
@@ -40,5 +43,14 @@ export const TransactionRouteByCustomer = {
     method: RequestMethod.POST,
     secure: true,
     roles: [UserRole.Customer],
+  },
+  getChartData: <IRouteParams>{
+    path: '/chart/data',
+    method: RequestMethod.GET,
+    secure: true,
+    roles: [UserRole.Customer],
+    swaggerParams: {
+      query: GetChartMode,
+    },
   },
 };

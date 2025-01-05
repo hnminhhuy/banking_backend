@@ -22,6 +22,7 @@ import { TransactionSort } from '../../core/enums/transaction_sort';
 import { TransactionStatus } from '../../core/enums/transaction_status';
 import { TransactionType } from '../../core/enums/transaction_type';
 import { BankModel } from '../../../bank/core/models/bank.model';
+import { TransactionCustomerChartMode } from '../../core/enums/transaction_customer_chart_mode';
 
 @Injectable()
 export class TransactionDatasource {
@@ -226,6 +227,78 @@ export class TransactionDatasource {
       outcomingAmount: parseInt(result.outcomingamount) ?? 0,
       incomingAmount: parseInt(result.incomingamount) ?? 0,
       transactionCount: parseInt(result.transactioncount) ?? 0,
+    };
+  }
+
+  async getDashboardInfo(
+    bankAccountId: string,
+    mode: TransactionCustomerChartMode,
+  ): Promise<Record<string, any>> {
+    const groupByClause = `DATE_TRUNC('day', transactions.completedAt)`;
+
+    // Calculate the date range using JavaScript Date
+    const dateRange =
+      mode === TransactionCustomerChartMode.Weekly
+        ? new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) // 7 days ago
+        : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // 30 days ago
+
+    // Build the query
+    let query = this.transactionRepository
+      .createQueryBuilder('transactions')
+      .select([
+        `${groupByClause}::date as time`, // Format as plain date
+        'COUNT(transactions.id) as totalCount', // Total transactions
+        `COUNT(CASE WHEN transactions.remitterId = :bankAccountId THEN 1 ELSE NULL END) as remitterCount`, // Count remitter transactions
+        `COUNT(CASE WHEN transactions.beneficiaryId = :bankAccountId THEN 1 ELSE NULL END) as beneficiaryCount`, // Count beneficiary transactions
+      ])
+      .where(
+        new Brackets((qb) => {
+          qb.orWhere('transactions.remitterId = :bankAccountId', {
+            bankAccountId,
+          });
+          qb.orWhere('transactions.beneficiaryId = :bankAccountId', {
+            bankAccountId,
+          });
+        }),
+      )
+      .andWhere('transactions.status = :status', {
+        status: TransactionStatus.SUCCESS,
+      });
+
+    // Apply date filter if necessary
+    if (dateRange) {
+      query.andWhere('transactions.completedAt >= :dateRange', { dateRange });
+    }
+
+    let result = await query
+      .groupBy(groupByClause)
+      .orderBy(groupByClause, 'ASC')
+      .getRawMany();
+
+    // Format the result for total transaction counts
+    const formattedResult = result.map((item: any) => ({
+      time: new Date(item.time).toLocaleDateString('vi'), // Formatted as YYYY-MM-DD
+      value: item.totalCount, // No need to parseInt as it's already an integer
+      type: 'transaction',
+    }));
+
+    // Format the result for remitter transactions (Outcoming)
+    const totalOutcoming = result.map((item: any) => ({
+      time: new Date(item.time).toLocaleDateString('vi'), // Formatted as YYYY-MM-DD
+      value: item.remitterCount, // Remitter is Outcoming
+      type: 'outcoming',
+    }));
+
+    // Format the result for beneficiary transactions (Incoming)
+    const totalIncoming = result.map((item: any) => ({
+      time: new Date(item.time).toLocaleDateString('vi'), // Formatted as YYYY-MM-DD
+      value: item.beneficiaryCount, // Beneficiary is Incoming
+      type: 'incoming',
+    }));
+
+    return {
+      totalTransactionData: formattedResult,
+      byCategory: { totalIncoming, totalOutcoming },
     };
   }
 }

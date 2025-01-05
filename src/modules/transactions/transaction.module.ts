@@ -35,6 +35,7 @@ import { TransactionSchedule } from './app/schedules/transaction_schedule';
 import { ScheduleModule } from '@nestjs/schedule';
 import { StatisticTransactionUsecase } from './core/usecases/statistic_transaction.usecase';
 import { NotificationModule } from '../notifications/notification.module';
+import { GetCustomerDashboardTransactionUsecase } from './core/usecases/get_customer_dashboard_transaction.usecase';
 
 @Module({
   imports: [
@@ -79,6 +80,7 @@ import { NotificationModule } from '../notifications/notification.module';
     HandleTimeoutTransactionUsecase,
     UpdateTransactionsUsecase,
     StatisticTransactionUsecase,
+    GetCustomerDashboardTransactionUsecase,
   ],
   exports: [
     CreateTransactionUsecase,
