@@ -23,6 +23,7 @@ import { TransactionStatus } from '../../core/enums/transaction_status';
 import { TransactionType } from '../../core/enums/transaction_type';
 import { BankModel } from '../../../bank/core/models/bank.model';
 import { TransactionCustomerChartMode } from '../../core/enums/transaction_customer_chart_mode';
+import { daysUntilNextOccurrence } from '../../core/helpers/calculate_date_interval';
 
 @Injectable()
 export class TransactionDatasource {
@@ -236,10 +237,12 @@ export class TransactionDatasource {
   ): Promise<Record<string, any>> {
     const groupByClause = `DATE_TRUNC('day', transactions.completedAt)`;
 
+    const dateInterval = daysUntilNextOccurrence();
+
     const dateRangeStart =
       mode === TransactionCustomerChartMode.Weekly
-        ? `NOW() - INTERVAL '7 days'`
-        : `NOW() - INTERVAL '30 days'`;
+        ? `NOW() - INTERVAL '${dateInterval.daysToMonday} days'`
+        : `NOW() - INTERVAL '${dateInterval.daysToFirst} days'`;
 
     // Generate the list of all dates within the range
     const allDatesQuery = `
