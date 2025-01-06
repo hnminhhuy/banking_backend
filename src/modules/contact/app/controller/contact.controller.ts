@@ -52,6 +52,14 @@ export class ContactController {
       nickname: body.nickname,
     };
     try {
+      const existingContacts = await this.getAllContactInfoUsecase.execute(
+        req.user.authId,
+      );
+      const isConflict = existingContacts.find(
+        (contact) => contact.beneficiaryId === contactParams.beneficiaryId,
+      );
+      if (isConflict) throw new Error('ExistingContactError');
+
       const data = await this.createContactUsecase.execute(
         req.user.authId,
         contactParams,
@@ -74,6 +82,8 @@ export class ContactController {
           throw new NotFoundException('Bank account for beneficiary not found');
         case 'CannotCreateContactForSelfError':
           throw new ConflictException('Cannot create contact for yourself.');
+        case 'ExistingContactError':
+          throw new ConflictException('The contact has already existed.');
         default:
           throw new InternalServerErrorException(
             'An unexpected error occurred',
