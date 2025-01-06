@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { ExternalBankService } from './external_bank.service';
 import { BankModel } from '../../../bank/core/models/bank.model';
 
@@ -8,6 +8,20 @@ export class BankAccountService extends ExternalBankService {
     externalBank: BankModel,
     id: string,
   ): Promise<Record<string, any>> {
+    let response;
+    switch (externalBank.code) {
+      case 'EXB':
+        return await this.sendEXBBank(externalBank, id);
+      case 'NTB':
+        response = await this.ntbAccountService.getAccountInfo(
+          externalBank,
+          id,
+        );
+        return response;
+    }
+  }
+
+  private async sendEXBBank(externalBank: BankModel, id: string) {
     const response = await this.safeRequest(
       externalBank,
       'GET',

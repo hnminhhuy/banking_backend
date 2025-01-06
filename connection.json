@@ -1,0 +1,13 @@
+{
+  "clientConnection": {
+    "apiKey": "jqwF34JWyWRwHjBzUma4O2yOZpYZOVLtvenrf0IwxWZeXOYzVYUzjJJshqLmPheITBGSEbmP5yScD69710D7HwbsmR1TMNSJb4nrRBccPWpciztTV8lpWLsB5UakerjW",
+    "clientId": "676fc3c0d2f280b039bbf710",
+    "publicKey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvUpp29YsxaSmmXu1bMOp\nfC6W43k5++yOflSYdskSvKTUm+2Cig6lwiLHLBqJN6vdTAfJXpHkDwjquaziMEBA\nRijYkJGKmKhRs9WGwRwyiMjAzASqQt2pAteux7XSIpHNWTG8IpfZFa9yAoXYj459\nTyEGE3Fg6TcKjn2iNcOVt2csxj2LxtozGNOmcMz/LZc7q10cDN6fFDD2oLBO28qe\neoAdzNlyJTHMAl5IRA+Z8ddop6RoNYdWhOJsYyzzaQT5OPCjtNOc4BOU9uPmO3jS\nYNFfG5Ch5Aiq+rchEDeZ+7jPhn6RDFuGfJwp4VJus7LKL8J9v4yqivz2EgYEFlbL\nGQIDAQAB\n-----END PUBLIC KEY-----\n",
+    "secretKey": "da3c349666ccabc19962a9260f054f0b2d7519681435a7f25bc6e91ba0d8a65f118e2e550647a424d33fca2f109f7c68aebc0b33b2fa2b9a31a0f16c54597757a6b95fca4440b9576e5c594d60b0966d6f43c47dc099d7015ae6909c9cc8f25a9db8bf2496ed7b0422494b34fcfd931c8209a43701c1b06f087d48605654d21b",
+    "host": "https://wnc-internet-banking-be.vercel.app/"
+  },
+  "clientCredential": {
+    "clientId": "ae0eeebf-7ac7-46de-b1c7-145e9edfe722",
+    "clientSecret": "757cc12dcc6911c1976d0b321898ea4c83ea20cf2e2b5ba90edd93a1ab3148b5478849e15b0a97c498253d00b16c25f6700ed969bd40387d46781d1c3482f6f8"
+  }
+}
