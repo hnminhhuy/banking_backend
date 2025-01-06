@@ -306,12 +306,14 @@ export class DebtDatasource {
     const result = await this.debtRepository
       .createQueryBuilder('debt')
       .select([
-        `COUNT(CASE WHEN debt.reminderId = :reminderId AND debt.createdAt >= :currentMonthStart AND debt.createdAt < :currentMonthEnd THEN 0 ELSE NULL END) as totalDebtCreatedCurrentMonth`,
-        `SUM(CASE WHEN debt.reminderId = :reminderId AND debt.createdAt >= :currentMonthStart AND debt.createdAt < :currentMonthEnd AND debt.status = :settled THEN debt.amount ELSE 0 END) as totalPaidCurrentMonth`,
-        `SUM(CASE WHEN debt.debtorId = :debtorId AND debt.createdAt >= :currentMonthStart AND debt.createdAt < :currentMonthEnd AND debt.status = :settled THEN debt.amount ELSE 0 END) as totalBePaidCurrentMonth`,
+        `COUNT(CASE 
+          WHEN debt.reminderId = :reminderId AND debt.createdAt >= :currentMonthStart AND debt.createdAt < :currentMonthEnd THEN 0 ELSE NULL END) 
+          as totalDebtCreatedCurrentMonth`,
+        `SUM(CASE WHEN debt.reminderId = :reminderId AND debt.createdAt >= :currentMonthStart AND debt.createdAt < :currentMonthEnd AND debt.status = :settled THEN debt.amount ELSE 0 END) as totalBePaidCurrentMonth`,
+        `SUM(CASE WHEN debt.debtorId = :debtorId AND debt.createdAt >= :currentMonthStart AND debt.createdAt < :currentMonthEnd AND debt.status = :settled THEN debt.amount ELSE 0 END) as totalPaidCurrentMonth`,
         `COUNT(CASE WHEN debt.reminderId = :reminderId AND debt.createdAt >= :previousMonthStart AND debt.createdAt < :previousMonthEnd THEN 0 ELSE NULL END) as totalDebtCreatedPreviousMonth`,
-        `SUM(CASE WHEN debt.reminderId = :reminderId AND debt.createdAt >= :previousMonthStart AND debt.createdAt < :previousMonthEnd AND debt.status = :settled THEN debt.amount ELSE 0 END) as totalPaidPreviousMonth`,
-        `SUM(CASE WHEN debt.debtorId = :debtorId AND debt.createdAt >= :previousMonthStart AND debt.createdAt < :previousMonthEnd AND debt.status = :settled THEN debt.amount ELSE 0 END) as totalBePaidPreviousMonth`,
+        `SUM(CASE WHEN debt.reminderId = :reminderId AND debt.createdAt >= :previousMonthStart AND debt.createdAt < :previousMonthEnd AND debt.status = :settled THEN debt.amount ELSE 0 END) as totalBePaidPreviousMonth`,
+        `SUM(CASE WHEN debt.debtorId = :debtorId AND debt.createdAt >= :previousMonthStart AND debt.createdAt < :previousMonthEnd AND debt.status = :settled THEN debt.amount ELSE 0 END) as totalPaidPreviousMonth`,
       ])
       .setParameters({
         reminderId: affectedId,
