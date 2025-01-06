@@ -8,6 +8,7 @@ import { DebtSort } from '../core/enum/debt_sort';
 import { paginate } from 'src/common/helpers/pagination.helper';
 import { DebtStatus } from '../core/enum/debt_status';
 import { DebtorNameModel } from '../core/models/debtor_name.model';
+import { calculateRate } from '../core/helpers/calcute_rate';
 
 @Injectable()
 export class DebtDatasource {
@@ -287,5 +288,60 @@ export class DebtDatasource {
     });
 
     return result.affected > 0;
+  }
+
+  async getDashboardCount(affectedId: string): Promise<Record<string, any>> {
+    const currentMonthStart = new Date();
+    currentMonthStart.setDate(1);
+    currentMonthStart.setHours(0, 0, 0, 0);
+
+    const currentMonthEnd = new Date(currentMonthStart);
+    currentMonthEnd.setMonth(currentMonthEnd.getMonth() + 1);
+
+    const previousMonthStart = new Date(currentMonthStart);
+    previousMonthStart.setMonth(previousMonthStart.getMonth() - 1);
+
+    const previousMonthEnd = new Date(currentMonthStart);
+
+    const result = await this.debtRepository
+      .createQueryBuilder('debt')
+      .select([
+        `COUNT(CASE WHEN debt.reminderId = :reminderId AND debt.createdAt >= :currentMonthStart AND debt.createdAt < :currentMonthEnd THEN 0 ELSE NULL END) as totalDebtCreatedCurrentMonth`,
+        `SUM(CASE WHEN debt.reminderId = :reminderId AND debt.createdAt >= :currentMonthStart AND debt.createdAt < :currentMonthEnd AND debt.status = :settled THEN debt.amount ELSE 0 END) as totalPaidCurrentMonth`,
+        `SUM(CASE WHEN debt.debtorId = :debtorId AND debt.createdAt >= :currentMonthStart AND debt.createdAt < :currentMonthEnd AND debt.status = :settled THEN debt.amount ELSE 0 END) as totalBePaidCurrentMonth`,
+        `COUNT(CASE WHEN debt.reminderId = :reminderId AND debt.createdAt >= :previousMonthStart AND debt.createdAt < :previousMonthEnd THEN 0 ELSE NULL END) as totalDebtCreatedPreviousMonth`,
+        `SUM(CASE WHEN debt.reminderId = :reminderId AND debt.createdAt >= :previousMonthStart AND debt.createdAt < :previousMonthEnd AND debt.status = :settled THEN debt.amount ELSE 0 END) as totalPaidPreviousMonth`,
+        `SUM(CASE WHEN debt.debtorId = :debtorId AND debt.createdAt >= :previousMonthStart AND debt.createdAt < :previousMonthEnd AND debt.status = :settled THEN debt.amount ELSE 0 END) as totalBePaidPreviousMonth`,
+      ])
+      .setParameters({
+        reminderId: affectedId,
+        currentMonthEnd: currentMonthEnd,
+        currentMonthStart: currentMonthStart,
+        previousMonthStart: previousMonthStart,
+        previousMonthEnd: previousMonthEnd,
+        settled: DebtStatus.Settled,
+        debtorId: affectedId,
+      })
+      .getRawOne();
+
+    return {
+      totalDebtCreatedCurrentMonth: parseInt(
+        result.totaldebtcreatedcurrentmonth,
+      ),
+      totalPaidCurrentMonth: parseInt(result.totalpaidcurrentmonth),
+      totalBePaidCurrentMonth: parseInt(result.totalbepaidcurrentmonth),
+      debtCreationRate: calculateRate(
+        result.totaldebtcreatedcurrentmonth,
+        result.totaldebtcreatedpreviousmonth,
+      ),
+      paidRate: calculateRate(
+        result.totalpaidcurrentmonth,
+        result.totalpaidpreviousmonth,
+      ),
+      bePaidRate: calculateRate(
+        result.totalbepaidcurrentmonth,
+        result.totalbepaidpreviousmonth,
+      ),
+    };
   }
 }

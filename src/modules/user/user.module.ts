@@ -26,6 +26,9 @@ import { MailModule } from '../mail/mail.module';
 import { AppModule } from 'src/app/app.module';
 import { RedisCacheModule } from '../redis_cache/redis_cache.module';
 import { CreateAdminCommand } from './app/console/create_admin.command';
+import { DebtModule } from '../debt/debt.module';
+import { GetCustomerDashBoardInfoUsecase } from './core/usecases/get_customer_dashboard_info.usecase';
+import { TransactionModule } from '../transactions/transaction.module';
 
 @Module({
   imports: [
@@ -35,6 +38,8 @@ import { CreateAdminCommand } from './app/console/create_admin.command';
     forwardRef(() => BankModule),
     forwardRef(() => MailModule),
     forwardRef(() => AppModule),
+    forwardRef(() => DebtModule),
+    forwardRef(() => TransactionModule),
   ],
   providers: [
     CreateAdminCommand,
@@ -52,6 +57,7 @@ import { CreateAdminCommand } from './app/console/create_admin.command';
     GeneratePasswordUsecase,
     BlockUserUsecase,
     UnblockUserUsecase,
+    GetCustomerDashBoardInfoUsecase,
   ],
   exports: [
     CreateUserUsecase,

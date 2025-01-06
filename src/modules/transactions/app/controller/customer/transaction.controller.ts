@@ -21,7 +21,10 @@ import {
 import { GetBankAccountUsecase } from '../../../../bank_account/core/usecases';
 import { TransactionType } from '../../../core/enums/transaction_type';
 import { Transactional } from 'typeorm-transactional';
-import { GetTransactionDto } from '../../dtos/get_transaction.dto';
+import {
+  GetChartMode,
+  GetTransactionDto,
+} from '../../dtos/get_transaction.dto';
 import { GetUserUsecase } from '../../../../user/core/usecases';
 import { TransactionCategory } from '../../../core/enums/transaction_category';
 import { calBalanceChange } from '../../../core/helpers/calculate_amount';
@@ -34,6 +37,7 @@ import { TransactionSort } from '../../../core/enums/transaction_sort';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateNormalTransactionUsecase } from '../../../core/usecases/create_normal_transaction.usecase';
 import { VerifyTransactionOtpUsecase } from '../../../core/usecases/verify_transaction_otp.usecase';
+import { GetCustomerDashboardTransactionUsecase } from '../../../core/usecases/get_customer_dashboard_transaction.usecase';
 
 @ApiTags(`Customer \\ Transactions`)
 @ApiBearerAuth()
@@ -46,6 +50,7 @@ export class TransactionController {
     private readonly listTransactionUsecase: ListTransactionUsecase,
     private readonly createNormalTransactionUsecase: CreateNormalTransactionUsecase,
     private readonly verifyTransactionOtpUsecase: VerifyTransactionOtpUsecase,
+    private readonly getCustomerDashboardTransactionUsecase: GetCustomerDashboardTransactionUsecase,
   ) {}
 
   @Route(TransactionRouteByCustomer.createTransaction)
@@ -111,24 +116,15 @@ export class TransactionController {
       throw new BadRequestException('This transaction does not belong to you');
     }
 
-    const isRemitter = transaction.remitterId === userBankAccountId;
+    // const isRemitter = transaction.remitterId === userBankAccountId;
 
-    const transactionCategory = isRemitter
-      ? TransactionCategory.OUTCOMING
-      : TransactionCategory.INCOMING;
+    // const transactionCategory = isRemitter
+    //   ? TransactionCategory.OUTCOMING
+    //   : TransactionCategory.INCOMING;
 
-    const transactionAmount = calBalanceChange(transaction, userBankAccountId);
+    // const transactionAmount = calBalanceChange(transaction, userBankAccountId);
 
-    return {
-      // id: transaction.id,
-      // date: transaction.updatedAt,
-      // status: transaction.status,
-      // category: transactionCategory,
-      // amount: transactionAmount,
-      // message: transaction.message,
-      transaction,
-      statusCode: 200,
-    };
+    return transaction;
   }
 
   @Route(TransactionRouteByCustomer.listTransaction)
@@ -172,7 +168,7 @@ export class TransactionController {
       query.category === TransactionCategory.DEBT
         ? TransactionType.DEBT
         : undefined,
-      undefined,
+      ['beneficiaryBank', 'remitterBank'],
     );
 
     const data = transactions.data.map((transaction) => {
@@ -198,6 +194,17 @@ export class TransactionController {
         category: transactionCategory,
         amount: transactionAmount,
         message: transaction.message,
+        relatedUser: {
+          name: isRemitter
+            ? transaction.beneficiaryName
+            : transaction.remitterName,
+          bankAccountId: isRemitter
+            ? transaction.beneficiaryId
+            : transaction.remitterId,
+          bankName: isRemitter
+            ? transaction.beneficiaryBank.name
+            : transaction.remitterBank.name,
+        },
       };
     });
 
@@ -208,5 +215,17 @@ export class TransactionController {
         totalCount: transactions.totalCount,
       },
     };
+  }
+
+  @Route(TransactionRouteByCustomer.getChartData)
+  async getChart(@Req() req: any, @Query() query: GetChartMode) {
+    const bankAccount = await this.getBankAccountUsecase.execute(
+      'userId',
+      req.user.authId,
+    );
+    return await this.getCustomerDashboardTransactionUsecase.execute(
+      bankAccount.id,
+      query.mode,
+    );
   }
 }

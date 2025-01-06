@@ -12,6 +12,7 @@ import { TransactionStatus } from '../../../core/enums/transaction_status';
 import { TransactionType } from '../../../core/enums/transaction_type';
 import { TransactionModel } from '../../../core/models/transaction.model';
 import { BankModel } from '../../../../bank/core/models/bank.model';
+import { TransactionCustomerChartMode } from '../../../core/enums/transaction_customer_chart_mode';
 
 @Injectable()
 export class TransactionRepo implements ITransactionRepo {
@@ -79,6 +80,16 @@ export class TransactionRepo implements ITransactionRepo {
     return await this.transactionDatasource.statistic(
       defaultBank,
       externalBank,
+    );
+  }
+
+  public async getDashboardInfo(
+    bankAccountId: string,
+    mode: TransactionCustomerChartMode,
+  ): Promise<Record<string, any>> {
+    return await this.transactionDatasource.getDashboardInfo(
+      bankAccountId,
+      mode,
     );
   }
 }

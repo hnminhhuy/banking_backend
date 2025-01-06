@@ -5,6 +5,7 @@ import {
   SortParams,
 } from '../../../../common/models';
 import { BankModel } from '../../../bank/core/models/bank.model';
+import { TransactionCustomerChartMode } from '../enums/transaction_customer_chart_mode';
 import { TransactionSort } from '../enums/transaction_sort';
 import { TransactionStatus } from '../enums/transaction_status';
 import { TransactionType } from '../enums/transaction_type';
@@ -46,4 +47,9 @@ export abstract class ITransactionRepo {
     defaultBank: BankModel,
     externalBank: BankModel,
   ): Promise<any>;
+
+  public abstract getDashboardInfo(
+    bankAccountId: string,
+    mode: TransactionCustomerChartMode,
+  ): Promise<Record<string, any>>;
 }
