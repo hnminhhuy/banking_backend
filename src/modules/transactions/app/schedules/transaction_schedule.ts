@@ -8,7 +8,7 @@ export class TransactionSchedule {
     private readonly handleTimeoutTransactionUsecase: HandleTimeoutTransactionUsecase,
   ) {}
 
-  // @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_10_SECONDS)
   public async handleTimeout() {
     await this.handleTimeoutTransactionUsecase.execute();
   }
