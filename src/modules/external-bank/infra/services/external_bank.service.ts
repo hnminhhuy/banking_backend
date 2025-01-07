@@ -8,6 +8,7 @@ import { Cache } from 'cache-manager';
 import { throwError } from '../../../../common/helpers/throw_error';
 import { JwtService } from '@nestjs/jwt';
 import { BankModel } from '../../../bank/core/models/bank.model';
+import { NTBAccountService } from './ntb_account.service';
 
 @Injectable()
 export class ExternalBankService {
@@ -16,6 +17,7 @@ export class ExternalBankService {
     private readonly httpService: HttpService,
     protected configService: ConfigService,
     protected jwtService: JwtService,
+    protected ntbAccountService: NTBAccountService,
   ) {}
 
   protected getBaseUrl(externalBank: BankModel): string {

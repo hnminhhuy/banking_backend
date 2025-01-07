@@ -11,7 +11,6 @@ export class ProcessInterBankTransactionUsecase {
     private readonly getBankUsecase: GetBankUsecase,
     private readonly createExternalBankTransactionUsecase: CreateExternalBankTransactionUsecase,
     private readonly updateTransactionStatusUsecase: UpdateTransactionUsecase,
-    private readonly bankCode: BankCode,
   ) {}
 
   async execute(transaction: any): Promise<void> {
@@ -27,25 +26,25 @@ export class ProcessInterBankTransactionUsecase {
       );
     }
 
-    if (externalBank.code === this.bankCode.EXTERNAL_BANK) {
-      try {
-        const res = await this.createExternalBankTransactionUsecase.execute(
-          externalBank,
-          transaction,
+    try {
+      const res = await this.createExternalBankTransactionUsecase.execute(
+        externalBank,
+        transaction,
+      );
+
+      console.log(res);
+
+      if (res.data) {
+        await this.updateTransactionStatusUsecase.execute(
+          id,
+          TransactionStatus.SUCCESS,
         );
-        if (res.data) {
-          await this.updateTransactionStatusUsecase.execute(
-            id,
-            TransactionStatus.SUCCESS,
-          );
-        } else {
-          throw new Error('Failed to complete interbank transaction');
-        }
-      } catch (error) {
-        throw new Error(`Interbank transaction failed: ${error.message}`);
+      } else {
+        throw new Error('Failed to complete interbank transaction');
       }
-    } else {
-      throw new BadRequestException('Invalid beneficiary bank ID');
+    } catch (error) {
+      console.log(error.response.data);
+      throw new Error(`Interbank transaction failed: ${error.message}`);
     }
   }
 }

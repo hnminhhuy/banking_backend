@@ -20,6 +20,7 @@ import { NotificationModule } from '../notifications/notification.module';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { BankConfigModule } from '../bank_config/bank_config.module';
 import { AuthModule } from '../auth/auth.module';
+import { NTBAccountService } from './infra/services/ntb_account.service';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { AuthModule } from '../auth/auth.module';
     ExternalBankService,
     BankAccountService,
     TransactionService,
+    NTBAccountService,
     GetExternalBankAccountInfoUsecase,
     CreateExternalBankTransactionUsecase,
   ],
