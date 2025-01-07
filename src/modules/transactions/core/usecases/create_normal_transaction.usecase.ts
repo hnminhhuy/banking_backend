@@ -69,25 +69,42 @@ export class CreateNormalTransactionUsecase {
 
     let fee = undefined;
 
-    switch (beneficiaryBank.code) {
-      case this.bankCode.EXTERNAL_BANK:
-        fee = this.externalFee;
-        beneficiary = await this.getExternalBankAccountInfoUsecase.execute(
-          beneficiaryBank,
-          createTransactionDto.beneficiaryId,
-        );
-        break;
-      case this.bankCode.DEFAULT:
-        fee = this.internalFee;
-        beneficiary = await this.getBankAccountUsecase.execute(
-          'id',
-          createTransactionDto.beneficiaryId,
-          ['user'],
-        );
-        break;
-      default:
-        throw new BadRequestException('Invalid beneficiary bank id');
+    if (beneficiaryBank.code === this.bankCode.DEFAULT) {
+      fee = this.internalFee;
+      beneficiary = await this.getBankAccountUsecase.execute(
+        'id',
+        createTransactionDto.beneficiaryId,
+        ['user'],
+      );
+    } else {
+      fee = this.externalFee;
+      beneficiary = await this.getExternalBankAccountInfoUsecase.execute(
+        beneficiaryBank,
+        createTransactionDto.beneficiaryId,
+      );
     }
+
+    // switch (beneficiaryBank.code) {
+    //   case this.bankCode.EXTERNAL_BANK:
+    //     fee = this.externalFee;
+    //     beneficiary = await this.getExternalBankAccountInfoUsecase.execute(
+    //       beneficiaryBank,
+    //       createTransactionDto.beneficiaryId,
+    //     );
+    //     break;
+    //   case this.bankCode.DEFAULT:
+    //     fee = this.internalFee;
+    //     beneficiary = await this.getBankAccountUsecase.execute(
+    //       'id',
+    //       createTransactionDto.beneficiaryId,
+    //       ['user'],
+    //     );
+    //     break;
+    //   default:
+    //     throw new BadRequestException('Invalid beneficiary bank id');
+    // }
+
+    console.log(beneficiary);
 
     const params: TransactionModelParams = {
       amount: createTransactionDto.amount,

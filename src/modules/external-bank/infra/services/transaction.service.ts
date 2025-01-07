@@ -9,6 +9,21 @@ export class TransactionService extends ExternalBankService {
     externalBank: BankModel,
     params: TransactionModelParams,
   ): Promise<Record<string, any>> {
+    switch (externalBank.code) {
+      case 'EXB':
+        return await this.sendEXBBank(externalBank, params);
+      case 'NTB':
+        return await this.ntbAccountService.sendTransaction(
+          externalBank,
+          params,
+        );
+    }
+  }
+
+  private async sendEXBBank(
+    externalBank: BankModel,
+    params: TransactionModelParams,
+  ) {
     const sign = await this.jwtService.sign({
       id: params.id,
       remitterId: params.remitterId,
