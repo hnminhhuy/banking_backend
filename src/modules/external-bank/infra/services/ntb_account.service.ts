@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import * as crypto from 'crypto';
@@ -10,16 +10,12 @@ export class NTBAccountService {
   private privateKey;
 
   constructor(private readonly configService: ConfigService) {
-    this.privateKey = configService.get<string>('auth.jwt.privateKey');
+    this.privateKey = this.configService.get<string>('auth.jwt.privateKey');
   }
 
   generateSHA256Hash(data: any, secret_key: string): string {
     const json_data = JSON.stringify(data);
-    // console.log(json_data)
-    // console.log(secret_key)
     const hash = crypto.createHmac('sha256', secret_key).update(json_data);
-    //hash.end();
-    //console.log('hash', hash)
     return hash.digest('hex');
   }
 
@@ -40,7 +36,7 @@ export class NTBAccountService {
 
     const hash = this.generateSHA256Hash(payload, metadata.secretKey);
 
-    const response = await axios.post(metadata.host, payload, {
+    const response = await axios.post(`${metadata.host}api/get-info`, payload, {
       headers: {
         Authorization: `Bearer ${metadata.apiKey}`,
         'x-hash': hash,
@@ -48,8 +44,18 @@ export class NTBAccountService {
       },
     });
 
-    console.log(response);
-    return response;
+    if (response.status >= 200 && response.status < 300) {
+      const { account_number, name } = response.data;
+      const convertedData = {
+        data: {
+          id: account_number,
+          fullName: name,
+        },
+      };
+      return convertedData;
+    } else {
+      throw new BadRequestException(response.data.message);
+    }
   }
 
   async sendTransaction(
@@ -61,25 +67,36 @@ export class NTBAccountService {
       our_bank_account_number: transaction.beneficiaryId,
       amount: transaction.amount,
       client_bank_account_number: transaction.remitterId,
-      client_bank_number: transaction.remitterName,
+      client_bank_name: transaction.remitterName,
       timestamp: new Date().toISOString(),
       remarks: transaction.message,
       payment_method: transaction.remitterPaidFee
         ? 'Sender Pay'
         : 'Recipient Pay',
-      feeL: transaction.transactionFee,
+      fee: transaction.transactionFee,
     };
     const signature = this.signMessage(JSON.stringify(payload));
     const hash = this.generateSHA256Hash(payload, metadata.secretKey);
-    const response = await axios.post(metadata.host, payload, {
-      headers: {
-        Authorization: `Bearer ${metadata.apiKey}`,
-        'x-hash': hash,
-        'x-client-id': metadata.clientId,
-        'x-signature': signature,
-      },
-    });
 
-    return response;
+    const response = await axios.post(
+      `${metadata.host}api/add-to-balance`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${metadata.apiKey}`,
+          'x-hash': hash,
+          'x-client-id': metadata.clientId,
+          'x-signature': signature,
+        },
+      },
+    );
+
+    if (!response.data || response.status < 200 || response.status >= 300) {
+      throw new BadRequestException(
+        response.data?.message || 'An unknown error occurred.',
+      );
+    }
+
+    return { data: 'success' };
   }
 }

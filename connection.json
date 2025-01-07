@@ -9,5 +9,15 @@
   "clientCredential": {
     "clientId": "ae0eeebf-7ac7-46de-b1c7-145e9edfe722",
     "clientSecret": "757cc12dcc6911c1976d0b321898ea4c83ea20cf2e2b5ba90edd93a1ab3148b5478849e15b0a97c498253d00b16c25f6700ed969bd40387d46781d1c3482f6f8"
+  },
+  "sample": {
+    "our_bank_account_number": "000000001",
+    "amount": 25000,
+    "client_bank_account_number": "03330001",
+    "client_bank_number": "Huynh Nguyen Minh Huy",
+    "timestamp": "2025-01-07T17:21:38.888Z",
+    "remarks": "NHB test",
+    "payment_method": "Sender Pay",
+    "fee": 3300
   }
 }
