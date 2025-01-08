@@ -1,9 +1,14 @@
 import { HttpStatus, RequestMethod } from '@nestjs/common';
-import { Page } from 'src/common/models';
 import { IRouteParams } from 'src/decorators';
 import { UserRole } from 'src/modules/user/core/enums/user_role';
-import { UserModel } from '../../core/models/user.model';
+import {
+  BooleanModel,
+  CreateUserResponseModel,
+  UserMeModel,
+  UserModel,
+} from '../../core/models/user.model';
 import { BaseException } from 'src/exceptions';
+import { UserPageResponseModel } from '../../core/models/user_page_response.model';
 
 export default {
   createEmployee: <IRouteParams>{
@@ -13,7 +18,7 @@ export default {
     roles: [UserRole.Admin],
     swaggerParams: {
       responses: [
-        { status: HttpStatus.CREATED, type: UserModel },
+        { status: HttpStatus.CREATED, type: CreateUserResponseModel },
         {
           status: HttpStatus.BAD_REQUEST,
           description: 'Bad request',
@@ -29,7 +34,7 @@ export default {
     roles: [UserRole.Admin],
     swaggerParams: {
       responses: [
-        { status: HttpStatus.OK, type: Page<UserModel> },
+        { status: HttpStatus.OK, type: UserPageResponseModel },
         {
           status: HttpStatus.BAD_REQUEST,
           description: 'Bad request',
@@ -61,7 +66,7 @@ export default {
     roles: [UserRole.Admin],
     swaggerParams: {
       responses: [
-        { status: HttpStatus.OK, type: UserModel },
+        { status: HttpStatus.OK, type: UserMeModel },
         {
           status: HttpStatus.BAD_REQUEST,
           description: 'Bad request',
@@ -91,13 +96,17 @@ export default {
     method: RequestMethod.PATCH,
     secure: true,
     roles: [UserRole.Admin],
-    swaggerParams: {},
+    swaggerParams: {
+      responses: [{ status: HttpStatus.OK, type: BooleanModel }],
+    },
   },
   unblockUser: <IRouteParams>{
     path: 'unblock/:id',
     method: RequestMethod.PATCH,
     secure: true,
     roles: [UserRole.Admin],
-    swaggerParams: {},
+    swaggerParams: {
+      responses: [{ status: HttpStatus.OK, type: BooleanModel }],
+    },
   },
 };

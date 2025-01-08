@@ -25,11 +25,12 @@ export class TransactionConsumer extends WorkerHost {
     private readonly processInterBankTransactionUsecase: ProcessInterBankTransactionUsecase,
     private readonly sendPushNotificationUsecase: SendPushNotificationUseCase,
     private readonly getBankAccountUsecase: GetBankAccountUsecase,
+    private readonly transactionGateway: TransactionGateway,
   ) {
     super();
   }
 
-  @Transactional()
+  // @Transactional()
   async process(job: Job): Promise<void> {
     const transaction = job.data.transaction;
     const {

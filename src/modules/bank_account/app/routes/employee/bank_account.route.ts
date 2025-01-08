@@ -5,6 +5,8 @@ import { GetBankAccountDto } from '../../dtos';
 import { ListBankAccountDto } from '../../dtos/list_bank_account.dto';
 import { Page } from '../../../../../common/models';
 import { UserRole } from '../../../../user/core/enums/user_role';
+import { PageResponseModel } from 'src/common/models/page_response.model';
+import { BankAccountPageResponseModel } from 'src/modules/bank_account/core/models/bank_account_page_response.model';
 
 export const BankAccountRouteByEmployee = {
   getBankAccount: <IRouteParams>{
@@ -32,7 +34,7 @@ export const BankAccountRouteByEmployee = {
       responses: [
         {
           status: HttpStatus.OK,
-          type: Page<BankAccountModel>,
+          type: BankAccountPageResponseModel,
         },
         { status: 400, description: 'Bad request.' },
       ],

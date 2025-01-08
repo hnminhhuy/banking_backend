@@ -1,8 +1,9 @@
 import { HttpStatus, RequestMethod } from '@nestjs/common';
 import { IRouteParams } from 'src/decorators';
 import { UserRole } from 'src/modules/user/core/enums/user_role';
-import { UserModel } from '../../core/models/user.model';
+import { UserMeModel, UserModel } from '../../core/models/user.model';
 import { BaseException } from 'src/exceptions';
+import { UserEmployeePageResponseModel } from '../../core/models/user_page_response.model';
 
 export default {
   createCustomer: <IRouteParams>{
@@ -24,7 +25,7 @@ export default {
     roles: [UserRole.Employee],
     swaggerParams: {
       responses: [
-        { status: HttpStatus.CREATED, type: UserModel },
+        { status: HttpStatus.CREATED, type: UserEmployeePageResponseModel },
         { status: HttpStatus.BAD_REQUEST, type: BaseException },
       ],
     },
@@ -36,7 +37,7 @@ export default {
     roles: [UserRole.Employee],
     swaggerParams: {
       responses: [
-        { status: HttpStatus.OK, type: UserModel },
+        { status: HttpStatus.OK, type: UserMeModel },
         { status: HttpStatus.BAD_REQUEST, type: BaseException },
       ],
     },

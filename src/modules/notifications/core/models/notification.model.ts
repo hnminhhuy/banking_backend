@@ -30,3 +30,11 @@ export class NotificationModel extends BaseModel {
     Object.assign(this, partial);
   }
 }
+
+export class NotificationCountModel {
+  @ApiProperty({
+    description: 'The count of unread notifications',
+    example: 0,
+  })
+  data: number;
+}

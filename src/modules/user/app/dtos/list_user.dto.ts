@@ -7,7 +7,10 @@ export class ListUserDto extends IntersectionType(
   PartialType(PaginationDto),
   PartialType(SortParamsDto),
 ) {
-  @ApiProperty()
+  @ApiProperty({
+    enum: [UserRole.Customer, UserRole.Employee],
+    example: UserRole.Customer,
+  })
   @IsDefined()
   @IsIn([UserRole.Customer, UserRole.Employee])
   public role?: UserRole;
@@ -17,7 +20,10 @@ export class ListCustomerByEmployeeDto extends IntersectionType(
   PartialType(PaginationDto),
   PartialType(SortParamsDto),
 ) {
-  @ApiProperty()
+  @ApiProperty({
+    enum: [UserRole.Customer],
+    example: UserRole.Customer,
+  })
   @IsDefined()
   @IsIn([UserRole.Customer])
   public role?: UserRole.Customer;

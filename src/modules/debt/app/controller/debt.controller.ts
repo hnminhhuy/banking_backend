@@ -11,7 +11,7 @@ import {
   Query,
   Req,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Route } from 'src/decorators';
 import { DebtRoute } from '../routes/debt.route';
 import { CreateDebtDto, GetDebtDto } from '../dtos/debt.dto';
@@ -106,6 +106,11 @@ export class DebtController {
   }
 
   @Route(DebtRoute.getDebt)
+  @ApiQuery({
+    name: 'includeUser',
+    required: false,
+    description: 'Set to true to include debtor and reminder user information.',
+  })
   async getDebt(
     @Req() req,
     @Param() param: GetDebtDto,
@@ -123,16 +128,6 @@ export class DebtController {
       'user_id',
       req.user.authId,
     );
-    // console.log('banj 102', bankAccount);
-    // bankAccount =
-    //   bankAccount ||
-    //   (await this.getBankAccountUsecase.execute('id', debt.debtorId));
-
-    // console.log('banj 106', bankAccount);
-
-    // if (!bankAccount) {
-    //   throw new NotFoundException('Bank Account not found');
-    // }
 
     if (bankAccount.id !== debt.reminderId && bankAccount.id !== debt.debtorId)
       throw new ForbiddenException('You are not authorized to get this debt');
@@ -224,13 +219,11 @@ export class DebtController {
   @Route(DebtRoute.cancelDebt)
   async cancelDebt(@Req() req, @Param() param: GetDebtDto) {
     try {
-      // Execute use case to cancel debt
       const result = await this.cancelDebtUsecase.execute(
         req.user.authId,
         param.id,
       );
 
-      // Return success response
       return {
         statusCode: HttpStatus.OK,
         message: 'Debt successfully canceled',

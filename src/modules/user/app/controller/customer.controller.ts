@@ -3,7 +3,9 @@ import { GetUserUsecase } from '../../core/usecases';
 import { Route } from 'src/decorators';
 import customerRoute from '../routes/customer.route';
 import { GetCustomerDashBoardInfoUsecase } from '../../core/usecases/get_customer_dashboard_info.usecase';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('User By Customer')
 @Controller({ path: 'api/customer/v1' })
 export class UserControllerByCustomer {
   constructor(

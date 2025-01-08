@@ -100,15 +100,15 @@ export class UserControllerByAdmin {
     return await this.getUserUsecase.execute('id', req.user.authId);
   }
 
-  @Route(adminRoute.getUser)
-  async getUser(@Param() params: IdDto) {
-    return await this.getUserUsecase.execute('id', params.id);
-  }
+  // @Route(adminRoute.getUser)
+  // async getUser(@Param() params: IdDto) {
+  //   return await this.getUserUsecase.execute('id', params.id);
+  // }
 
-  @Route(adminRoute.updateUser)
-  async updateUser(@Param() params: IdDto, @Body() body: UpdateUserDto) {
-    return await this.updateUserUsecase.execute(params.id, body);
-  }
+  // @Route(adminRoute.updateUser)
+  // async updateUser(@Param() params: IdDto, @Body() body: UpdateUserDto) {
+  //   return await this.updateUserUsecase.execute(params.id, body);
+  // }
 
   @Route(adminRoute.blockedUser)
   async blockedUser(@Req() req, @Param() params: IdDto) {

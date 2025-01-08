@@ -1,4 +1,5 @@
 import {
+  ApiProperty,
   ApiPropertyOptional,
   IntersectionType,
   PartialType,
@@ -12,13 +13,23 @@ import {
 import { TransactionDto } from './transaction.dto';
 import { IsOptional, IsString } from 'class-validator';
 import { TransactionCategory } from '../../core/enums/transaction_category';
+import { TransactionStatus } from '../../core/enums/transaction_status';
 
 export class ListTransactionDto extends IntersectionType(
   PartialType(PaginationDto),
   PartialType(SortParamsDto),
-  PartialType(PickType(TransactionDto, ['status'])),
+  // PartialType(PickType(TransactionDto, ['status'])),
 ) {
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    enum: TransactionStatus,
+  })
+  @IsOptional()
+  @IsString()
+  status?: TransactionStatus;
+
+  @ApiPropertyOptional({
+    enum: TransactionCategory,
+  })
   @IsString()
   @IsOptional()
   category?: TransactionCategory;

@@ -7,8 +7,9 @@ import { PageParams, SortParams } from '../../../../../common/models';
 import { ListBankAccountDto } from '../../dtos/list_bank_account.dto';
 import { BankAccountSort } from '../../../core/enums/bank_account_sort';
 import { ListBankAccountsUsecase } from '../../../core/usecases/list_bank_account.usecase';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Bank Account For Employee')
 @Controller({ path: 'api/employee/v1/bank-accounts' })
 @ApiBearerAuth()
 export class BankAccountController {
@@ -17,15 +18,15 @@ export class BankAccountController {
     private readonly listBankAccountsUsecase: ListBankAccountsUsecase,
   ) {}
 
-  @Route(BankAccountRouteByEmployee.getBankAccount)
-  async get(@Param() param: GetBankAccountDto) {
-    const bankAccount = await this.getBankAccountUsecase.execute(
-      'id',
-      param.id,
-      undefined,
-    );
-    return bankAccount;
-  }
+  // @Route(BankAccountRouteByEmployee.getBankAccount)
+  // async get(@Param() param: GetBankAccountDto) {
+  //   const bankAccount = await this.getBankAccountUsecase.execute(
+  //     'id',
+  //     param.id,
+  //     undefined,
+  //   );
+  //   return bankAccount;
+  // }
 
   @Route(BankAccountRouteByEmployee.listBank)
   async list(@Query() query: ListBankAccountDto) {

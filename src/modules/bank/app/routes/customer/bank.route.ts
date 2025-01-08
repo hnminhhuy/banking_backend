@@ -5,6 +5,7 @@ import { BankModel } from '../../../core/models/bank.model';
 import { ListBankDto } from '../../dto/list_banks.dto';
 import { GetBankDto } from '../../dto';
 import { UserRole } from '../../../../user/core/enums/user_role';
+import { CustomerBankPageResponseModel } from 'src/modules/user/core/models/customer_bank_page_response.model';
 
 export default {
   listBank: <IRouteParams>{
@@ -17,7 +18,7 @@ export default {
       responses: [
         {
           status: HttpStatus.OK,
-          type: Page<BankModel>,
+          type: CustomerBankPageResponseModel,
         },
         { status: 400, description: 'Bad request.' },
       ],
