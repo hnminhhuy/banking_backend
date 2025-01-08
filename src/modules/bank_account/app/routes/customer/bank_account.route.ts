@@ -3,6 +3,7 @@ import { IRouteParams } from '../../../../../decorators';
 import { BankAccountModel } from '../../../core/models/bank_account.model';
 import { GetBankAccountDto } from '../../dtos';
 import { UserRole } from '../../../../user/core/enums/user_role';
+import { BankAccountUserModel } from 'src/modules/bank_account/core/models/bank_account_user.model';
 
 export const BankAccountRouteByCustomer = {
   getBankAccount: <IRouteParams>{
@@ -15,7 +16,7 @@ export const BankAccountRouteByCustomer = {
       responses: [
         {
           status: HttpStatus.OK,
-          type: BankAccountModel,
+          type: BankAccountUserModel,
         },
       ],
     },

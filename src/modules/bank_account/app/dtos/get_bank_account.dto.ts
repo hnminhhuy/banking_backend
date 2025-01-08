@@ -3,7 +3,10 @@ import { BankAccountDto } from './bank_account.dto';
 import { IsString, Length } from 'class-validator';
 
 export class GetBankAccountDto extends PickType(BankAccountDto, ['id']) {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The code of the bank.',
+    example: 'NHB', // Example value for bank code
+  })
   @IsString()
   @Length(3, 10)
   code: string;
