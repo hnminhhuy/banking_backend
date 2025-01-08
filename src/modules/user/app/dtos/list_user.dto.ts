@@ -12,3 +12,13 @@ export class ListUserDto extends IntersectionType(
   @IsIn([UserRole.Customer, UserRole.Employee])
   public role?: UserRole;
 }
+
+export class ListCustomerByEmployeeDto extends IntersectionType(
+  PartialType(PaginationDto),
+  PartialType(SortParamsDto),
+) {
+  @ApiProperty()
+  @IsDefined()
+  @IsIn([UserRole.Customer])
+  public role?: UserRole.Customer;
+}

@@ -46,6 +46,7 @@ export abstract class ITransactionRepo {
   public abstract statistic(
     defaultBank: BankModel,
     externalBank: BankModel,
+    dateFilter: DateFilter,
   ): Promise<any>;
 
   public abstract getDashboardInfo(

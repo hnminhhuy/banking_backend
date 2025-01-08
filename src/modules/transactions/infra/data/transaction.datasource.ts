@@ -186,48 +186,52 @@ export class TransactionDatasource {
   public async statistic(
     defaultBank: BankModel,
     externalBank: BankModel,
+    dateFilter: DateFilter,
   ): Promise<any> {
     const result = await this.transactionRepository
       .createQueryBuilder('transactions')
       .select([
-        `SUM(CASE 
-         WHEN transactions.status = :status 
-           AND transactions.remitterBankId = :defaultBankId 
-           AND transactions.beneficiaryBankId = :externalBankId 
-         THEN 
-           CASE 
-             WHEN transactions.remitterPaidFee 
-             THEN transactions.transactionFee + transactions.amount 
-             ELSE transactions.amount 
+        `SUM(CASE
+         WHEN transactions.status = :status
+           AND transactions.remitterBankId = :defaultBankId
+           AND transactions.beneficiaryBankId = :externalBankId
+         THEN
+           CASE
+             WHEN transactions.remitter_paid_fee
+             THEN transactions.transactionFee + transactions.amount
+             ELSE transactions.amount
            END
          ELSE 0 END) as outcomingAmount`,
-        `SUM(CASE 
-         WHEN transactions.status = :status 
-           AND transactions.remitterBankId = :externalBankId 
-           AND transactions.beneficiaryBankId = :defaultBankId 
-         THEN 
-           CASE 
-             WHEN transactions.remitterPaidFee 
-             THEN transactions.amount 
-             ELSE transactions.amount + transactions.transactionFee 
+        `SUM(CASE
+         WHEN transactions.status = :status
+           AND transactions.remitterBankId = :externalBankId
+           AND transactions.beneficiaryBankId = :defaultBankId
+         THEN
+           CASE
+             WHEN transactions.remitter_paid_fee
+             THEN transactions.amount
+             ELSE transactions.amount + transactions.transaction_fee
            END
          ELSE 0 END) as incomingAmount`,
-        `COUNT(CASE 
-         WHEN transactions.status = :status 
-           AND (transactions.remitterBankId = :externalBankId OR transactions.beneficiaryBankId = :externalBankId) 
+        `COUNT(CASE
+         WHEN transactions.status = :status
+           AND (transactions.remitterBankId = :externalBankId OR transactions.beneficiaryBankId = :externalBankId)
          THEN 1 ELSE NULL END) as transactionCount`,
       ])
+      .where('transactions.completed_at BETWEEN :startDate AND :endDate')
       .setParameters({
         status: TransactionStatus.SUCCESS,
         defaultBankId: defaultBank.id,
         externalBankId: externalBank.id,
+        startDate: dateFilter.from.toISOString(),
+        endDate: dateFilter.to.toISOString(),
       })
       .getRawOne();
 
     return {
-      outcomingAmount: parseInt(result.outcomingamount) ?? 0,
-      incomingAmount: parseInt(result.incomingamount) ?? 0,
-      transactionCount: parseInt(result.transactioncount) ?? 0,
+      outcomingAmount: parseInt(result.outcomingamount) || 0,
+      incomingAmount: parseInt(result.incomingamount) || 0,
+      transactionCount: parseInt(result.transactioncount) || 0,
     };
   }
 
@@ -259,23 +263,23 @@ export class TransactionDatasource {
         `${groupByClause}::date as time`, // Format as plain date
         'COUNT(transactions.id) as totalCount', // Total transactions
         `SUM(
-        CASE 
-          WHEN transactions.remitterId = $1 AND transactions.status = $2 THEN 
-            CASE 
-              WHEN transactions.remitterPaidFee THEN transactions.transactionFee + transactions.amount 
-              ELSE transactions.amount 
-            END 
-          ELSE 0 
+        CASE
+          WHEN transactions.remitterId = $1 AND transactions.status = $2 THEN
+            CASE
+              WHEN transactions.remitterPaidFee THEN transactions.transactionFee + transactions.amount
+              ELSE transactions.amount
+            END
+          ELSE 0
         END
       ) as remitterCount`, // Sum remitter transactions amount
         `SUM(
-        CASE 
-          WHEN transactions.beneficiaryId = $1 AND transactions.status = $2 THEN 
-            CASE 
-              WHEN transactions.remitterPaidFee THEN transactions.amount 
-              ELSE transactions.transactionFee + transactions.amount 
-            END 
-          ELSE 0 
+        CASE
+          WHEN transactions.beneficiaryId = $1 AND transactions.status = $2 THEN
+            CASE
+              WHEN transactions.remitterPaidFee THEN transactions.amount
+              ELSE transactions.transactionFee + transactions.amount
+            END
+          ELSE 0
         END
       ) as beneficiaryCount`, // Sum beneficiary transactions amount
       ])
@@ -291,7 +295,7 @@ export class TransactionDatasource {
 
     const combinedQuery = `
     WITH all_dates AS (${allDatesQuery})
-    SELECT 
+    SELECT
       ad.time::date,
       COALESCE(t.totalCount, 0) AS totalCount,
       COALESCE(t.remitterCount, 0) AS remitterCount,

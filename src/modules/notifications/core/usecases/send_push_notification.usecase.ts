@@ -5,6 +5,7 @@ import { SendNotificationToMultipleTokensUsecase } from './fcm_service/send_noti
 import { NotificationType } from '../enums/notification_type';
 import { NotificationIcon } from '../enums/notification_icon';
 import { NotificationBodyHandlerUsecase } from './notification_body_handler.usecase';
+import { TransactionGateway } from 'src/modules/transactions/infra/transaction_websocket';
 
 @Injectable()
 export class SendPushNotificationUseCase {
@@ -13,6 +14,7 @@ export class SendPushNotificationUseCase {
     private readonly listFcmTokenUsecase: ListFcmTokenUsecase,
     private readonly sendNotificationToMultipleTokensUsecase: SendNotificationToMultipleTokensUsecase,
     private readonly notificationBodyHandlerUsecase: NotificationBodyHandlerUsecase,
+    private readonly transactionGateway: TransactionGateway,
   ) {}
 
   public async execute(
@@ -21,6 +23,9 @@ export class SendPushNotificationUseCase {
     debtId: string | undefined,
     transactionId: string | undefined,
   ) {
+    this.transactionGateway.sendMessageToUser(userId, {
+      value: 'reload transaction',
+    });
     const body = await this.notificationBodyHandlerUsecase.execute(
       type,
       userId,

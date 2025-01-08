@@ -12,6 +12,7 @@ import {
 import { TransactionSort } from '../../../core/enums/transaction_sort';
 import { StatisticTransactionUsecase } from '../../../core/usecases/statistic_transaction.usecase';
 import { GetBankUsecase } from '../../../../bank/core/usecases';
+import { DateParamsDto } from 'src/common/dtos';
 
 @ApiTags('Admin \\ Transaction')
 @ApiBearerAuth()
@@ -60,13 +61,24 @@ export class TransactionController {
   }
 
   @Route(TransactionRouteByAdmin.statisticTransaction)
-  async statistic(@Param() param: StatisticTransactionDto) {
+  async statistic(
+    @Param() param: StatisticTransactionDto,
+    @Query() dateFilterParams: DateParamsDto,
+  ) {
     const externalBank = await this.getBankUsecase.execute('id', param.bankId);
+    const dateFilter = new DateFilter(
+      dateFilterParams.from,
+      dateFilterParams.to,
+      dateFilterParams.column,
+    );
 
     if (!externalBank) {
       throw new BadRequestException('Bank not found');
     }
 
-    return await this.statisticTransactionUsecase.execute(externalBank);
+    return await this.statisticTransactionUsecase.execute(
+      externalBank,
+      dateFilter,
+    );
   }
 }
