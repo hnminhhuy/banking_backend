@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, PickType } from '@nestjs/swagger';
 import { BaseModel, BaseModelParams } from '../../../../common/models';
 import { TransactionType } from '../enums/transaction_type';
 import { TransactionStatus } from '../enums/transaction_status';
@@ -75,3 +75,21 @@ export class TransactionModel extends BaseModel {
     Object.assign(this, partial);
   }
 }
+
+export class TransactionResponseModel extends PickType(TransactionModel, [
+  'id',
+  'createdAt',
+  'updatedAt',
+  'amount',
+  'remitterId',
+  'type',
+  'transactionFee',
+  'beneficiaryId',
+  'remitterPaidFee',
+  'message',
+  'beneficiaryName',
+  'remitterBankId',
+  'remitterName',
+  'debtId',
+  'status',
+]) {}

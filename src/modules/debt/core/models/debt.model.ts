@@ -45,3 +45,17 @@ export class DebtModel extends BaseModel {
     Object.assign(this, partial);
   }
 }
+
+export class CancelDebtResponseModel {
+  @ApiProperty({ description: 'The ID of the debt' })
+  id: string;
+
+  @ApiProperty({ description: 'The current status of the debt', example: 200 })
+  status: number;
+
+  @ApiProperty({
+    description: 'A message describing the result of the cancellation',
+    example: 'Debt successfully canceled',
+  })
+  message: string;
+}

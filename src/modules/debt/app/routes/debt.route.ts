@@ -1,8 +1,17 @@
 import { HttpStatus, RequestMethod } from '@nestjs/common';
 import { IRouteParams } from 'src/decorators';
-import { DebtModel } from '../../core/models/debt.model';
+import {
+  CancelDebtResponseModel,
+  DebtModel,
+} from '../../core/models/debt.model';
 import { BaseException } from 'src/exceptions';
 import { DebtorNameModel } from '../../core/models/debtor_name.model';
+import { CreateDebtReponseModel } from '../../core/models/create_debt_response.model';
+import { DebtPageResponseModel } from '../../core/models/debt_page_response.model';
+import {
+  TransactionModel,
+  TransactionResponseModel,
+} from 'src/modules/transactions/core/models/transaction.model';
 
 export const DebtRoute = {
   createDebt: <IRouteParams>{
@@ -13,7 +22,7 @@ export const DebtRoute = {
       responses: [
         {
           status: HttpStatus.CREATED,
-          type: DebtModel,
+          type: CreateDebtReponseModel,
           description: 'Debt successfully created',
         },
         {
@@ -69,7 +78,9 @@ export const DebtRoute = {
     path: '/:id/settle',
     method: RequestMethod.POST,
     secure: true,
-    swaggerParams: {},
+    swaggerParams: {
+      responses: [{ status: HttpStatus.OK, type: TransactionResponseModel }],
+    },
   },
   listDebt: <IRouteParams>{
     path: '/',
@@ -77,7 +88,7 @@ export const DebtRoute = {
     secure: true,
     swaggerParams: {
       responses: [
-        { status: HttpStatus.OK, type: DebtModel },
+        { status: HttpStatus.OK, type: DebtPageResponseModel },
         {
           status: HttpStatus.BAD_REQUEST,
           description: 'Bad request',
@@ -100,7 +111,7 @@ export const DebtRoute = {
         {
           status: HttpStatus.OK,
           description: 'Debt successfully canceled',
-          type: DebtModel,
+          type: CancelDebtResponseModel,
         },
         {
           status: HttpStatus.BAD_REQUEST,
