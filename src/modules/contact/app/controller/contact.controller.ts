@@ -55,7 +55,7 @@ export class ContactController {
       const existingContacts = await this.getAllContactInfoUsecase.execute(
         req.user.authId,
       );
-      const isConflict = existingContacts.find(
+      const isConflict = existingContacts?.find(
         (contact) => contact.beneficiaryId === contactParams.beneficiaryId,
       );
       if (isConflict) throw new Error('ExistingContactError');
