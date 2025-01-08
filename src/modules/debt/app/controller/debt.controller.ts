@@ -33,6 +33,7 @@ import { ListDebtWithUserUsecase } from '../../core/usecases/list_debt_with_user
 import { GetAllDebtorUsecase } from '../../core/usecases/get_all_debto.usecase';
 import { SendPushNotificationUseCase } from '../../../notifications/core/usecases/send_push_notification.usecase';
 import { NotificationType } from '../../../notifications/core/enums/notification_type';
+import { DebtStatus } from '../../core/enum/debt_status';
 
 @ApiTags('Debt by Customer')
 @Controller({ path: 'api/customer/v1/debt' })
@@ -263,6 +264,14 @@ export class DebtController {
 
     if (debt.reminderId === req.user.authId) {
       throw new BadRequestException('Debt cannot be settled by the reminder');
+    }
+
+    if (debt.status === DebtStatus.Settled) {
+      throw new BadRequestException('This debt is already paid');
+    }
+
+    if (debt.status === DebtStatus.Canceled) {
+      throw new BadRequestException('This debt is already cancelled');
     }
 
     const debtorAccount = await this.getBankAccountUsecase.execute(

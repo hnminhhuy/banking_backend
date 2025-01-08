@@ -1,15 +1,14 @@
 import { Controller, Param, Query } from '@nestjs/common';
 import { GetBankUsecase, ListBanksUsecase } from '../../../core/usecases';
 import { Route } from '../../../../../decorators';
-import { GetBankDto, ListBankDto } from '../../dto';
+import { ListBankDto } from '../../dto';
 import { PageParams, SortParams } from '../../../../../common/models';
 import { BankSort } from '../../../core/enums/bank_sort';
+import { ApiTags } from '@nestjs/swagger';
 import bankRoute from '../../routes/customer/bank.route';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Bank for Customer')
 @Controller({ path: 'api/customer/v1/banks' })
-@ApiBearerAuth()
 export class BankController {
   constructor(
     private readonly listBanksUsecase: ListBanksUsecase,
@@ -31,18 +30,10 @@ export class BankController {
     );
     const banks = await this.listBanksUsecase.execute(pageParams, sortParams);
 
-    banks.data.map((bank) => {
+    return banks.data.map((bank) => {
       const { publicKey, id, createdAt, updatedAt, ...bankData } = bank;
       return bankData;
     });
-
-    return {
-      data: banks.data,
-      metadata: {
-        page: banks.page,
-        totalCount: banks.totalCount,
-      },
-    };
   }
 
   // @Route(bankRoute.getBank)
