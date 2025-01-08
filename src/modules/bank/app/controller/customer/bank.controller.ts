@@ -38,6 +38,7 @@ export class BankController {
         createdAt,
         updatedAt,
         metadata,
+        logoUrl,
         ...bankData
       } = bank;
       return bankData;
