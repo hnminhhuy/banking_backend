@@ -64,14 +64,14 @@ export class TransactionController {
       }
 
       if (
-        createTransactionDto.amount !== body.amount &&
-        createTransactionDto.beneficiaryId !== body.beneficiaryId &&
-        createTransactionDto.remitterId !== body.remitterId &&
-        createTransactionDto.id !== body.id &&
-        createTransactionDto.remitterName !== body.remitterName &&
-        createTransactionDto.beneficiaryName !== body.beneficiaryName &&
-        createTransactionDto.message !== body.message &&
-        createTransactionDto.remitterPaidFee !== body.remitterPaidFee &&
+        createTransactionDto.amount !== body.amount ||
+        createTransactionDto.beneficiaryId !== body.beneficiaryId ||
+        createTransactionDto.remitterId !== body.remitterId ||
+        createTransactionDto.id !== body.id ||
+        createTransactionDto.remitterName !== body.remitterName ||
+        createTransactionDto.beneficiaryName !== body.beneficiaryName ||
+        createTransactionDto.message !== body.message ||
+        createTransactionDto.remitterPaidFee !== body.remitterPaidFee ||
         createTransactionDto.transactionFee !== body.transactionFee
       ) {
         throw new BadRequestException('Mismatch data');

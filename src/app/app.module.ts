@@ -71,11 +71,7 @@ import { NotificationModule } from '../modules/notifications/notification.module
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        connection: {
-          host: configService.get('redis.host'),
-          port: <number>configService.get('redis.port'),
-          db: <number>configService.get('bullmq.db'),
-        },
+        connection: configService.get('redis'),
       }),
     }),
     forwardRef(() => RedisCacheModule),
