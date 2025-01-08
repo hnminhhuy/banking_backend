@@ -25,7 +25,7 @@ export class BankModel extends BaseModel {
   public readonly publicKey: string;
 
   @ApiProperty()
-  public readonly alogrithm: string;
+  public readonly algorithm: string;
 
   @ApiPropertyOptional()
   public readonly logoUrl: string | undefined;

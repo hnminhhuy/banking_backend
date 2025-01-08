@@ -30,13 +30,21 @@ export class BankController {
     );
     const banks = await this.listBanksUsecase.execute(pageParams, sortParams);
 
-    banks.data.map((bank) => {
-      const { publicKey, id, createdAt, updatedAt, ...bankData } = bank;
+    const responseData = banks.data.map((bank) => {
+      const {
+        publicKey,
+        id,
+        algorithm: alogrithm,
+        createdAt,
+        updatedAt,
+        metadata,
+        ...bankData
+      } = bank;
       return bankData;
     });
 
     return {
-      data: banks.data,
+      data: responseData,
       metadata: {
         page: banks.page,
         totalCount: banks.totalCount,
@@ -47,7 +55,7 @@ export class BankController {
   @Route(bankRoute.getBank)
   async get(@Param() param: GetBankDto) {
     const bank = await this.getBankUsecase.execute('id', param.id, undefined);
-    const { publicKey, id, createdAt, updatedAt, ...bankData } = bank;
+    const { publicKey, id, createdAt, updatedAt, metadata, ...bankData } = bank;
 
     return bankData;
   }

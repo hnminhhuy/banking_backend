@@ -53,7 +53,7 @@ export class BankDatasource {
       conditions,
     );
 
-    const bankModels = rawItems.map((bank) => new BankModel(bank));
+    const bankModels = rawItems?.map((bank) => new BankModel(bank));
 
     return new Page(page, totalCount, bankModels);
   }
