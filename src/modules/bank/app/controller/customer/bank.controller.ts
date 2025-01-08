@@ -31,16 +31,7 @@ export class BankController {
     const banks = await this.listBanksUsecase.execute(pageParams, sortParams);
 
     const responseData = banks.data.map((bank) => {
-      const {
-        publicKey,
-        id,
-        algorithm: alogrithm,
-        createdAt,
-        updatedAt,
-        metadata,
-        logoUrl,
-        ...bankData
-      } = bank;
+      const { publicKey, algorithm, metadata, logoUrl, ...bankData } = bank;
       return bankData;
     });
 
