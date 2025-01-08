@@ -3,6 +3,7 @@ import { IRouteParams } from 'src/decorators';
 import { UserRole } from '../../core/enums/user_role';
 import { UserModel } from '../../core/models/user.model';
 import { BaseException } from 'src/exceptions';
+import { DashboardInfoResponseModel } from '../../core/models/dashboard_response.model';
 
 export default {
   getMe: <IRouteParams>{
@@ -28,7 +29,7 @@ export default {
     roles: [UserRole.Customer],
     swaggerParams: {
       responses: [
-        { status: HttpStatus.OK, type: UserModel },
+        { status: HttpStatus.OK, type: DashboardInfoResponseModel },
         {
           status: HttpStatus.BAD_REQUEST,
           description: 'Bad request',
