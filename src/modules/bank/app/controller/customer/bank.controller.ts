@@ -5,8 +5,9 @@ import { GetBankDto, ListBankDto } from '../../dto';
 import { PageParams, SortParams } from '../../../../../common/models';
 import { BankSort } from '../../../core/enums/bank_sort';
 import bankRoute from '../../routes/customer/bank.route';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Bank for Customer')
 @Controller({ path: 'api/customer/v1/banks' })
 @ApiBearerAuth()
 export class BankController {
@@ -44,11 +45,11 @@ export class BankController {
     };
   }
 
-  @Route(bankRoute.getBank)
-  async get(@Param() param: GetBankDto) {
-    const bank = await this.getBankUsecase.execute('id', param.id, undefined);
-    const { publicKey, id, createdAt, updatedAt, ...bankData } = bank;
+  // @Route(bankRoute.getBank)
+  // async get(@Param() param: GetBankDto) {
+  //   const bank = await this.getBankUsecase.execute('id', param.id, undefined);
+  //   const { publicKey, id, createdAt, updatedAt, ...bankData } = bank;
 
-    return bankData;
-  }
+  //   return bankData;
+  // }
 }

@@ -2,8 +2,18 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsObject } from 'class-validator';
 import { PageParams } from './page_params.model';
 import { Type } from 'class-transformer';
+class PaginationMetadata {
+  @ApiProperty({
+    description: 'The current page number (starting from 1)',
+  })
+  page: number;
 
-// Generic page response model
+  @ApiProperty({
+    description: 'The total number of items available across all pages',
+  })
+  totalCount: number;
+}
+
 export class PageResponseModel<T> {
   @ApiProperty({
     description: 'The list of data for the page.',
@@ -16,8 +26,8 @@ export class PageResponseModel<T> {
 
   @ApiProperty({
     description: 'Pagination metadata.',
-    type: PageParams,
+    type: PaginationMetadata,
   })
   @IsObject()
-  metadata: PageParams;
+  metadata: PaginationMetadata;
 }
