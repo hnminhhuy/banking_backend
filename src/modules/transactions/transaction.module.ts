@@ -36,6 +36,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { StatisticTransactionUsecase } from './core/usecases/statistic_transaction.usecase';
 import { NotificationModule } from '../notifications/notification.module';
 import { GetCustomerDashboardTransactionUsecase } from './core/usecases/get_customer_dashboard_transaction.usecase';
+import { TransactionGateway } from './infra/transaction_websocket';
 
 @Module({
   imports: [
@@ -66,6 +67,7 @@ import { GetCustomerDashboardTransactionUsecase } from './core/usecases/get_cust
       provide: ITransactionRepo,
       useClass: TransactionRepo,
     },
+    TransactionGateway,
     TransactionDatasource,
     CreateTransactionUsecase,
     GetTransactionUsecase,
@@ -83,6 +85,7 @@ import { GetCustomerDashboardTransactionUsecase } from './core/usecases/get_cust
     GetCustomerDashboardTransactionUsecase,
   ],
   exports: [
+    TransactionGateway,
     CreateTransactionUsecase,
     GetTransactionUsecase,
     UpdateTransactionUsecase,

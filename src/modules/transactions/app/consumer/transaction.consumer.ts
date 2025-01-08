@@ -14,6 +14,7 @@ import {
 } from '../../core/usecases';
 import { SendPushNotificationUseCase } from '../../../notifications/core/usecases/send_push_notification.usecase';
 import { NotificationType } from '../../../notifications/core/enums/notification_type';
+import { TransactionGateway } from '../../infra/transaction_websocket';
 
 @Processor('transaction-queue', { concurrency: 1 })
 export class TransactionConsumer extends WorkerHost {
