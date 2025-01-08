@@ -23,9 +23,6 @@ export class SendPushNotificationUseCase {
     debtId: string | undefined,
     transactionId: string | undefined,
   ) {
-    this.transactionGateway.sendMessageToUser(userId, {
-      value: 'reload transaction',
-    });
     const body = await this.notificationBodyHandlerUsecase.execute(
       type,
       userId,
@@ -38,6 +35,12 @@ export class SendPushNotificationUseCase {
       body,
       type,
     });
+
+    if (type === NotificationType.BALANCE_UPDATE) {
+      this.transactionGateway.sendMessageToUser(userId, {
+        id: transactionId,
+      });
+    }
 
     const fcmTokens = await this.listFcmTokenUsecase.execute(userId);
 
