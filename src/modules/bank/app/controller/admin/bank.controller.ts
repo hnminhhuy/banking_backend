@@ -28,7 +28,7 @@ export class AdminBankController {
     const banks = await this.listBanksUsecase.execute(pageParams, sortParams);
 
     banks.data.map((bank) => {
-      const { publicKey, id, createdAt, updatedAt, ...bankData } = bank;
+      const { publicKey, logoUrl, metadata, algorithm, ...bankData } = bank;
       return bankData;
     });
 
