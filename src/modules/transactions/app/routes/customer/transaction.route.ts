@@ -1,12 +1,19 @@
 import { HttpStatus, RequestMethod } from '@nestjs/common';
 import { IRouteParams } from '../../../../../decorators';
-import { TransactionModel } from '../../../core/models/transaction.model';
+import {
+  GetTransactionResponseModel,
+  TransactionModel,
+  TransactionResponseModel,
+} from '../../../core/models/transaction.model';
 import { UserRole } from '../../../../user/core/enums/user_role';
 import { CreateTransactionDto, ListTransactionDto } from '../../dtos';
 import {
   GetChartMode,
   GetTransactionDto,
 } from '../../dtos/get_transaction.dto';
+import { TransactionPageResponseModel } from 'src/modules/transactions/core/models/transaction_page_response.model';
+import { BooleanModel } from 'src/modules/user/core/models/user.model';
+import { ChartResponseModel } from 'src/modules/transactions/core/models/chart_response.model';
 
 export const TransactionRouteByCustomer = {
   createTransaction: <IRouteParams>{
@@ -16,7 +23,9 @@ export const TransactionRouteByCustomer = {
     roles: [UserRole.Customer],
     swaggerParams: {
       body: CreateTransactionDto,
-      responses: [{ status: HttpStatus.CREATED, type: TransactionModel }],
+      responses: [
+        { status: HttpStatus.CREATED, type: TransactionResponseModel },
+      ],
     },
   },
   getTransaction: <IRouteParams>{
@@ -26,7 +35,7 @@ export const TransactionRouteByCustomer = {
     roles: [UserRole.Customer],
     swaggerParams: {
       params: GetTransactionDto,
-      responses: [{ status: HttpStatus.OK, type: TransactionModel }],
+      responses: [{ status: HttpStatus.OK, type: GetTransactionResponseModel }],
     },
   },
   listTransaction: <IRouteParams>{
@@ -36,6 +45,9 @@ export const TransactionRouteByCustomer = {
     roles: [UserRole.Customer],
     swaggerParams: {
       query: ListTransactionDto,
+      responses: [
+        { status: HttpStatus.OK, type: TransactionPageResponseModel },
+      ],
     },
   },
   verifyOtp: <IRouteParams>{
@@ -43,6 +55,9 @@ export const TransactionRouteByCustomer = {
     method: RequestMethod.POST,
     secure: true,
     roles: [UserRole.Customer],
+    swaggerParams: {
+      responses: [{ status: HttpStatus.OK, type: BooleanModel }],
+    },
   },
   getChartData: <IRouteParams>{
     path: '/chart/data',
@@ -51,6 +66,7 @@ export const TransactionRouteByCustomer = {
     roles: [UserRole.Customer],
     swaggerParams: {
       query: GetChartMode,
+      responses: [{ status: HttpStatus.OK, type: ChartResponseModel }],
     },
   },
 };

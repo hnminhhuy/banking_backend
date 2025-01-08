@@ -6,7 +6,9 @@ import { TransactionCustomerChartMode } from '../../core/enums/transaction_custo
 export class GetTransactionDto extends PickType(TransactionDto, ['id']) {}
 
 export class GetChartMode {
-  @ApiProperty()
+  @ApiProperty({
+    enum: TransactionCustomerChartMode,
+  })
   @IsEnum(TransactionCustomerChartMode)
   mode!: TransactionCustomerChartMode;
 }

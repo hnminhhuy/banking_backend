@@ -7,7 +7,7 @@ export class NotificationDto extends PickType(PaginationDto, [
   'page',
   'limit',
 ]) {
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ enum: NotificationType })
   @IsOptional()
   @IsEnum(NotificationType)
   type!: NotificationType;

@@ -5,6 +5,7 @@ import { ContactModel } from '../../core/models/contact.model';
 import { UserRole } from 'src/modules/user/core/enums/user_role';
 import { ContactUserModel } from '../../core/models/contact_user.model';
 import { ContactPageResponseModel } from '../../core/models/contact_page_response.model';
+import { BooleanModel } from 'src/modules/user/core/models/user.model';
 
 export const ContactRoute = {
   createContact: <IRouteParams>{
@@ -108,6 +109,7 @@ export const ContactRoute = {
         {
           status: HttpStatus.OK,
           description: 'Contact updated successfully',
+          type: BooleanModel,
         },
         {
           status: HttpStatus.BAD_REQUEST,
@@ -142,6 +144,7 @@ export const ContactRoute = {
         {
           status: HttpStatus.OK,
           description: 'Contact deleted successfully',
+          type: BooleanModel,
         },
 
         {

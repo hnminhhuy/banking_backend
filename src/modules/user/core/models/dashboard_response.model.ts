@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PickType } from '@nestjs/swagger';
+import { TransactionCategory } from 'src/modules/transactions/core/enums/transaction_category';
 import { TransactionModel } from 'src/modules/transactions/core/models/transaction.model';
 
 // Create a new model to combine the necessary fields from TransactionModel and relatedUser
@@ -18,17 +19,16 @@ class TransactionWithRelatedUser extends PickType(TransactionModel, [
 
   @ApiProperty({
     description: 'The category of the transaction.',
-    type: String,
     example: 'debt',
   })
-  category: string;
+  category: TransactionCategory;
 
   @ApiProperty({
     description: 'Information of the related user for the transaction.',
     type: Object,
     example: {
-      name: 'Uyển Nhi Hehe',
-      bankAccountId: '21120002',
+      name: 'string',
+      bankAccountId: '03330001',
       bankName: 'National Heritage Bank',
     },
   })

@@ -10,7 +10,7 @@ import { CreateDebtReponseModel } from '../../core/models/create_debt_response.m
 import { DebtPageResponseModel } from '../../core/models/debt_page_response.model';
 import {
   TransactionModel,
-  TransactionResponseModel,
+  DebtTransactionResponseModel,
 } from 'src/modules/transactions/core/models/transaction.model';
 
 export const DebtRoute = {
@@ -79,7 +79,9 @@ export const DebtRoute = {
     method: RequestMethod.POST,
     secure: true,
     swaggerParams: {
-      responses: [{ status: HttpStatus.OK, type: TransactionResponseModel }],
+      responses: [
+        { status: HttpStatus.OK, type: DebtTransactionResponseModel },
+      ],
     },
   },
   listDebt: <IRouteParams>{

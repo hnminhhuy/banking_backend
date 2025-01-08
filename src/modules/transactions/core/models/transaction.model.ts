@@ -76,7 +76,7 @@ export class TransactionModel extends BaseModel {
   }
 }
 
-export class TransactionResponseModel extends PickType(TransactionModel, [
+export class DebtTransactionResponseModel extends PickType(TransactionModel, [
   'id',
   'createdAt',
   'updatedAt',
@@ -92,4 +92,42 @@ export class TransactionResponseModel extends PickType(TransactionModel, [
   'remitterName',
   'debtId',
   'status',
+]) {}
+
+export class TransactionResponseModel extends PickType(TransactionModel, [
+  'id',
+  'createdAt',
+  'updatedAt',
+  'amount',
+  'remitterId',
+  'type',
+  'transactionFee',
+  'beneficiaryId',
+  'beneficiaryBankId',
+  'remitterPaidFee',
+  'message',
+  'beneficiaryName',
+  'remitterBankId',
+  'remitterName',
+  'status',
+]) {}
+
+export class GetTransactionResponseModel extends PickType(TransactionModel, [
+  'id',
+  'createdAt',
+  'updatedAt',
+  'amount',
+  'remitterId',
+  'type',
+  'debtId',
+  'transactionFee',
+  'beneficiaryId',
+  'beneficiaryBankId',
+  'remitterPaidFee',
+  'message',
+  'beneficiaryName',
+  'remitterBankId',
+  'remitterName',
+  'status',
+  'completedAt',
 ]) {}
