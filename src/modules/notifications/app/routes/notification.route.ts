@@ -1,7 +1,10 @@
-import { RequestMethod } from '@nestjs/common';
+import { HttpStatus, RequestMethod } from '@nestjs/common';
 import { IRouteParams } from '../../../../decorators';
 import { UserRole } from '../../../user/core/enums/user_role';
 import { NotificationDto } from '../dto/notificarion.dto';
+import { NotificationPageResponseModel } from '../../core/models/notification_page_response.model';
+import { BooleanModel } from 'src/modules/user/core/models/user.model';
+import { NotificationCountModel } from '../../core/models/notification.model';
 
 export const NotificationRoute = {
   listNotification: <IRouteParams>{
@@ -11,6 +14,9 @@ export const NotificationRoute = {
     roles: [UserRole.Customer],
     swaggerParams: {
       query: NotificationDto,
+      responses: [
+        { status: HttpStatus.OK, type: NotificationPageResponseModel },
+      ],
     },
   },
 
@@ -19,6 +25,9 @@ export const NotificationRoute = {
     method: RequestMethod.POST,
     secure: true,
     roles: [UserRole.Customer],
+    swaggerParams: {
+      responses: [{ status: HttpStatus.OK, type: BooleanModel }],
+    },
   },
 
   countUnread: <IRouteParams>{
@@ -26,5 +35,8 @@ export const NotificationRoute = {
     method: RequestMethod.GET,
     secure: true,
     roles: [UserRole.Customer],
+    swaggerParams: {
+      responses: [{ status: HttpStatus.OK, type: NotificationCountModel }],
+    },
   },
 };

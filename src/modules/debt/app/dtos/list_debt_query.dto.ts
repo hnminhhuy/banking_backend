@@ -4,7 +4,7 @@ import { DebtStatus } from '../../core/enum/debt_status';
 import { DebtCategory } from '../../core/enum/debt_category';
 
 export class ListDebtQueryDto {
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ enum: DebtCategory })
   category?: DebtCategory;
 
   @ApiPropertyOptional()
@@ -13,7 +13,7 @@ export class ListDebtQueryDto {
   @ApiPropertyOptional()
   amount?: number;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ enum: DebtStatus })
   status?: DebtStatus;
 
   @ApiProperty()

@@ -1,10 +1,11 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, PickType } from '@nestjs/swagger';
 import { BaseModel, BaseModelParams } from 'src/common/models';
 import { UserRole } from '../enums/user_role';
 import * as bcrypt from 'bcrypt';
 import { BankAccountModel } from 'src/modules/bank_account/core/models/bank_account.model';
 import { BankAccountEntity } from 'src/modules/bank_account/infra/data/entities/bank_account.entity';
 import { UserEntity } from '../../infra/data/entities/user.entity';
+import { IsBoolean, IsString } from 'class-validator';
 
 export interface UserModelParams extends BaseModelParams {
   createdBy: string | undefined;
@@ -58,4 +59,52 @@ export class UserModel extends BaseModel {
   public verifyPassword(password: string): boolean {
     return bcrypt.compareSync(password, this.password);
   }
+}
+
+export class CreateUserResponseModel extends PickType(UserModel, [
+  'id',
+  'createdAt',
+  'updatedAt',
+  'email',
+  'username',
+  'fullName',
+  'role',
+  'createdBy',
+  'isBlocked',
+]) {
+  @ApiProperty()
+  @IsString()
+  rawPassword: string;
+}
+
+export class UserMeModel extends PickType(UserModel, [
+  'id',
+  'createdAt',
+  'updatedAt',
+  'createdBy',
+  'email',
+  'username',
+  'isBlocked',
+  'fullName',
+  'role',
+]) {}
+
+export class UserEmployeeModel extends PickType(UserModel, [
+  'id',
+  'createdAt',
+  'updatedAt',
+  'createdBy',
+  'email',
+  'username',
+  'fullName',
+  'role',
+]) {}
+
+export class BooleanModel {
+  @ApiProperty({
+    description: 'Indicates whether the operation was successful.',
+    example: true,
+  })
+  @IsBoolean()
+  data: boolean;
 }

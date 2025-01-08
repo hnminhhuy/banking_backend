@@ -4,6 +4,8 @@ import { BaseException } from 'src/exceptions';
 import { ContactModel } from '../../core/models/contact.model';
 import { UserRole } from 'src/modules/user/core/enums/user_role';
 import { ContactUserModel } from '../../core/models/contact_user.model';
+import { ContactPageResponseModel } from '../../core/models/contact_page_response.model';
+import { BooleanModel } from 'src/modules/user/core/models/user.model';
 
 export const ContactRoute = {
   createContact: <IRouteParams>{
@@ -70,7 +72,7 @@ export const ContactRoute = {
     secure: true,
     swaggerParams: {
       responses: [
-        { status: HttpStatus.OK, type: ContactUserModel },
+        { status: HttpStatus.OK, type: [ContactUserModel] },
         {
           status: HttpStatus.BAD_REQUEST,
           description: 'Bad request',
@@ -92,7 +94,7 @@ export const ContactRoute = {
     roles: [UserRole.Customer],
     swaggerParams: {
       responses: [
-        { status: HttpStatus.CREATED, type: ContactModel },
+        { status: HttpStatus.CREATED, type: ContactPageResponseModel },
         { status: HttpStatus.BAD_REQUEST, type: BaseException },
       ],
     },
@@ -107,6 +109,7 @@ export const ContactRoute = {
         {
           status: HttpStatus.OK,
           description: 'Contact updated successfully',
+          type: BooleanModel,
         },
         {
           status: HttpStatus.BAD_REQUEST,
@@ -141,6 +144,7 @@ export const ContactRoute = {
         {
           status: HttpStatus.OK,
           description: 'Contact deleted successfully',
+          type: BooleanModel,
         },
 
         {

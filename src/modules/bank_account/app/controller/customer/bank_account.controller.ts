@@ -6,12 +6,13 @@ import {
 import { Route } from '../../../../../decorators';
 import { DepositDto, GetBankAccountDto } from '../../dtos';
 import { BankAccountRouteByCustomer } from '../../routes/customer/bank_account.route';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GetExternalBankAccountInfoUsecase } from '../../../../external-bank/core/usecases/bank_account/get_external_bank_user.usecase';
 import { BankCode } from 'src/modules/bank/core/enums/bank_code';
 import { GetBankUsecase } from '../../../../bank/core/usecases';
 import { throwError } from '../../../../../common/helpers/throw_error';
 
+@ApiTags('Bank Account For Customer')
 @Controller({ path: 'api/customer/v1/bank-accounts' })
 @ApiBearerAuth()
 export class BankAccountController {
