@@ -1,7 +1,6 @@
 import { Controller, Param, Query } from '@nestjs/common';
 import { GetBankUsecase, ListBanksUsecase } from '../../../core/usecases';
 import { Route } from '../../../../../decorators';
-import bankRoute from '../../routes/employee/bank.route';
 import { ListBankDto } from '../../dto';
 import { PageParams, SortParams } from '../../../../../common/models';
 import { BankSort } from '../../../core/enums/bank_sort';
