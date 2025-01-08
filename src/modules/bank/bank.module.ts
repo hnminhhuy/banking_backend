@@ -12,10 +12,11 @@ import {
 import { BankController } from './app/controller/customer/bank.controller';
 import { BankCode } from './core/enums/bank_code';
 import { CreateAuthClientCommand } from './app/console/create_bank_client.command';
+import { AdminBankController } from './app/controller/admin/bank.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([BankEntity])],
-  controllers: [BankController],
+  controllers: [BankController, AdminBankController],
   providers: [
     CreateAuthClientCommand,
     BankCode,

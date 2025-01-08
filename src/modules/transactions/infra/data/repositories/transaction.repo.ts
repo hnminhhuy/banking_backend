@@ -76,10 +76,12 @@ export class TransactionRepo implements ITransactionRepo {
   public async statistic(
     defaultBank: BankModel,
     externalBank: BankModel,
+    dateFilter: DateFilter,
   ): Promise<any> {
     return await this.transactionDatasource.statistic(
       defaultBank,
       externalBank,
+      dateFilter,
     );
   }
 
