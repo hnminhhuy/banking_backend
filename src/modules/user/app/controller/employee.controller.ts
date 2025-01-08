@@ -1,7 +1,11 @@
 import { Body, Controller, HttpStatus, Query, Req } from '@nestjs/common';
 import { Route } from 'src/decorators';
 import employeeRoute from '../routes/employee.route';
-import { CreateCustomerDto, ListUserDto } from '../dtos';
+import {
+  CreateCustomerDto,
+  ListCustomerByEmployeeDto,
+  ListUserDto,
+} from '../dtos';
 import { UserModelParams } from 'src/modules/user/core/models/user.model';
 import {
   CreateUserUsecase,
@@ -81,7 +85,7 @@ export class UserControllerByEmployee {
   }
 
   @Route(employeeRoute.listCustomer)
-  async listCustomers(@Query() query: ListUserDto) {
+  async listCustomers(@Query() query: ListCustomerByEmployeeDto) {
     const pageParams = new PageParams(
       query.page,
       query.limit,
